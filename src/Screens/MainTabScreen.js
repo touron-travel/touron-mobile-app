@@ -21,7 +21,12 @@ import SelfTourInner from "./SelfPlanTourScreens/SelfTourInner";
 import ProgressScreen from "./CheckoutScreens/ProgressScreen";
 import PaymentScreen from "./CheckoutScreens/PaymentScreen";
 import Animated from "react-native-reanimated";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import {
+  Feather,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -114,12 +119,28 @@ const HomeStackScreen = () => {
         }}
         component={CityInnerScreen}
       />
-      <HomeStack.Screen name="BlogHome" component={BlogHomeScreen} />
-      <HomeStack.Screen name="BlogInner" component={BlogInnerScreen} />
+      <HomeStack.Screen
+        options={{
+          title: "Blogs",
+          headerShown: true,
+          headerTransparent: true,
+          headerTitleStyle: {
+            fontWeight: "bold",
+            //   marginLeft: WIDTH / 5,
+          },
+        }}
+        name="BlogHome"
+        component={BlogHomeScreen}
+      />
+      <HomeStack.Screen
+        options={{ headerShown: false }}
+        name="BlogInner"
+        component={BlogInnerScreen}
+      />
       <HomeStack.Screen
         options={{
           title: "Tours",
-          headerShown: true,
+          headerShown: false,
           headerTransparent: true,
           headerTitleStyle: {
             fontWeight: "bold",
@@ -173,15 +194,36 @@ const SelfTourStackScreen = () => {
 };
 
 const MainTabScreen = () => (
-  <Tab.Navigator>
+  <Tab.Navigator
+    tabBarOptions={{
+      keyboardHidesTabBar: true,
+    }}
+    // screenOptions={({ route }) => ({
+    //   key
+    //   tabBarIcon: ({ focused, color, size }) => {
+    //     let iconName;
+
+    //     if (route.name === "Home") {
+    //       iconName = focused
+    //         ? "ios-information-circle"
+    //         : "ios-information-circle-outline";
+    //     } else if (route.name === "Settings") {
+    //       iconName = focused ? "ios-list-box" : "ios-list";
+    //     }
+
+    //     // You can return any component that you like here!
+    //     return <Ionicons name={iconName} size={size} color={color} />;
+    //   },
+    // })}
+  >
     <Tab.Screen
       options={{
         tabBarIcon: ({ color }) => (
-          // <MaterialCommunityIcons name="home" color={color} size={26} />
-          <Image
-            style={{ height: 25, width: 25, marginBottom: 0 }}
-            source={require("../../assets/House.png")}
-          />
+          <MaterialCommunityIcons name="home" color={color} size={26} />
+          // <Image
+          //   style={{ height: 25, width: 25, marginBottom: 0 }}
+          //   source={require("../../assets/House.png")}
+          // />
         ),
       }}
       name="Home"
@@ -190,11 +232,11 @@ const MainTabScreen = () => (
     <Tab.Screen
       options={{
         tabBarIcon: ({ color }) => (
-          // <MaterialCommunityIcons name="home" color={color} size={26} />
-          <Image
-            style={{ height: 25, width: 25, marginBottom: 0 }}
-            source={require("../../assets/Compass.png")}
-          />
+          <MaterialIcons name="flight-takeoff" size={24} color={color} />
+          // <Image
+          //   style={{ height: 25, width: 25, marginBottom: 0 }}
+          //   source={require("../../assets/Compass.png")}
+          // />
         ),
       }}
       name="Tour"
@@ -203,15 +245,15 @@ const MainTabScreen = () => (
     <Tab.Screen
       options={{
         tabBarIcon: ({ color }) => (
-          // <MaterialCommunityIcons name="home" color={color} size={26} />
-          <Image
-            style={{ height: 25, width: 25, marginBottom: 0 }}
-            source={require("../../assets/Profile.png")}
-          />
+          <MaterialCommunityIcons name="shopping" size={24} color={color} />
+          // <Images
+          //   style={{ height: 25, width: 25, marginBottom: 0 }}
+          //   source={require("../../assets/CountryInnericon/shop.png")}
+          // />
         ),
       }}
-      name="Account"
-      component={AccountScreen}
+      name="Blog"
+      component={BlogHomeScreen}
     />
     {/* <Tab.Screen
       options={{
@@ -230,128 +272,3 @@ const MainTabScreen = () => (
 );
 
 export default MainTabScreen;
-// const Drawer = createDrawerNavigator();
-
-// const DrawerScreen = () => {
-//   const [progress, setProgress] = React.useState(new Animated.Value(0));
-//   const scale = Animated.interpolate(progress, {
-//     inputRange: [0, 1],
-//     outputRange: [1, 0.8],
-//   });
-//   const borderRadius = Animated.interpolate(progress, {
-//     inputRange: [0, 1],
-//     outputRange: [0, 16],
-//   });
-
-//   return (
-//     <Drawer.Navigator
-//       drawerType="slide"
-//       edgeWidth={2}
-//       drawerPosition="left"
-//       drawerStyle={{
-//         backgroundColor: "#fff",
-//         width: 300,
-//       }}
-//       overlayColor={0}
-//       contentContainerStyle={{ flex: 1 }}
-//       drawerContent={(props) => <DrawerContent {...props} />}
-//       sceneContainerStyle={{ backgroundColor: "red" }}
-//     >
-//       <Drawer.Screen name="Drawer" component={RootStackScreen} />
-//       {/* <Drawer.Screen name="MyRequest" component={MyRequestScreen} />
-//       <Drawer.Screen name="MyPlans" component={MyPlansScreen} />
-//       <Drawer.Screen name="Profile" component={ProfileScreen} />
-//       <Drawer.Screen name="Visa" component={VisaDetailsScreen} />
-//     <Drawer.Screen name="WishList" component={WishListScreen} /> */}
-//       <Drawer.Screen name="Account" component={AccountStackScreen} />
-//     </Drawer.Navigator>
-//   );
-// };
-
-// export default DrawerScreen;
-
-// const animatedStyle = { borderRadius, transform: [{ scale }] };
-// <LinearGradient style={{ flex: 1 }} colors={["#E94057", "#4A00E0"]}>
-//   <Drawer.Navigator
-//     drawerType="slide"
-//     overlayColor="transparent"
-//     drawerStyle={styles.drawerStyles}
-//     contentContainerStyle={{ flex: 1 }}
-//     drawerContentOptions={{
-//       activeBackgroundColor: "transparent",
-//       activeTintColor: "white",
-//       inactiveTintColor: "white",
-//     }}
-//     sceneContainerStyle={{ backgroundColor: "transparent" }}
-//     drawerContent={(props) => {
-//       setProgress(props.progress);
-//       return <DrawerContent {...props} />;
-//     }}
-//   >
-//     >
-//     <Drawer.Screen name="D" component={MainTabScreen} />
-//     <Drawer.Screen
-//       name="Drawer"
-//       {...(props) => (
-//         <AccountStackScreen {...props} style={animatedStyle} />
-//       )}
-//       // component={MainTabScreen}
-//     />
-//   </Drawer.Navigator>
-// </LinearGradient>
-
-// const DrawerContent = (props) => {
-//   return (
-//     <DrawerContentScrollView
-//       {...props}
-//       scrollEnabled={false}
-//       contentContainerStyle={{ flex: 1 }}
-//     >
-//       <Image
-//         source={{
-//           uri:
-//             "https://react-ui-kit.com/assets/img/react-ui-kit-logo-green.png",
-//           height: 60,
-//           width: 60,
-//           scale: 0.5,
-//         }}
-//         resizeMode="center"
-//         style={styles.avatar}
-//       />
-//       <Text white title>
-//         React UI Kit
-//       </Text>
-//       <Text white size={9}>
-//         contact@react-ui-kit.com
-//       </Text>
-
-//       <DrawerItem
-//         label="My Request"
-//         labelStyle={styles.drawerLabel}
-//         style={styles.drawerItem}
-//         onPress={() => props.navigation.navigate("MyRequest")}
-//         icon={() => <AntDesign name="dashboard" color="white" size={16} />}
-//       />
-//       <DrawerItem
-//         label="My Plans"
-//         labelStyle={{ color: "white", marginLeft: -16 }}
-//         style={{ alignItems: "flex-start", marginVertical: 0 }}
-//         onPress={() => props.navigation.navigate("MyPlans")}
-//         icon={() => <AntDesign name="message1" color="white" size={16} />}
-//       />
-//       <DrawerItem
-//         label="Profile"
-//         labelStyle={{ color: "white", marginLeft: -16 }}
-//         style={{ alignItems: "flex-start", marginVertical: 0 }}
-//         onPress={() => props.navigation.navigate("Profile")}
-//         icon={() => <AntDesign name="phone" color="white" size={16} />}
-//       />
-//       <DrawerItem
-//         label="Logout"
-//         labelStyle={{ color: "white" }}
-//         icon={() => <AntDesign name="logout" color="white" size={16} />}
-//         onPress={() => alert("Are your sure to logout?")}
-//       />
-//     </DrawerContentScrollView>
-//   );
-// };

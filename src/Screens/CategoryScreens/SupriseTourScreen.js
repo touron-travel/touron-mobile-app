@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Image,
   Dimensions,
   TouchableOpacity,
@@ -21,6 +22,7 @@ import Tourpreferance from "./Reusable components/Tourpreferance";
 import * as firebase from "firebase";
 
 import { AuthContext } from "../../context/AuthContext";
+import Categories from "../HomeScreens/components/CategoriesScreen";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -42,7 +44,27 @@ const SurpriseTourScreen = ({ navigation }) => {
   const [budget, setBudget] = useState("");
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
+  const [date, setDate] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
+  let random;
+  let formatedMonth;
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigation.replace("SignInScreen");
+    }
+  });
+  useEffect(() => {
+    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
+    const requestDate = new Date();
+    let currentYear = requestDate.getFullYear();
+    setDate(requestDate.getDate());
+    setMonth(requestDate.getMonth() + 1);
+    setYear(currentYear.toString().slice(2, 5));
+    formatedMonth = month < 10 ? "0" + month : month;
+  });
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -53,6 +75,7 @@ const SurpriseTourScreen = ({ navigation }) => {
   };
 
   const handleFromDate = (date) => {
+    console.log(date, "LOLOLOLO");
     setDatePickerVisibility(false);
     setFromDate(date.toLocaleDateString("en-GB"));
   };
@@ -271,6 +294,54 @@ const SurpriseTourScreen = ({ navigation }) => {
             budget={budget}
           />
         );
+      case 10:
+        return (
+          <View
+            style={{
+              marginHorizontal: WIDTH / 10,
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.text}>
+              Request Id :{`T0-${date}${formatedMonth}${year}-${random}`}
+            </Text>
+            <Text style={styles.text}>Status: 'Query Received'</Text>
+            <Text style={styles.text}>Name: {name}</Text>
+            <Text style={styles.text}>Number: {number}</Text>
+            <Text style={styles.text}>Budget: {budget}</Text>
+            <Text style={styles.text}>Adult: {adult}</Text>
+            <Text style={styles.text}>Children : {children}</Text>
+            <Text style={styles.text}>From Date: {fromDate}</Text>
+            <Text style={styles.text}>To Date: {toDate}</Text>
+            <Text style={styles.text}>Expediture1: {expediture1}</Text>
+            <Text style={styles.text}>Expediture1: {expediture2}</Text>
+            <Text style={styles.text}>Expediture1: {expediture3}</Text>
+            <Text style={styles.text}>Start Point: {startPoint}</Text>
+            <Text style={styles.text}>Preferance: {tourPreferance}</Text>
+            <Text style={styles.text}>Tour Type: {tourType}</Text>
+            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
+            <Text style={styles.text}>Traveller Type: {travellerType}</Text>
+
+            <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+              <View style={{ alignItems: "center", margin: 10 }}>
+                <Text
+                  style={{
+                    // backgroundColor: "red",
+                    textAlign: "center",
+                    padding: 8,
+                    borderWidth: 1,
+                    borderColor: "black",
+                    borderRadius: 20,
+                  }}
+                >
+                  Back to Home
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
       default:
         break;
     }
@@ -278,11 +349,12 @@ const SurpriseTourScreen = ({ navigation }) => {
 
   const submitData = () => {
     const user = firebase.auth().currentUser;
-    console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
     const userID = user.uid;
     console.log(userID);
+
     const tourData = {
-      userId: userID,
+      requestID: `T0-${date}${formatedMonth}${year}-${random}`,
+      tourCategory: "Surprise Tour",
       tourType: tourType,
       travellerType: travellerType,
       fromDate: fromDate,
@@ -298,8 +370,17 @@ const SurpriseTourScreen = ({ navigation }) => {
       name: name,
       number: number,
       budget: budget,
+      status: "Query Received",
     };
-    firebase.database().ref(`surprise-tours/`).push(tourData);
+    firebase
+      .database()
+      .ref(`surprise-tours/${userID}`)
+      .push(tourData)
+      .then((data) => {
+        console.log(data);
+        nextStep();
+      })
+      .catch((err) => console.log(err));
 
     console.log(
       tourType,
@@ -320,53 +401,57 @@ const SurpriseTourScreen = ({ navigation }) => {
     );
   };
 
-  if (!isLoggedIn) {
-    navigation.navigate("SignUpScreen");
-  }
   return (
-    <View style={styles.container}>
-      <View style={styles.arrowsContainer}>
-        {step == 1 ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack("Home");
-              console.log("logged");
+    <ScrollView style={styles.container}>
+      {step == 10 ? null : (
+        <View style={styles.arrowsContainer}>
+          {step == 1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack("Home");
+                console.log("logged");
+              }}
+            >
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => prevStep()}>
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "NewYorkl",
+              marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
             }}
           >
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => prevStep()}>
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        )}
+            Surprise Trip
+          </Text>
 
-        <Text
-          style={{
-            fontSize: 20,
-            marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
-          }}
-        >
-          Surprise Trip
-        </Text>
-
-        <TouchableOpacity
-          onPress={() => {
-            nextStep();
-          }}
-        >
-          {step !== 9 ? (
-            <View>
-              <AntDesign name="arrowright" size={28} />
-            </View>
-          ) : null}
-        </TouchableOpacity>
-      </View>
-      {step == 1 ? null : (
+          <TouchableOpacity
+            onPress={() => {
+              nextStep();
+            }}
+          >
+            {step !== 9 &&
+            step !== 2 &&
+            step !== 3 &&
+            step !== 4 &&
+            step !== 6 ? (
+              <View>
+                <AntDesign name="arrowright" size={28} />
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        </View>
+      )}
+      {step == 1 || step == 10 ? null : (
         <View style={styles.progressContainer}>
           <View
             style={{
@@ -384,7 +469,7 @@ const SurpriseTourScreen = ({ navigation }) => {
       )}
 
       {renderForm(step)}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -425,5 +510,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: WIDTH / 15,
     position: "relative",
+  },
+  text: {
+    marginTop: 8,
+    fontSize: 16,
+    fontFamily: "Andika",
+    textAlign: "justify",
   },
 });

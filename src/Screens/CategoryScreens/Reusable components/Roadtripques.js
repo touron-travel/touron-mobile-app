@@ -29,7 +29,7 @@ const Roadtripques = ({
 }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={{ alignItems: "center" }}>
           <View
             style={{
@@ -46,16 +46,22 @@ const Roadtripques = ({
           </View>
 
           <View>
-            <Text style={{ fontSize: 20, textAlign: "center" }}>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+                fontFamily: "NewYorkl",
+              }}
+            >
               Get the best planned road trip
             </Text>
             <View
               style={{
-                height: HEIGHT / 2.65,
+                height: HEIGHT / 3,
                 marginTop: 20,
                 width: WIDTH * 0.9,
                 marginHorizontal: 40,
-
+                justifyContent: "space-around",
                 alignItems: "center",
               }}
             >
@@ -68,14 +74,21 @@ const Roadtripques = ({
                   alignItems: "center",
                 }}
               >
-                <View style={{ width: WIDTH / 2 }}>
-                  <Text style={{ fontSize: 14 }}>{que1}</Text>
+                <View style={{ width: WIDTH / 2.1 }}>
+                  <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                    {que1}
+                  </Text>
                 </View>
-                <View style={{ width: WIDTH / 3 }}>
+                <View style={{ width: WIDTH / 2.8 }}>
                   <TextInput
                     placeholder={placeholder1}
                     multiline
-                    style={{ fontSize: 14 }}
+                    style={{
+                      fontSize: 14,
+                      textAlign: "center",
+                      // color: "blue",
+                      fontWeight: "bold",
+                    }}
                     value={attr1}
                     onChangeText={(value) => func1(value)}
                   />
@@ -91,12 +104,18 @@ const Roadtripques = ({
                 }}
               >
                 <View style={{ width: WIDTH / 2 }}>
-                  <Text style={{ fontSize: 14 }}>{que2}</Text>
+                  <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                    {que2}
+                  </Text>
                 </View>
                 <View style={{ width: WIDTH / 3 }}>
                   <TextInput
                     placeholder={placeholder2}
-                    style={{ fontSize: 14 }}
+                    style={{
+                      fontSize: 14,
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
                     multiline
                     value={attr2}
                     onChangeText={(value) => func2(value)}
@@ -114,13 +133,19 @@ const Roadtripques = ({
                 }}
               >
                 <View style={{ width: WIDTH / 2 }}>
-                  <Text style={{ fontSize: 14 }}>{que3}</Text>
+                  <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                    {que3}
+                  </Text>
                 </View>
                 <View style={{ width: WIDTH / 3 }}>
                   <TextInput
                     placeholder={placeholder3}
                     multiline
-                    style={{ fontSize: 14 }}
+                    style={{
+                      fontSize: 14,
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
                     value={attr3}
                     onChangeText={(value) => func3(value)}
                   />

@@ -22,7 +22,9 @@ const Tourtype = ({
   return (
     <View style={{ alignItems: "center" }}>
       <View style={{ marginTop: HEIGHT / 20 }}>
-        <Text style={{ fontSize: 22 }}>Pick the type of tour! </Text>
+        <Text style={{ fontSize: 22, fontFamily: "NewYorkl" }}>
+          Pick the type of tour!{" "}
+        </Text>
       </View>
 
       <View style={{ marginHorizontal: 10 }}>
@@ -50,7 +52,11 @@ const Tourtype = ({
               />
             </View>
           </TouchableOpacity>
-          <Text style={{ textAlign: "center", fontSize: 20 }}>Domestic</Text>
+          <Text
+            style={{ textAlign: "center", fontSize: 20, fontFamily: "Andika" }}
+          >
+            Domestic
+          </Text>
         </View>
         <View
           style={{
@@ -77,7 +83,9 @@ const Tourtype = ({
               />
             </View>
           </TouchableOpacity>
-          <Text style={{ textAlign: "center", fontSize: 20 }}>
+          <Text
+            style={{ textAlign: "center", fontSize: 20, fontFamily: "Andika" }}
+          >
             International
           </Text>
         </View>

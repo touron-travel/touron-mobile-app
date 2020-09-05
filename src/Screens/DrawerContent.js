@@ -20,32 +20,39 @@ import { AuthContext } from "../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const DrawerContent = (props) => {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
-  const [user, setUser] = useState();
+  const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(AuthContext);
+  // const [user, setUser] = useState();
+  // console.log(user, "USER");
   const [userData, setUserData] = useState({});
+  // console.log(userData.userData.name, "LO");
+  // const name = userData.userData.name;
+  // console.log(name, "NAME");
+  // useEffect(() => {
+  //   const getToken = async () => {
+  //     try {
+  //       const data = await AsyncStorage.getItem("userToken");
+  //       const userToken = JSON.parse(data);
+  //      // console.log(userToken.user, "Token");
+  //       if (userToken !== null) {
+  //         setIsLoggedIn(true);
+  //         setUser(userToken.user);
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  // getToken();
 
-  useEffect(() => {
-    let mounted = true;
-    if (mounted) {
-      const userDetails = firebase.auth().currentUser;
-      if (userDetails !== null) setUser(userDetails);
-    }
-    return () => (mounted = false);
-  }, []);
-
-  const getToken = async () => {
-    try {
-      const data = await AsyncStorage.getItem("userToken");
-      const userToken = JSON.parse(data);
-      console.log(userToken, "Token");
-      if (userToken !== null) {
-        setIsLoggedIn(true);
-        setUserData(userToken);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  // if (isLoggedIn) {
+  //   let mounted = true;
+  //   if (mounted) {
+  //     const userDetails = firebase.auth().currentUser;
+  //     console.log(userDetails, "DETAILS");
+  //     setUser(userDetails);
+  //   }
+  //   return () => (mounted = false);
+  // }
+  // }, []);
 
   const removeToken = async () => {
     try {
@@ -57,9 +64,7 @@ const DrawerContent = (props) => {
     console.log("Done.");
   };
 
-  useEffect(() => {
-    getToken();
-  }, []);
+  // useEffect(() => {}, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -89,19 +94,10 @@ const DrawerContent = (props) => {
         >
           <DrawerContentScrollView {...props}>
             <View style={{ flexDirection: "row", marginTop: 20 }}>
-              <Avatar.Text
-                // label={user.displayName ? user.displayName.charAt(0) : "N"}
-                label="N"
-                style={{ backgroundColor: "#DBE8EB", marginLeft: 20 }}
+              <Image
+                style={{ height: 100, width: 100 }}
+                source={require("../../assets/clogo.png")}
               />
-              <View style={{ marginHorizontal: 20, marginTop: 10 }}>
-                <Text style={{ color: "#FFF", fontSize: 20 }}>
-                  {/* {user.displayName ? user.displayName : "Null"} */}
-                </Text>
-                <Text style={{ color: "#FFF", fontSize: 10 }}>
-                  {/* {user.email} */}
-                </Text>
-              </View>
             </View>
             <View style={{ marginVertical: 40 }}>
               <DrawerItem
@@ -110,8 +106,8 @@ const DrawerContent = (props) => {
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/log-out.png")}
+                    style={{ height: 30, width: 30 }}
+                    source={require("../../assets/houses.png")}
                   />
                 )}
                 onPress={() => props.navigation.navigate("Main")}
@@ -121,8 +117,8 @@ const DrawerContent = (props) => {
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/log-out.png")}
+                    style={{ height: 30, width: 30 }}
+                    source={require("../../assets/Planes.png")}
                   />
                 )}
                 onPress={() => props.navigation.navigate("MyRequest")}
@@ -132,8 +128,8 @@ const DrawerContent = (props) => {
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/log-out.png")}
+                    style={{ height: 30, width: 30 }}
+                    source={require("../../assets/flash.png")}
                   />
                 )}
                 onPress={() => {
@@ -141,12 +137,12 @@ const DrawerContent = (props) => {
                 }}
               />
               <DrawerItem
-                label={() => <Text style={styles.label}>Wish List</Text>}
+                label={() => <Text style={styles.label}>Saved Tours</Text>}
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/log-out.png")}
+                    style={{ height: 30, width: 30 }}
+                    source={require("../../assets/heart.png")}
                   />
                 )}
                 onPress={() => {
@@ -154,12 +150,29 @@ const DrawerContent = (props) => {
                 }}
               />
               <DrawerItem
-                label={() => <Text style={styles.label}>Profile</Text>}
+                label={() => <Text style={styles.label}>Shop</Text>}
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/Drawer Icons/Profile.png")}
+                    style={{ height: 30, width: 30 }}
+                    source={require("../../assets/heart.png")}
+                  />
+                )}
+                // onPress={() => {
+                //   props.navigation.navigate("WishList");
+                // }}
+              />
+              <DrawerItem
+                label={() => <Text style={styles.label}>Profile</Text>}
+                icon={() => (
+                  <Image
+                    style={{
+                      height: 30,
+                      width: 30,
+                      // marginLeft: 10,
+                      // marginRight: 3,
+                    }}
+                    source={require("../../assets/Profiles.png")}
                   />
                 )}
                 onPress={() => {
@@ -171,18 +184,23 @@ const DrawerContent = (props) => {
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
                   <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../assets/log-out.png")}
+                    style={{
+                      height: 30,
+                      width: 30,
+                      // marginLeft: 5,
+                      // marginRight: 3,
+                    }}
+                    source={require("../../assets/setting.png")}
                   />
                 )}
                 onPress={() => {}}
               />
               <DrawerItem
-                label={() => <Text style={styles.label}>Visa Details</Text>}
+                label={() => <Text style={styles.label}>Visa Assistance</Text>}
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
-                  <View style={{ marginHorizontal: 9 }}>
-                    <FontAwesome5 name="passport" size={25} color="#C1C5C6" />
+                  <View style={{ marginHorizontal: 5 }}>
+                    <FontAwesome5 name="passport" size={23} color="#C1C5C6" />
                   </View>
                 )}
                 onPress={() => {
@@ -205,7 +223,19 @@ const DrawerContent = (props) => {
         /> */}
 
             <DrawerItem
-              label={() => <Text style={styles.label}>Log Out</Text>}
+              label={() => (
+                <Text
+                  style={{
+                    marginBottom: HEIGHT / 10,
+                    color: "#FFF",
+                    fontWeight: "bold",
+                    //fontFamily: "Avenir",
+                    fontSize: 16,
+                  }}
+                >
+                  Log Out
+                </Text>
+              )}
               onPress={() => {
                 console.log("clicked");
                 firebase.auth().signOut();
@@ -217,7 +247,7 @@ const DrawerContent = (props) => {
               //   icon={({ color, size }) => <Feather name="menu" />}
               icon={() => (
                 <Image
-                  style={{ height: 40, width: 40 }}
+                  style={{ height: 30, width: 30, marginBottom: HEIGHT / 10 }}
                   source={require("../../assets/log-out.png")}
                 />
               )}
@@ -253,7 +283,7 @@ const styles = new StyleSheet.create({
   label: {
     color: "#FFF",
     fontWeight: "bold",
-    // fontFamily: "Avenir",
+    //fontFamily: "Avenir",
     fontSize: 16,
   },
 });

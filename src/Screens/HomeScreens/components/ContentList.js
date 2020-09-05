@@ -10,34 +10,49 @@ import {
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
 
-const ContentList = ({ title, more, navigation, route, data }) => {
-  const [fontLoaded, setFont] = useState(false);
+const ContentList = ({ title, more, navigation, route, data, content }) => {
+  // const [fontLoaded, setFont] = useState(false);
 
-  const fetchFont = async () => {
-    await Font.loadAsync({
-      Andika: require("../../../../assets/fonts/Andika-Regular.ttf"),
-    });
-    setFont(true);
-  };
-  useEffect(() => {
-    fetchFont();
-  }, []);
+  // const fetchFont = async () => {
+  //   await Font.loadAsync({
+  //     Andika: require("../../../../assets/fonts/Andika-Regular.ttf"),
+  //   });
+  //   setFont(true);
+  // };
+  // useEffect(() => {
+  //   fetchFont();
+  // }, []);
 
-  //   console.log(navigation, "hggj");
-  //   console.log(data, "jhhjg");
-  if (!fontLoaded) {
-    console.log("not");
-    return <AppLoading />;
-  }
+  // //   console.log(navigation, "hggj");
+  // //   console.log(data, "jhhjg");
+  // if (!fontLoaded) {
+  //   console.log("not");
+  //   return <AppLoading />;
+  // }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.titleStyle}>{title}</Text>
-      <TouchableOpacity
-        onPress={() => navigation.navigate(route, { name: "" })}
-      >
-        <Text style={styles.more}>{more}</Text>
-      </TouchableOpacity>
+      <View>
+        <Text style={styles.titleStyle}>{title}</Text>
+        <Text
+          style={{
+            marginTop: 5,
+            marginBottom: 10,
+            fontFamily: "WSansl",
+            fontStyle: "normal",
+            fontWeight: "900",
+          }}
+        >
+          {content}
+        </Text>
+      </View>
+      {more === "" ? null : (
+        <TouchableOpacity
+          onPress={() => navigation.navigate(route, { name: "" })}
+        >
+          <Text style={styles.more}>{more}</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -49,15 +64,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   titleStyle: {
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 0,
-    fontFamily: "Andika",
+    marginTop: 30,
+    fontFamily: "NewYorkl",
+    fontStyle: "normal",
   },
   more: {
-    fontSize: 15,
+    fontSize: 10,
     // color: "#EA7773",
-    fontFamily: "Andika",
-    marginRight: 15,
+    // fontFamily: "Roboto",
+    marginTop: -6,
+    marginRight: 10,
+    backgroundColor: "#626E7B",
+    color: "white",
+    padding: 8,
+    borderRadius: 5,
   },
 });
 export default ContentList;

@@ -4,6 +4,7 @@ import { DatePicker } from "native-base";
 import {
   View,
   StyleSheet,
+  ScrollView,
   Dimensions,
   Text,
   Image,
@@ -41,6 +42,26 @@ const PlannedTourScreen = ({ navigation }) => {
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
   const { isLoggedIn } = useContext(AuthContext);
+  const [date, setDate] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
+  let random;
+  let formatedMonth;
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigation.replace("SignInScreen");
+    }
+  });
+  useEffect(() => {
+    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
+    const requestDate = new Date();
+    let currentYear = requestDate.getFullYear();
+    setDate(requestDate.getDate());
+    setMonth(requestDate.getMonth() + 1);
+    setYear(currentYear.toString().slice(2, 5));
+    formatedMonth = month < 10 ? "0" + month : month;
+  });
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -68,8 +89,7 @@ const PlannedTourScreen = ({ navigation }) => {
     setStep(step - 1);
   };
 
-  const description = `This tour is perfect for all busy-bee travel enthusiasts! Our itinerary completely depends on you and your preferences and wepersonalize the whole tour accordingly
-   We offer you a complete list ofthings to do, places to visit, etc. and further prepare an appropriate itinerary for you within your budget and according to your travel preferences, making the experience worth every penny!`;
+  const description = `This tour is perfect for all busy-bee travel enthusiasts! Our itinerary completely depends on you and your preferences and wepersonalize the whole tour accordingly We offer you a complete list ofthings to do, places to visit, etc. and further prepare an appropriate itinerary for you within your budget and according to your travel preferences, making the experience worth every penny!`;
 
   const renderForm = (step) => {
     switch (step) {
@@ -166,18 +186,32 @@ const PlannedTourScreen = ({ navigation }) => {
               />
             </View>
             <View style={{ marginVertical: 20 }}>
-              <Text style={{ fontSize: 20, textAlign: "center" }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  textAlign: "center",
+                  fontFamily: "NewYorkl",
+                }}
+              >
                 When do you want to embark on your journey?
               </Text>
               <View style={styles.dateContainer}>
                 <View style={{ width: WIDTH / 4 }}>
-                  <Text style={{ fontSize: 20 }}>From:</Text>
+                  <Text style={{ fontSize: 20, fontFamily: "Andika" }}>
+                    From:
+                  </Text>
                 </View>
                 <View style={styles.dateContainer}>
                   <View>
                     <TouchableOpacity onPress={showDatePicker}>
                       {fromDate == "" ? (
-                        <Text style={{ fontSize: 16, marginRight: 18 }}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            marginRight: 18,
+                            // fontFamily: "Andika",
+                          }}
+                        >
                           Select date
                         </Text>
                       ) : (
@@ -200,7 +234,15 @@ const PlannedTourScreen = ({ navigation }) => {
               </View>
               <View style={styles.dateContainer}>
                 <View style={{ width: WIDTH / 6 }}>
-                  <Text style={{ fontSize: 20, marginLeft: 20 }}>To:</Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginLeft: WIDTH / 12,
+                      fontFamily: "Andika",
+                    }}
+                  >
+                    To:
+                  </Text>
                 </View>
                 <View style={styles.dateContainer}></View>
 
@@ -245,6 +287,63 @@ const PlannedTourScreen = ({ navigation }) => {
             budget={budget}
           />
         );
+
+      case 9:
+        return (
+          <View
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          >
+            <View
+              style={{
+                height: HEIGHT * 0.8,
+                alignItems: "center",
+                justifyContent: "center",
+                width: WIDTH,
+              }}
+            >
+              <Image
+                style={{ height: HEIGHT / 3, width: WIDTH * 0.7 }}
+                source={{
+                  uri:
+                    "https://image.freepik.com/free-vector/thank-you-with-character-vector_2029-149.jpg",
+                }}
+              />
+            </View>
+            {/* <Text style={styles.text}>
+              Request Id : {`T0-${date}${formatedMonth}${year}-${random}`}
+            </Text>
+            <Text style={styles.text}>Status: 'Query Received'</Text>
+            <Text style={styles.text}>Name: {name}</Text>
+            <Text style={styles.text}>Number: {number}</Text>
+            <Text style={styles.text}>Budget: {budget}</Text>
+            <Text style={styles.text}>Adult: {adult}</Text>
+            <Text style={styles.text}>Children : {children}</Text>
+            <Text style={styles.text}>From Date: {fromDate}</Text>
+            <Text style={styles.text}>To Date: {toDate}</Text>
+            <Text style={styles.text}>Destination: {destination}</Text>
+            <Text style={styles.text}>Preferance: {preferanece}</Text>
+            <Text style={styles.text}>Start Point: {startPoint}</Text>
+            <Text style={styles.text}>Tour Type: {tourType}</Text>
+            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
+            <Text style={styles.text}>Traveller Type: {travellerType}</Text> */}
+            <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+              <View style={{ alignItems: "center", margin: 10 }}>
+                <Text
+                  style={{
+                    // backgroundColor: "red",
+                    textAlign: "center",
+                    padding: 8,
+                    borderWidth: 1,
+                    borderColor: "black",
+                    borderRadius: 20,
+                  }}
+                >
+                  Back to Home
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
       default:
         break;
     }
@@ -252,13 +351,15 @@ const PlannedTourScreen = ({ navigation }) => {
 
   const submitData = () => {
     const user = firebase.auth().currentUser;
-    console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
     const userID = user.uid;
     console.log(userID);
+
     firebase
       .database()
       .ref(`planned-tours/${userID}`)
       .push({
+        requestID: `T0-${date}${formatedMonth}${year}-${random}`,
+        tourCategory: "Planned Tour",
         tourType: tourType,
         travellerType: travellerType,
         fromDate: fromDate,
@@ -272,8 +373,12 @@ const PlannedTourScreen = ({ navigation }) => {
         name: name,
         number: number,
         budget: budget,
+        status: "Query Received",
       })
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log(data);
+        nextStep();
+      })
       .catch((err) => console.log(err));
     // console.log(
     //   tourType,
@@ -292,54 +397,53 @@ const PlannedTourScreen = ({ navigation }) => {
     // );
   };
 
-  if (!isLoggedIn) {
-    navigation.navigate("SignUpScreen");
-  }
-
   return (
-    <View style={styles.container}>
-      <View style={styles.arrowsContainer}>
-        {step == 1 ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack("Home");
-              //   console.log("logged");
+    <ScrollView style={styles.container}>
+      {step == 9 ? null : (
+        <View style={styles.arrowsContainer}>
+          {step == 1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack("Home");
+                //   console.log("logged");
+              }}
+            >
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => prevStep()}>
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "NewYorkl",
+              marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
             }}
           >
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => prevStep()}>
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        )}
+            Planned Tour
+          </Text>
 
-        <Text
-          style={{
-            fontSize: 20,
-            marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
-          }}
-        >
-          Planned Tour
-        </Text>
-
-        <TouchableOpacity
-          onPress={() => {
-            nextStep();
-          }}
-        >
-          {step !== 8 ? (
-            <View>
-              <AntDesign name="arrowright" size={28} />
-            </View>
-          ) : null}
-        </TouchableOpacity>
-      </View>
-      {step == 1 ? null : (
+          <TouchableOpacity
+            onPress={() => {
+              nextStep();
+            }}
+          >
+            {step !== 8 && step !== 2 && step !== 3 && step !== 5 ? (
+              <View>
+                <AntDesign name="arrowright" size={28} />
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        </View>
+      )}
+      {step == 1 || step == 9 ? null : (
         <View style={styles.progressContainer}>
           <View
             style={{
@@ -356,7 +460,7 @@ const PlannedTourScreen = ({ navigation }) => {
         </View>
       )}
       {renderForm(step)}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -375,7 +479,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   dateContainer: {
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "row",
     marginVertical: 20,
@@ -398,5 +502,11 @@ const styles = StyleSheet.create({
     width: WIDTH,
     alignItems: "center",
     marginTop: 20,
+  },
+  text: {
+    marginTop: 8,
+    fontSize: 16,
+    fontFamily: "Andika",
+    textAlign: "justify",
   },
 });

@@ -27,7 +27,9 @@ const Travellertype = ({
   return (
     <View>
       <View style={{ marginVertical: HEIGHT / 20, marginHorizontal: 5 }}>
-        <Text style={{ fontSize: 18, textAlign: "center" }}>
+        <Text
+          style={{ fontSize: 15, textAlign: "center", fontFamily: "NewYorkl" }}
+        >
           Are you the Solo traveller kind or the more the merrier kind? Select
           your tour companions.
         </Text>
@@ -58,6 +60,7 @@ const Travellertype = ({
                     textAlign: "center",
                     fontSize: 20,
                     marginVertical: 10,
+                    fontFamily: "Andika",
                   }}
                 >
                   Solo
@@ -89,6 +92,7 @@ const Travellertype = ({
                     textAlign: "center",
                     fontSize: 20,
                     marginVertical: 10,
+                    fontFamily: "Andika",
                   }}
                 >
                   Family
@@ -124,6 +128,7 @@ const Travellertype = ({
                     textAlign: "center",
                     fontSize: 20,
                     marginVertical: 10,
+                    fontFamily: "Andika",
                   }}
                 >
                   Friends
@@ -155,6 +160,7 @@ const Travellertype = ({
                     textAlign: "center",
                     fontSize: 20,
                     marginVertical: 10,
+                    fontFamily: "Andika",
                   }}
                 >
                   Honeymoon

@@ -1,4 +1,11 @@
-import { YellowBox, View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  YellowBox,
+  View,
+  Text,
+  StyleSheet,
+  AppLoading,
+  Dimensions,
+} from "react-native";
 YellowBox.ignoreWarnings(["Remote debugger"]);
 YellowBox.ignoreWarnings(["Setting a timer"]);
 import React, { useState, useEffect, useMemo } from "react";
@@ -12,6 +19,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import AsyncStorage from "@react-native-community/async-storage";
 import Animated from "react-native-reanimated";
+import * as Font from "expo-font";
 
 import firebase from "firebase";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -20,6 +28,8 @@ import MyPlansScreen from "./src/Screens/AccountScreens/MyPlansScreen";
 import ProfileScreen from "./src/Screens/AccountScreens/ProfileScreen";
 import VisaDetailsScreen from "./src/Screens/AccountScreens/VisaDetailsScreen";
 import WishListScreen from "./src/Screens/AccountScreens/WishListScreen";
+import RequestInner from "./src/Screens/AccountScreens/RequestInner";
+import VisaInner from "./src/Screens/AccountScreens/VisaInner";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCZ2bo_iPbtvarsADQe84qX2s9cWPMq3U",
@@ -37,13 +47,38 @@ firebase.initializeApp(firebaseConfig);
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(null);
-  // const [progress, setProgress] = useState(new Animated.Value(0));
+  const [fontLoaded, setFont] = useState(false);
 
-  const setStatus = (value) => {
-    setIsLoggedIn(value);
+  const fetchFont = async () => {
+    await Font.loadAsync({
+      // Futura: require("../../../assets/fonts/Futura Std Medium.ttf"),
+      Andika: require("./assets/fonts/Andika-Regular.ttf"),
+      Avenir: require("./assets/fonts/AvenirLTStd-Black.otf"),
+      SfProDisplay: require("./assets/fonts/SF-Pro-Display-Black.otf"),
+      NewYorkl: require("./assets/fonts/NewYorkLargeBlack.otf"),
+      // NewYork400: require("../../../assets/fonts/NEW YORK 400.ttf"),
+      Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
+      WSans: require("./assets/fonts/WorkSans-Black.ttf"),
+      WSansl: require("./assets/fonts/WorkSans-Light.ttf"),
+      SFProDisplayRegular: require("./assets/fonts/SF-Pro-Display-Regular.otf"),
+      SFProTextRegular: require("./assets/fonts/SF-Pro-Text-Regular.otf"),
+    });
+
+    setFont(true);
   };
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      fetchFont();
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user, "MANIVASAGAM");
+        setUser(user);
+      });
+    }
+    return () => (mounted = false);
+  }, []);
 
   const getToken = async () => {
     try {
@@ -51,6 +86,7 @@ const App = () => {
       const userToken = JSON.parse(data);
       console.log(userToken, "TOKEn");
       if (userToken !== null) {
+        setUser(userToken);
         setIsLoggedIn(true);
       }
     } catch (e) {
@@ -62,55 +98,14 @@ const App = () => {
     getToken();
   }, []);
 
-  // const Scale = Animated.interpolate(progress, {
-  //   inputRange: [0, 1],
-  //   outputRange: [1, 0.8],
-  // });
-
-  // const borderRadius = Animated.interpolate(progress, {
-  //   inputRange: [0, 1],
-  //   outputRange: [0, 16],
-  // });
-
-  // const animatedStyles = { borderRadius, transform: [{ Scale }] };
-
-  //   const RootStack = createStackNavigator();
-
-  //  const RootStackScreen = () => {
-  //    return (
-  //     <RootStack.Navigator>
-  //       {/* <RootStack.Screen name="GettingStarted" component={GettingStartedScreen} />
-  //       <RootStack.Screen name="SignInScreen" component={SignInScreen} />
-  //       <RootStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
-  //       <RootStack.Screen name="Main" component={MainTabScreen} />
-  //     </RootStack.Navigator>
-  //    )
-  //     }
-
   const AccountStack = createStackNavigator();
 
-  // const AccountStackScreen = ({ navigation, style }) => {
-  //   return (
-  //     <AccountStack.Navigator
-  //       screenOptions={{
-  //         headerTransparent: true,
-  //         headerTitle: null,
-  //       }}
-  //     >
-  //       <AccountStack.Screen name="MyRequest" component={MyRequestScreen} />
-  //       <AccountStack.Screen name="MyPlans" component={MyPlansScreen} />
-  //       <AccountStack.Screen name="Profile" component={ProfileScreen} />
-  //       <AccountStack.Screen name="Visa" component={VisaDetailsScreen} />
-  //       <AccountStack.Screen name="WishList" component={WishListScreen} />
-  //     </AccountStack.Navigator>
-  //   );
-  // };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
       <NavigationContainer>
         <Drawer.Navigator
-          drawerType="slide"
+          drawerType="slides"
           screenOptions={{
             gestureEnabled: true,
           }}
@@ -129,74 +124,15 @@ const App = () => {
           <Drawer.Screen name="MyPlans" component={MyPlansScreen} />
           <Drawer.Screen name="Profile" component={ProfileScreen} />
           <Drawer.Screen name="Visa" component={VisaDetailsScreen} />
+          <Drawer.Screen name="VisaInner" component={VisaInner} />
           <Drawer.Screen name="WishList" component={WishListScreen} />
+          <Drawer.Screen name="RequestInner" component={RequestInner} />
         </Drawer.Navigator>
-        {/* {isLoggedIn ? <AuthStackScreen /> : <RootStackScreen />} */}
-        {/* <RootStackScreen /> */}
-        {/* <DrawerScreen /> */}
       </NavigationContainer>
     </AuthContext.Provider>
-  );
+  )
+
+ 
 };
 
 export default App;
-
-// const styles = new StyleSheet.create({
-//   drawerStyles: { flex: 1, width: "50%", backgroundColor: "transparent" },
-//   stack: {
-//     flex: 1,
-//     shadowColor: "#FFF",
-//     shadowOffset: {
-//       width: 0,
-//       height: 8,
-//     },
-//     shadowOpacity: 0.44,
-//     shadowRadius: 10.32,
-//     elevation: 5,
-//     // overflow: 'scroll',
-//     // borderWidth: 1,
-//   },
-// });
-
-{
-  /* <LinearGradient style={{ flex: 1 }} colors={["#E94057", "#4A00E0"]}>
-          <Drawer.Navigator
-            drawerType="slide"
-            overlayColor="transparent"
-            sceneContainerStyle={{ backgroundColor: "blue" }}
-            drawerContent={(props) => {
-              setProgress(props.progress);
-              return (
-                <View
-                  style={{
-                    ...props,
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text>welcome</Text>
-                </View>
-              );
-            }}
-            drawerStyle={styles.drawerStyle}
-            drawerContentOptions={{
-              activeTintColor: "green",
-              inactiveTintColor: "green",
-              activeBackgroundColor: "#333",
-            }}
-          >
-            <Drawer.Screen name="H" component={RootStackScreen} />
-            <Drawer.Screen name="Screens">
-              {(props) => (
-                <AccountStackScreen {...props} style={animatedStyles} />
-              )}
-            </Drawer.Screen>
-            {/* <Drawer.Screen name="A" component={AccountStackScreen} />
-          <Drawer.Screen name="B" component={AccountStackScreen} />
-          <Drawer.Screen name="c" component={AccountStackScreen} />
-          <Drawer.Screen name="D" component={AccountStackScreen} />
-          <Drawer.Screen name="E" component={AccountStackScreen} /> 
-          </Drawer.Navigator>
-        </LinearGradient> */
-}

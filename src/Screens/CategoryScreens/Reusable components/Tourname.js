@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-
+import { LinearGradient } from "expo-linear-gradient";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -32,30 +32,40 @@ const Tourname = ({ imgSrc, step, description }) => {
         />
       </View>
 
-      <View style={{ marginHorizontal: WIDTH / 9 }}>
-        <Text style={{ fontSize: 14, fontStyle: "italic" }}>{description}</Text>
+      <View style={{ marginHorizontal: WIDTH / 9, marginTop: WIDTH / 10 }}>
+        <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+          {description}
+        </Text>
       </View>
 
       <TouchableOpacity onPress={step}>
         <View style={styles.buttonContainer}>
-          <Text style={styles.buttonText}>Get Started</Text>
+          <LinearGradient
+            colors={["#9EB19E", "#9EB19E"]}
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.buttonText}>Get Started</Text>
+          </LinearGradient>
         </View>
       </TouchableOpacity>
     </View>
   );
 };
 
+// backgroundColor: "#FFB400",
 const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     justifyContent: "center",
     marginTop: 15,
+    borderRadius: 10,
   },
   buttonText: {
-    borderWidth: 2,
-    borderColor: "black",
-    padding: 10,
-    borderRadius: 20,
+    // borderWidth: 2,
+    // borderColor: "black",
+    // backgroundColor: "#ECF6F9",
+    padding: 15,
+
     fontSize: 18,
   },
 });

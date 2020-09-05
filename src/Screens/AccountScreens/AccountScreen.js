@@ -55,151 +55,173 @@ const AccountScreen = ({ navigation }) => {
         backgroundColor: "#FFF",
       }}
     >
-      {isLoggedIn ? (
-        <View>
-          <View
-            style={{
-              width: WIDTH,
-              height: HEIGHT / 4,
-              backgroundColor: "#28C9E1",
-            }}
-          ></View>
-          <Container
-            style={{
-              flex: 1,
-              height: HEIGHT,
-              backgroundColor: "#FFF",
-              top: -14,
-              borderTopLeftRadius: 25,
-              borderTopRightRadius: 25,
-            }}
-          >
-            <Content>
-              <List showsVerticalScrollIndicator={false}>
-                <TouchableOpacity>
-                  <ListItem style={{ marginTop: 30 }}>
-                    {/* <Feather
-                      name="inbox"
-                      size={30}
-                      color="black"
-                      style={{ marginRight: 20 }}
-                    /> */}
-                    <Image
-                      style={{ height: 30, width: 30, marginRight: 20 }}
-                      source={require("../../../assets/Drawer Icons/Profile.png")}
-                    />
-                    <Text>My Request</Text>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem>
-                    <Feather
-                      name="bookmark"
-                      size={30}
-                      color="black"
-                      style={{ marginRight: 20 }}
-                    />
-                    <Text>My Plans</Text>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem>
-                    <Feather
-                      name="heart"
-                      size={30}
-                      color="black"
-                      style={{ marginRight: 20 }}
-                    />
-                    <Text>Wish List </Text>
-                  </ListItem>
-                </TouchableOpacity>
-                <ListItem>
-                  <FontAwesome
-                    name="support"
-                    size={30}
-                    color="black"
-                    style={{ marginRight: 20 }}
-                  />
-                  <Text>Support</Text>
-                </ListItem>
-                <ListItem>
-                  <MaterialCommunityIcons
-                    name="account-circle-outline"
-                    size={30}
-                    color="black"
-                    style={{ marginRight: 20 }}
-                  />
-                  <Text>Profile</Text>
-                </ListItem>
-                <ListItem>
-                  <MaterialCommunityIcons
-                    name="passport"
-                    size={30}
-                    color="black"
-                    style={{ marginRight: 20 }}
-                  />
-                  <Text>Visa Details</Text>
-                </ListItem>
-              </List>
-            </Content>
-          </Container>
+      <Text style={{ fontFamily: "Andika", fontSize: 20, marginTop: 20 }}>
+        Andika
+      </Text>
+      <Text style={{ fontFamily: "Avenir", fontSize: 20, marginTop: 20 }}>
+        Avenir
+      </Text>
+      <Text style={{ fontFamily: "SfProDisplay", fontSize: 20, marginTop: 20 }}>
+        Sf Pro Display
+      </Text>
+      <Text style={{ fontFamily: "NewYorkl", fontSize: 20, marginTop: 20 }}>
+        New York Large
+      </Text>
+      <Text style={{ fontFamily: "Roboto", fontSize: 20, marginTop: 20 }}>
+        Roboto
+      </Text>
+      <Text
+        style={{
+          fontFamily: "SFProDisplayRegular",
+          fontSize: 20,
+          marginTop: 20,
+        }}
+      >
+        SF Pro Display Regular
+      </Text>
+      <Text
+        style={{
+          fontFamily: "SFProTextRegular",
+          fontSize: 20,
+          marginTop: 20,
+        }}
+      >
+        SF Pro Text Regular
+      </Text>
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Home");
-              firebase.auth().signOut();
-              setUser(null);
-              setIsLoggedIn(false);
-            }}
-          >
-            <ListItem>
-              <Feather
-                name="log-out"
-                size={30}
-                color="black"
-                style={{ marginRight: 10 }}
-              />
-              <Text>Log Out</Text>
-            </ListItem>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("SignInScreen");
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#28C9E1",
-              padding: 10,
-              borderRadius: 20,
-            }}
-          >
-            <Text style={{ fontFamily: "Avenir" }}> Log In</Text>
-          </View>
-        </TouchableOpacity>
-      )}
-
-      {/* <Progress.Bar progress={0.3} width={200} />
-      <Progress.Pie progress={0.4} size={50} />
-      <Progress.Circle size={30} indeterminate={true} /> */}
-      {/* <Progress.CircleSnail color={["red", "green", "blue"]} /> */}
-
-      {/* <View>
-        <Text>Apple</Text>
-        <Divider />
-        <Text>Orange</Text>
-        <Divider />
-      </View> */}
-      {/* <View style={{ alignItems: "center" }}>
-        <Image
-          style={{ height: 250, width: 250, borderRadius: 40 }}
-          source={require("../../../assets/logo.jpeg")}
-        />
-      </View> */}
+      <Text style={{ fontFamily: "WSans", fontSize: 20, marginTop: 20 }}>
+        WSans
+      </Text>
+      <Text style={{ fontFamily: "WSansl", fontSize: 20, marginTop: 20 }}>
+        WSans L
+      </Text>
     </View>
   );
 };
 
 export default AccountScreen;
+// {isLoggedIn ? (
+//   <View>
+//     <View
+//       style={{
+//         width: WIDTH,
+//         height: HEIGHT / 4,
+//         backgroundColor: "#28C9E1",
+//       }}
+//     ></View>
+//     <Container
+//       style={{
+//         flex: 1,
+//         height: HEIGHT,
+//         backgroundColor: "#FFF",
+//         top: -14,
+//         borderTopLeftRadius: 25,
+//         borderTopRightRadius: 25,
+//       }}
+//     >
+//       <Content>
+//         <List showsVerticalScrollIndicator={false}>
+//           <TouchableOpacity>
+//             <ListItem style={{ marginTop: 30 }}>
+//               {/* <Feather
+//                 name="inbox"
+//                 size={30}
+//                 color="black"
+//                 style={{ marginRight: 20 }}
+//               /> */}
+//               {/* <Image
+//                 style={{ height: 30, width: 30, marginRight: 20 }}
+//                 source={require("../../../assets/Drawer Icons/Profile.png")}
+//               /> */}
+//               <Text>My Request</Text>
+//             </ListItem>
+//           </TouchableOpacity>
+//           <TouchableOpacity>
+//             <ListItem>
+//               <Feather
+//                 name="bookmark"
+//                 size={30}
+//                 color="black"
+//                 style={{ marginRight: 20 }}
+//               />
+//               <Text>My Plans</Text>
+//             </ListItem>
+//           </TouchableOpacity>
+//           <TouchableOpacity>
+//             <ListItem>
+//               <Feather
+//                 name="heart"
+//                 size={30}
+//                 color="black"
+//                 style={{ marginRight: 20 }}
+//               />
+//               <Text>Wish List </Text>
+//             </ListItem>
+//           </TouchableOpacity>
+//           <ListItem>
+//             <FontAwesome
+//               name="support"
+//               size={30}
+//               color="black"
+//               style={{ marginRight: 20 }}
+//             />
+//             <Text>Support</Text>
+//           </ListItem>
+//           <ListItem>
+//             <MaterialCommunityIcons
+//               name="account-circle-outline"
+//               size={30}
+//               color="black"
+//               style={{ marginRight: 20 }}
+//             />
+//             <Text>Profile</Text>
+//           </ListItem>
+//           <ListItem>
+//             <MaterialCommunityIcons
+//               name="passport"
+//               size={30}
+//               color="black"
+//               style={{ marginRight: 20 }}
+//             />
+//             <Text>Visa Details</Text>
+//           </ListItem>
+//         </List>
+//       </Content>
+//     </Container>
+
+//     <TouchableOpacity
+//       onPress={() => {
+//         navigation.navigate("Home");
+//         firebase.auth().signOut();
+//         setUser(null);
+//         setIsLoggedIn(false);
+//       }}
+//     >
+//       <ListItem>
+//         <Feather
+//           name="log-out"
+//           size={30}
+//           color="black"
+//           style={{ marginRight: 10 }}
+//         />
+//         <Text>Log Out</Text>
+//       </ListItem>
+//     </TouchableOpacity>
+//   </View>
+// ) : (
+//   <TouchableOpacity
+//     onPress={() => {
+//       navigation.navigate("SignInScreen");
+//     }}
+//   >
+//     <View
+//       style={{
+//         backgroundColor: "#28C9E1",
+//         padding: 10,
+//         borderRadius: 20,
+//       }}
+//     >
+//       <Text style={{ fontFamily: "Avenir" }}> Log In</Text>
+//     </View>
+//   </TouchableOpacity>
+// )}

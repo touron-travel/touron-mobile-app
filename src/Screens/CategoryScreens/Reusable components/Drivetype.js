@@ -69,14 +69,14 @@ const Drivetype = ({
             }}
           >
             <View style={styles.travelTypeView}>
-              <View styles={[styles.travelTypeView]}>
+              <View styles={[styles.travelTypeView, { width: WIDTH / 1.8 }]}>
                 <View style={{ position: "absolute", top: -30, right: -20 }}>
                   {driveType == "Own Bike/Car" ? <Checked /> : null}
                 </View>
                 <Image
                   style={{
                     height: HEIGHT / 6,
-                    width: 130,
+                    width: WIDTH / 3,
                     marginVertical: 10,
                   }}
                   source={{ uri: imgSrc2 }}
@@ -183,7 +183,6 @@ const styles = StyleSheet.create({
   },
   travelTypeView: {
     width: WIDTH / 2,
-
     height: HEIGHT / 3.9,
     alignItems: "center",
   },

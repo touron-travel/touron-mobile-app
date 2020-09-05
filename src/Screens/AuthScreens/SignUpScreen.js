@@ -3,10 +3,15 @@ import AsyncStorage from "@react-native-community/async-storage";
 import {
   View,
   Text,
+  KeyboardAvoidingView,
   TouchableOpacity,
+  ImageBackground,
   StyleSheet,
   Dimensions,
   Alert,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
   TextInput,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,17 +25,15 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 function SignUpScreen({ navigation }) {
-  const [number, setNumber] = useState(0);
+  const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [step, setStep] = useState(0);
   const [code, setCode] = useState(0);
   const [sessionID, setSessionID] = useState("");
-  console.log(name, number, email);
-
   const [loaded, setLoaded] = useState(true);
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -43,32 +46,9 @@ function SignUpScreen({ navigation }) {
       const userToken = JSON.stringify(value);
       await AsyncStorage.setItem("userToken", userToken);
     } catch (e) {
-      // saving error
       console.log(e);
     }
   };
-
-  // const updateProfile = () => {
-  //   const userProfile = firebase.auth().currentUser;
-  //   userProfile
-  //     .updateProfile({
-  //       displayName: name,
-  //     })
-  //     .then(() => {
-  //       var displayName = userProfile.displayName;
-  //       console.log(displayName, "NAME");
-  //     })
-  //     .catch((err) => console.log(err));
-  //   // userProfile
-  //   //   .updatePhoneNumber({ phoneNumber: number })
-  //   //   .then((data) => {
-  //   //     var phone = userProfile.phoneNumber;
-  //   //     console.log(phone);
-  //   //   })
-  //   //   .catch((err) => console.log(err));
-  //   console.log(userProfile.displayName, "UPDTED ONE");
-  //   storeToken(userProfile);
-  // };
 
   const nextStep = () => {
     setStep(step + 1);
@@ -78,9 +58,10 @@ function SignUpScreen({ navigation }) {
   };
 
   const sendOtp = () => {
+    console.log("clicked");
     axios
       .get(
-        `https://2factor.in/API/V1/bba9d328-d970-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN`
+        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN`
       )
       .then((response) => {
         //console.log(response.data);
@@ -94,7 +75,7 @@ function SignUpScreen({ navigation }) {
   const verifyOtp = () => {
     axios
       .get(
-        `https://2factor.in/API/V1/bba9d328-d970-11ea-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
+        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
       )
       .then((response) => {
         console.log(response, "RESPONSE");
@@ -105,25 +86,34 @@ function SignUpScreen({ navigation }) {
             .auth()
             .createUserWithEmailAndPassword(email, password)
             .then((user) => {
+              setUser(user);
+              firebase.database().ref("users").push({
+                name: name,
+                phoneNumber: number,
+                email: email,
+              });
+              setUser(user);
               setIsLoggedIn(true);
+              storeToken(user);
             })
-
             .catch((err) => console.log(err));
-
-          firebase.database().ref("users").push({
-            name: name,
-            phoneNumber: number,
-            email: email,
-          });
+          navigation.navigate("Main");
           prevStep();
         }
       })
       .catch((err) => Alert.alert("Otp is wrong"));
-    const userData = firebase.auth().currentUser;
-    if (userData !== null) {
-      navigation.navigate("Main");
-    }
   };
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      fetchFont();
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user, "MANIVASAGAM");
+        setUser(user);
+      });
+    }
+    return () => (mounted = false);
+  }, []);
 
   const renderView = (step) => {
     switch (step) {
@@ -132,7 +122,11 @@ function SignUpScreen({ navigation }) {
           <View>
             <View style={styles.skip}>
               <TouchableOpacity onPress={() => navigation.navigate("Main")}>
-                <Text style={{ fontSize: 18, color: "#333" }}>Skip</Text>
+                <Text
+                  style={{ fontSize: 18, color: "#333", fontWeight: "bold" }}
+                >
+                  Skip
+                </Text>
               </TouchableOpacity>
             </View>
             <View
@@ -141,10 +135,28 @@ function SignUpScreen({ navigation }) {
                 justifyContent: "flex-end",
               }}
             >
-              <Animatable.View animation="fadeInUp" duration={1500}>
+              <Animatable.View
+                animation="fadeInUp"
+                duration={1500}
+                style={{ alignItems: "center" }}
+              >
+                <View
+                  style={{ marginBottom: HEIGHT / 7, alignItems: "center" }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 40,
+                      color: "white",
+                      fontFamily: "NewYorkl",
+                    }}
+                  >
+                    Sign Up
+                  </Text>
+                </View>
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
+                    value={name}
                     placeholder="Name"
                     keyboardType="visible-password"
                     keyboardAppearance="dark"
@@ -156,6 +168,7 @@ function SignUpScreen({ navigation }) {
                   <TextInput
                     style={styles.input}
                     placeholder="Email"
+                    value={email}
                     keyboardType="visible-password"
                     keyboardAppearance="dark"
                     keyboardType="email-address"
@@ -165,6 +178,7 @@ function SignUpScreen({ navigation }) {
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
+                    value={number.toString()}
                     placeholder="Phone Number"
                     keyboardAppearance="dark"
                     keyboardType="number-pad"
@@ -174,7 +188,8 @@ function SignUpScreen({ navigation }) {
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    placeholder="Passord"
+                    placeholder="Password"
+                    value={password}
                     keyboardType="visible-password"
                     keyboardAppearance="dark"
                     keyboardType="email-address"
@@ -192,11 +207,23 @@ function SignUpScreen({ navigation }) {
                     <Text style={styles.optButtonText}>Send Otp</Text>
                   </View>
                 </TouchableOpacity>
-                <View style={{ position: "absolute", bottom: 20, left: 10 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 20,
+                    width: WIDTH * 0.9,
+                  }}
+                >
                   <TouchableOpacity
                     onPress={() => navigation.navigate("SignInScreen")}
                   >
-                    <Text style={{ fontWeight: "900" }}>
+                    <Text
+                      style={{
+                        fontWeight: "900",
+                        textAlign: "center",
+                        color: "white",
+                      }}
+                    >
                       Already have an account? Try Sign In
                     </Text>
                   </TouchableOpacity>
@@ -208,12 +235,31 @@ function SignUpScreen({ navigation }) {
       case 1:
         return (
           <View>
-            <TouchableOpacity onPress={() => prevStep()}>
-              <View style={{ paddingTop: 50 }}>
-                <AntDesign name="arrowleft" size={28} />
-              </View>
-            </TouchableOpacity>
-            <View style={{ justifyContent: "flex-end" }}>
+            <View
+              style={{
+                marginVertical: HEIGHT / 10,
+                //  justifyContent: "t",
+                position: "absolute",
+                bottom: HEIGHT * 0.7,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 25,
+                  color: "white",
+                  // marginBottom: 10,
+                  fontFamily: "Andika",
+                }}
+              >
+                Enter the otp send to
+              </Text>
+              <Text
+                style={{ fontSize: 25, color: "white", fontFamily: "Andika" }}
+              >
+                +91 {number}
+              </Text>
+            </View>
+            <View>
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.input}
@@ -223,15 +269,34 @@ function SignUpScreen({ navigation }) {
                   onChangeText={(value) => setCode(value)}
                 />
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  verifyOtp();
-                }}
-              >
-                <View style={styles.otpButton}>
-                  <Text style={styles.otpText}> Verify Otp</Text>
-                </View>
-              </TouchableOpacity>
+
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    prevStep();
+                  }}
+                >
+                  <View style={styles.otpButton}>
+                    <Text style={styles.otpText}> Back</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    verifyOtp();
+
+                    navigation.navigate("Main");
+                    prevStep();
+                  }}
+                >
+                  <View
+                    style={[styles.otpButton, { backgroundColor: "white" }]}
+                  >
+                    <Text style={[styles.otpText, { color: "black" }]}>
+                      Sign Up
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         );
@@ -239,15 +304,33 @@ function SignUpScreen({ navigation }) {
   };
 
   return (
-    <Animatable.View
-      duration={1000}
-      style={{
-        alignItems: "center",
-        justifyContent: "flex-end",
-      }}
-    >
-      {renderView(step)}
-    </Animatable.View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      {/* <KeyboardAvoidingView style={{ flex: 1 }} behavior="position"> */}
+      <Animatable.View
+        duration={1000}
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        <ImageBackground
+          style={{
+            width: WIDTH,
+            height: HEIGHT + 30,
+            position: "absolute",
+            //zIndex: -2,
+          }}
+          // source={require("../../../assets/loginimage.jpg")}
+          source={{
+            uri:
+              "https://images.pexels.com/photos/2249602/pexels-photo-2249602.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+          }}
+        />
+        {renderView(step)}
+      </Animatable.View>
+      {/* </KeyboardAvoidingView> */}
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -256,40 +339,46 @@ export default SignUpScreen;
 const styles = new StyleSheet.create({
   otpButton: {
     marginTop: HEIGHT / 25,
-    marginBottom: 45,
+    marginBottom: 85,
     backgroundColor: "black",
     borderRadius: 10,
-    width: WIDTH * 0.9,
+    width: WIDTH / 3,
     alignContent: "center",
+    marginHorizontal: 20,
+    paddingHorizontal: 10,
     position: "relative",
   },
   otpText: {
     textAlign: "center",
-    paddingVertical: 20,
+    paddingVertical: 10,
     color: "white",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Andika",
+    // fontWeight: "bold",
   },
   input: {
     marginHorizontal: 20,
     width: WIDTH * 0.8,
     height: 60,
+    color: "white",
+    fontFamily: "Andika",
   },
   inputContainer: {
     height: 60,
     borderRadius: 10,
-    backgroundColor: "white",
-    marginBottom: 30,
+    backgroundColor: "#0005",
+    marginBottom: 20,
   },
   optButtonText: {
     textAlign: "center",
     paddingVertical: 20,
     color: "white",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "Andika",
+    //  fontWeight: "bold",
   },
   otpButtonContainer: {
-    marginBottom: 45,
+    marginBottom: HEIGHT / 14,
     backgroundColor: "black",
     borderRadius: 10,
     width: WIDTH * 0.9,
@@ -299,6 +388,8 @@ const styles = new StyleSheet.create({
   skip: {
     position: "absolute",
     right: 20,
+    color: "#333",
+    fontWeight: "bold",
     marginTop: HEIGHT / 20,
   },
 });

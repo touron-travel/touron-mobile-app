@@ -41,7 +41,13 @@ const Destination = ({
           </View>
 
           <View>
-            <Text style={{ fontSize: 20, textAlign: "center" }}>
+            <Text
+              style={{
+                fontSize: 18,
+                textAlign: "center",
+                fontFamily: "NewYorkl",
+              }}
+            >
               FIND THE BEST PLANNED TOUR
             </Text>
             <View
@@ -64,7 +70,7 @@ const Destination = ({
                 }}
               >
                 <View style={{ width: WIDTH / 2.5 }}>
-                  <Text style={{ fontSize: 14 }}>
+                  <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
                     Enter the holiday destination
                   </Text>
                 </View>
@@ -74,7 +80,7 @@ const Destination = ({
                     style={{ width: 100 }}
                     multiline
                     onChangeText={(value) => setDestination(value)}
-                    placeholder="Maldives"
+                    placeholder="Ex.Maldives"
                   />
                 </View>
               </View>
@@ -88,8 +94,8 @@ const Destination = ({
                 }}
               >
                 <View style={{ width: WIDTH / 2.5 }}>
-                  <Text style={{ fontSize: 14 }}>
-                    Where would you like to start your trip from?
+                  <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                    Departure City
                   </Text>
                 </View>
                 <View>
@@ -98,7 +104,7 @@ const Destination = ({
                     multiline
                     style={{ width: 100 }}
                     onChangeText={(value) => setStartPoint(value)}
-                    placeholder="Chennai"
+                    placeholder="Ex.Chennai"
                   />
                 </View>
               </View>
@@ -112,7 +118,13 @@ const Destination = ({
                 }}
               >
                 <View>
-                  <Text style={{ fontSize: 14, marginRight: 11 }}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      marginLeft: 10,
+                      fontFamily: "Andika",
+                    }}
+                  >
                     Your preferences when you travel (Optional):
                   </Text>
                 </View>

@@ -153,10 +153,11 @@ const styles = StyleSheet.create({
   //   backgroundColor: "#fff",
   // },
   text: {
-    fontSize: 16,
+    fontSize: 15,
+    fontWeight: "900",
     justifyContent: "space-evenly",
     marginVertical: 10,
     marginHorizontal: 5,
-    fontFamily: "Andika",
+    fontFamily: "WSansl",
   },
 });

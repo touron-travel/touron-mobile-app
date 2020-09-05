@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import touron from "../api/touron";
 import * as firebase from "firebase";
+
+
+
+
 export default () => {
   const [country, setCountry] = useState([]);
   const [city, setCity] = useState([]);
@@ -12,7 +16,7 @@ export default () => {
       const countryResponse = await touron.get("/country");
 
       setCountry(countryResponse.data);
-      console.log(citResponse.data);
+      // console.log(citResponse.data);
     } catch (err) {
       setErrorMessage("Something went wrong");
     }

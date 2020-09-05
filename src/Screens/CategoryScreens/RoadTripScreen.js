@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
+  ScrollView,
   Text,
   View,
   Image,
@@ -18,10 +19,12 @@ import Travelmode from "./Reusable components/Travelmode";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { DatePicker } from "native-base";
 import Roadtripques from "./Reusable components/Roadtripques";
+import Roadtripques2 from "./Reusable components/Roadtripques2";
 import Drivetype from "./Reusable components/Drivetype";
 import * as firebase from "firebase";
 
 import { AuthContext } from "../../context/AuthContext";
+
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -37,15 +40,39 @@ const RoadTripScreen = ({ navigation }) => {
   const [driveDuration, setDriveDuration] = useState("");
   const [driveRestriction, setDriveRestriction] = useState("");
   const [stops, setStops] = useState("");
-  const [carRent, setCarRent] = useState("");
-  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [carRent, setCarRent] = useState(false);
+  const [additionalInfo, setAdditionalInfo] = useState(false);
   const [name, setName] = useState("");
   const [driveType, setDriveType] = useState("");
   const [driverType, setDriverType] = useState("");
   const [budget, setBudget] = useState("");
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
+  const [date, setDate] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
+  let random;
+  let formatedMonth;
+
+  const onCarRent = () => setIsSwitchOn(!carRent);
+
+  const onAdditionalInfo = () => setIsSwitchOn(!additionalInfo);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigation.replace("SignInScreen");
+    }
+  });
+  useEffect(() => {
+    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
+    const requestDate = new Date();
+    let currentYear = requestDate.getFullYear();
+    setDate(requestDate.getDate());
+    setMonth(requestDate.getMonth() + 1);
+    setYear(currentYear.toString().slice(2, 5));
+    formatedMonth = month < 10 ? "0" + month : month;
+  });
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -71,6 +98,7 @@ const RoadTripScreen = ({ navigation }) => {
   };
   const prevStep = () => {
     setStep(step - 1);
+    setNumber("");
   };
 
   const description = `“It is all about the journey and not the destination.” If this is your mantra, a road trip is the best option for you! A road trip lets you experience the scenic beauty of the places you go by unlike taking a train or a flight. We provide you with appropriate route plans and recommendations of restaurants, fuel stations, etc. We do plan it all out for you, but the decision of what to explore and what not still remains with you.`;
@@ -227,9 +255,9 @@ const RoadTripScreen = ({ navigation }) => {
             attr3={startPoint}
             attr1={driveDuration}
             attr2={driveRestriction}
-            placeholder1={"6 hours"}
-            placeholder2={""}
-            placeholder3={"Chennai"}
+            placeholder1={"Ex.6 hours"}
+            placeholder2={" Ex.Veg food only"}
+            placeholder3={"Ex.Chennai"}
             que3={"Where will be your starting point ?"}
             que1={"How long would you like to drive? (Optional)"}
             que2={"Any travel or dietary restrictions? (Optional)"}
@@ -240,7 +268,7 @@ const RoadTripScreen = ({ navigation }) => {
         );
       case 7:
         return (
-          <Roadtripques
+          <Roadtripques2
             imgSrc={
               "https://image.freepik.com/free-vector/traveling-car-illustration_126895-243.jpg"
             }
@@ -249,15 +277,15 @@ const RoadTripScreen = ({ navigation }) => {
             attr2={carRent}
             placeholder1={""}
             placeholder2={""}
-            placeholder3={""}
+            placeholder3={"Ex.Food joints"}
             que3={"What kind of stops do you prefer on your drive? (Optional)"}
             que1={
               "Would you like to add extra beds or additional room if travelling as 3/5/7?"
             }
             que2={"Do you need any help in renting a car?"}
             func3={(value) => setStops(value)}
-            func1={(value) => setAdditionalInfo(value)}
-            func2={(value) => setCarRent(value)}
+            func1={() => setAdditionalInfo(!additionalInfo)}
+            func2={() => setCarRent(!carRent)}
           />
         );
       case 8:
@@ -299,34 +327,98 @@ const RoadTripScreen = ({ navigation }) => {
             budget={budget}
           />
         );
+
+      case 10:
+        return (
+          <View
+            style={{
+              marginHorizontal: WIDTH / 10,
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+            }}
+          >
+            <Text style={styles.text}>
+              Request Id :{`TO-${date}${formatedMonth}${year}-${random}`}
+            </Text>
+            <Text style={styles.text}>Status:'Query Received</Text>
+            <Text style={styles.text}>Name: {name}</Text>
+            <Text style={styles.text}>Number: {number}</Text>
+            <Text style={styles.text}>Budget: {budget}</Text>
+            <Text style={styles.text}>Adult: {adult}</Text>
+            <Text style={styles.text}>Children : {children}</Text>
+            <Text style={styles.text}>From Date: {fromDate}</Text>
+            <Text style={styles.text}>To Date: {toDate}</Text>
+            <Text style={styles.text}>Start Point: {startPoint}</Text>
+
+            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
+            <Text style={styles.text}>Car Rent: {carRent}</Text>
+            <Text style={styles.text}>Drive Duration: {driveDuration}</Text>
+            <Text style={styles.text}>
+              Drive Restriction: {driveRestriction}
+            </Text>
+            <Text style={styles.text}>Drive Type: {driveType}</Text>
+            <Text style={styles.text}>Driver Type: {driverType}</Text>
+            <Text style={styles.text}>Stops: {stops}</Text>
+            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
+            <Text style={styles.text}>Traveller Type: {travellerType}</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Main")}>
+              <View style={{ alignItems: "center", margin: 10 }}>
+                <Text
+                  style={{
+                    // backgroundColor: "red",
+                    textAlign: "center",
+                    padding: 8,
+                    borderWidth: 1,
+                    borderColor: "black",
+                    borderRadius: 20,
+                  }}
+                >
+                  Back to Home
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        );
       default:
         break;
     }
   };
   const submitData = () => {
     const user = firebase.auth().currentUser;
-    console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
     const userID = user.uid;
     console.log(userID);
-    firebase.database().ref(`roadtrip-tours/${userID}`).push({
-      travellerType: travellerType,
-      fromDate: fromDate,
-      adult: adult,
-      children: children,
-      travelMode: travelMode,
-      startPoint: startPoint,
-      driveRestriction: driveRestriction,
-      driveDuration: driveDuration,
-      toDate: toDate,
-      stops: stops,
-      carRent: carRent,
-      additionalInfo: additionalInfo,
-      name: name,
-      number: number,
-      budget: budget,
-      driverType: driverType,
-      driveType: driveType,
-    });
+
+    firebase
+      .database()
+      .ref(`roadtrip-tours/${userID}`)
+      .push({
+        requestID: `TO-${date}${formatedMonth}${year}-${random}`,
+        tourCategory: "Road Trip",
+        travellerType: travellerType,
+        fromDate: fromDate,
+        adult: adult,
+        children: children,
+        travelMode: travelMode,
+        startPoint: startPoint,
+        driveRestriction: driveRestriction,
+        driveDuration: driveDuration,
+        toDate: toDate,
+        stops: stops,
+        carRent: carRent,
+        additionalInfo: additionalInfo,
+        name: name,
+        number: number,
+        budget: budget,
+        driverType: driverType,
+        driveType: driveType,
+        status: "Query Received",
+      })
+      .then((data) => {
+        console.log(data);
+        nextStep();
+      })
+      .catch((err) => console.log(err));
     console.log(
       travellerType,
       fromDate,
@@ -348,53 +440,53 @@ const RoadTripScreen = ({ navigation }) => {
     );
   };
 
-  if (!isLoggedIn) {
-    navigation.navigate("SignUpScreen");
-  }
   return (
-    <View style={styles.container}>
-      <View style={styles.arrowsContainer}>
-        {step == 1 ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack("Home");
-              console.log("logged");
+    <ScrollView style={styles.container}>
+      {step == 10 ? null : (
+        <View style={styles.arrowsContainer}>
+          {step == 1 ? (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack("Home");
+                console.log("logged");
+              }}
+            >
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => prevStep()}>
+              <View>
+                <AntDesign name="arrowleft" size={28} />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "NewYorkl",
+              marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
             }}
           >
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => prevStep()}>
-            <View>
-              <AntDesign name="arrowleft" size={28} />
-            </View>
-          </TouchableOpacity>
-        )}
+            Road Trip
+          </Text>
 
-        <Text
-          style={{
-            fontSize: 20,
-            marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
-          }}
-        >
-          Road Trip
-        </Text>
-
-        <TouchableOpacity
-          onPress={() => {
-            nextStep();
-          }}
-        >
-          {step !== 9 ? (
-            <View>
-              <AntDesign name="arrowright" size={28} />
-            </View>
-          ) : null}
-        </TouchableOpacity>
-      </View>
-      {step == 1 ? null : (
+          <TouchableOpacity
+            onPress={() => {
+              nextStep();
+            }}
+          >
+            {step !== 9 && step !== 2 && step !== 3 && step !== 8 ? (
+              <View>
+                <AntDesign name="arrowright" size={28} />
+              </View>
+            ) : null}
+          </TouchableOpacity>
+        </View>
+      )}
+      {step == 1 || step == 10 ? null : (
         <View style={styles.progressContainer}>
           <View
             style={{
@@ -412,7 +504,7 @@ const RoadTripScreen = ({ navigation }) => {
       )}
 
       {renderForm(step)}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -453,5 +545,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: WIDTH / 15,
     position: "relative",
+  },
+  text: {
+    marginTop: 8,
+    fontSize: 16,
+    fontFamily: "Andika",
+    textAlign: "justify",
   },
 });

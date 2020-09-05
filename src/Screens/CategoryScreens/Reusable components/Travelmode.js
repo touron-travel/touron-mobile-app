@@ -30,7 +30,9 @@ const Travelmode = ({
           marginHorizontal: 10,
         }}
       >
-        <Text style={{ fontSize: 18, textAlign: "center" }}>
+        <Text
+          style={{ fontSize: 15, textAlign: "center", fontFamily: "NewYorkl" }}
+        >
           It’s all about the journey! Select your preferred mode of travel
         </Text>
       </View>
@@ -66,6 +68,7 @@ const Travelmode = ({
               textAlign: "center",
               fontSize: 20,
               marginTop: 20,
+              fontFamily: "Andika",
             }}
           >
             {name1}
@@ -101,6 +104,7 @@ const Travelmode = ({
               textAlign: "center",
               marginVertical: 20,
               fontSize: 20,
+              fontFamily: "Andika",
             }}
           >
             {name2}

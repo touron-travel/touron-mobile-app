@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,18 +7,22 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-
+import * as firebase from "firebase";
 const HEIGHT = Dimensions.get("window").height;
 const WIDTH = Dimensions.get("window").width;
 
 import { AuthContext } from "../../context/AuthContext";
 const SelfPlanningScreen = ({ navigation }) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
-  console.log(isLoggedIn);
+  console.log(isLoggedIn, "k");
 
-  if (isLoggedIn == false) {
-    navigation.navigate("SignUpScreen");
-  }
+  useEffect(() => {
+    const user = firebase.auth().currentUser;
+    console.log(user, "LO");
+    if (user === null) {
+      navigation.replace("SignUpScreen");
+    }
+  });
   return (
     <View style={styles.container}>
       <View style={{ marginTop: HEIGHT / 12 }}>

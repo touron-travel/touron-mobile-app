@@ -14,7 +14,7 @@ const HEIGHT = Dimensions.get("window").height;
 
 const CityInnerScreen = ({ navigation, route }) => {
   const item = route.params.item;
-  console.log(item);
+  console.log(item,"TEM");
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -111,26 +111,126 @@ const CityInnerScreen = ({ navigation, route }) => {
             justifyContent: "center",
             alignItems: "center",
             marginVertical: 15,
-            marginHorizontal: 20,
+            marginHorizontal: 15,
           }}
         >
           <Text
             style={{
-              marginTop: 60,
-
-              marginRight: 50,
-              fontSize: 40,
-              fontWeight: "bold",
+              marginTop: 20,
+              fontSize: 36,
+              textAlign: "left",
+              width: WIDTH,
+              marginLeft: WIDTH / 10,
+              fontFamily: "NewYorkl",
             }}
           >
             Famous Places
           </Text>
-          {item.famousPlacesToVisit.split(".").map((d) => {
+          {/* {item.famousPlacesToVisit.split(" ").map((d) => {
             return <Text style={{ fontSize: 15 }}>{d}</Text>;
-          })}
+          })} */}
+          <Text style={{ fontFamily: "Andika", fontSize: 16 }}>
+            {item.famousPlacesToVisit}
+          </Text>
           {/* </View> */}
         </View>
-        <TouchableOpacity
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginBottom: 20,
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+            <View
+              style={{
+                alignItems: "center",
+                // borderWidth: 2,
+                borderRadius: 13,
+                elevation: 200,
+                // borderColor: "black",
+                backgroundColor: "#FA3B5A",
+                padding: 15,
+              }}
+            >
+              <Image
+                style={{ height: 40, width: 40 }}
+                source={require("../../../assets/CountryInnericon/shop.png")}
+              />
+            </View>
+            <Text
+              style={{
+                textAlign: "center",
+                fontFamily: "Andika",
+                fontSize: 12,
+              }}
+            >
+              Shopp
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("TourHome", { name: item.cityName })
+            }
+          >
+            <View
+              style={{
+                alignItems: "center",
+                // borderWidth: 2,
+                borderRadius: 13,
+                elevation: 200,
+                backgroundColor: "#9EB19E",
+
+                //borderColor: "black",
+                padding: 15,
+                paddingHorizontal: WIDTH / 8,
+              }}
+            >
+              <Image
+                style={{ height: 40, width: 40 }}
+                source={require("../../../assets/CountryInnericon/travelplan.png")}
+              />
+            </View>
+            <Text
+              style={{
+                fontFamily: "Andika",
+                textAlign: "center",
+                fontSize: 12,
+              }}
+            >
+              Explore {item.cityName}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+            <View
+              style={{
+                alignItems: "center",
+                // borderWidth: 2,
+                backgroundColor: "#FFB400",
+                borderRadius: 13,
+                elevation: 200,
+                // borderColor: "black",
+                padding: 15,
+              }}
+            >
+              <Image
+                style={{ height: 40, width: 40 }}
+                source={require("../../../assets/CountryInnericon/contact.png")}
+              />
+            </View>
+            <Text
+              style={{
+                textAlign: "center",
+                fontFamily: "Andika",
+                fontSize: 12,
+              }}
+            >
+              Talk to us
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {/* <TouchableOpacity
           onPress={() =>
             navigation.navigate("TourHome", { name: item.cityName })
           }
@@ -165,7 +265,7 @@ const CityInnerScreen = ({ navigation, route }) => {
               <Text style={{ fontSize: 20, color: "#FFF" }}>Explore Shop</Text>
             </LinearGradient>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );
@@ -187,7 +287,7 @@ const styles = StyleSheet.create({
     marginTop: 60,
     marginLeft: 30,
     fontSize: 40,
-    fontWeight: "bold",
+    fontFamily: "NewYorkl",
   },
   innerDetail: {
     top: -30,
@@ -197,8 +297,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
   },
   about: {
-    marginTop: 20,
+    marginTop: 10,
     fontSize: 17,
     marginHorizontal: 30,
+    fontFamily: "Andika",
   },
 });
