@@ -121,7 +121,7 @@ const HomeStackScreen = () => {
       />
       <HomeStack.Screen
         options={{
-          title: "Blogs",
+          title: "",
           headerShown: true,
           headerTransparent: true,
           headerTitleStyle: {
@@ -133,7 +133,7 @@ const HomeStackScreen = () => {
         component={BlogHomeScreen}
       />
       <HomeStack.Screen
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: "", headerTransparent: true }}
         name="BlogInner"
         component={BlogInnerScreen}
       />

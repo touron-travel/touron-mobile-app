@@ -331,37 +331,25 @@ const RoadTripScreen = ({ navigation }) => {
       case 10:
         return (
           <View
-            style={{
-              marginHorizontal: WIDTH / 10,
-              alignItems: "center",
-              justifyContent: "center",
-              flex: 1,
-            }}
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
-            <Text style={styles.text}>
-              Request Id :{`TO-${date}${formatedMonth}${year}-${random}`}
-            </Text>
-            <Text style={styles.text}>Status:'Query Received</Text>
-            <Text style={styles.text}>Name: {name}</Text>
-            <Text style={styles.text}>Number: {number}</Text>
-            <Text style={styles.text}>Budget: {budget}</Text>
-            <Text style={styles.text}>Adult: {adult}</Text>
-            <Text style={styles.text}>Children : {children}</Text>
-            <Text style={styles.text}>From Date: {fromDate}</Text>
-            <Text style={styles.text}>To Date: {toDate}</Text>
-            <Text style={styles.text}>Start Point: {startPoint}</Text>
+            <View
+              style={{
+                height: HEIGHT * 0.8,
+                alignItems: "center",
+                justifyContent: "center",
+                width: WIDTH,
+              }}
+            >
+              <Image
+                style={{ height: HEIGHT / 3, width: WIDTH * 0.7 }}
+                source={{
+                  uri:
+                    "https://image.freepik.com/free-vector/thank-you-with-character-vector_2029-149.jpg",
+                }}
+              />
+            </View>
 
-            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
-            <Text style={styles.text}>Car Rent: {carRent}</Text>
-            <Text style={styles.text}>Drive Duration: {driveDuration}</Text>
-            <Text style={styles.text}>
-              Drive Restriction: {driveRestriction}
-            </Text>
-            <Text style={styles.text}>Drive Type: {driveType}</Text>
-            <Text style={styles.text}>Driver Type: {driverType}</Text>
-            <Text style={styles.text}>Stops: {stops}</Text>
-            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
-            <Text style={styles.text}>Traveller Type: {travellerType}</Text>
             <TouchableOpacity onPress={() => navigation.navigate("Main")}>
               <View style={{ alignItems: "center", margin: 10 }}>
                 <Text

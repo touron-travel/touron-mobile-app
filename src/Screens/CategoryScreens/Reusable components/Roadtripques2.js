@@ -83,13 +83,6 @@ const Roadtripques2 = ({
                 </View>
                 <View style={{ width: WIDTH / 3 }}>
                   <Switch value={attr1} onValueChange={func1} color="#e74c3c" />
-                  {/* <TextInput
-                    placeholder={placeholder1}
-                    multiline
-                    style={{ fontSize: 14 }}
-                    value={attr1}
-                    onChangeText={(value) => func1(value)}
-                  /> */}
                 </View>
               </View>
               <View
@@ -108,13 +101,6 @@ const Roadtripques2 = ({
                 </View>
                 <View style={{ width: WIDTH / 3 }}>
                   <Switch value={attr2} onValueChange={func2} color="#e74c3c" />
-                  {/* <TextInput
-                    placeholder={placeholder2}
-                    style={{ fontSize: 14 }}
-                    multiline
-                    value={attr2}
-                    onChangeText={(value) => func2(value)}
-                  /> */}
                 </View>
               </View>
 

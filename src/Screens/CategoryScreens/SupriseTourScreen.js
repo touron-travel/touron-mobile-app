@@ -22,7 +22,7 @@ import Tourpreferance from "./Reusable components/Tourpreferance";
 import * as firebase from "firebase";
 
 import { AuthContext } from "../../context/AuthContext";
-import Categories from "../HomeScreens/components/CategoriesScreen";
+
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -297,32 +297,24 @@ const SurpriseTourScreen = ({ navigation }) => {
       case 10:
         return (
           <View
-            style={{
-              marginHorizontal: WIDTH / 10,
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
-            <Text style={styles.text}>
-              Request Id :{`T0-${date}${formatedMonth}${year}-${random}`}
-            </Text>
-            <Text style={styles.text}>Status: 'Query Received'</Text>
-            <Text style={styles.text}>Name: {name}</Text>
-            <Text style={styles.text}>Number: {number}</Text>
-            <Text style={styles.text}>Budget: {budget}</Text>
-            <Text style={styles.text}>Adult: {adult}</Text>
-            <Text style={styles.text}>Children : {children}</Text>
-            <Text style={styles.text}>From Date: {fromDate}</Text>
-            <Text style={styles.text}>To Date: {toDate}</Text>
-            <Text style={styles.text}>Expediture1: {expediture1}</Text>
-            <Text style={styles.text}>Expediture1: {expediture2}</Text>
-            <Text style={styles.text}>Expediture1: {expediture3}</Text>
-            <Text style={styles.text}>Start Point: {startPoint}</Text>
-            <Text style={styles.text}>Preferance: {tourPreferance}</Text>
-            <Text style={styles.text}>Tour Type: {tourType}</Text>
-            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
-            <Text style={styles.text}>Traveller Type: {travellerType}</Text>
+            <View
+              style={{
+                height: HEIGHT * 0.8,
+                alignItems: "center",
+                justifyContent: "center",
+                width: WIDTH,
+              }}
+            >
+              <Image
+                style={{ height: HEIGHT / 3, width: WIDTH * 0.7 }}
+                source={{
+                  uri:
+                    "https://image.freepik.com/free-vector/thank-you-with-character-vector_2029-149.jpg",
+                }}
+              />
+            </View>
 
             <TouchableOpacity onPress={() => navigation.navigate("Main")}>
               <View style={{ alignItems: "center", margin: 10 }}>

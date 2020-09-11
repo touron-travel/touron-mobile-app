@@ -1,18 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  Image,
-  View,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
-import * as Animatable from "react-native-animatable";
+import { Text, Image, View, Dimensions, TouchableOpacity } from "react-native";
+
 import { AuthContext } from "../../context/AuthContext";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const MyPlansScreen = ({ navigation }) => {
   const [plannedTour, setPlannedTour] = useState([]);

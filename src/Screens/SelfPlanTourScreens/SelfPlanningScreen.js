@@ -18,7 +18,7 @@ const SelfPlanningScreen = ({ navigation }) => {
 
   useEffect(() => {
     const user = firebase.auth().currentUser;
-    console.log(user, "LO");
+    // console.log(user, "LO");
     if (user === null) {
       navigation.replace("SignUpScreen");
     }

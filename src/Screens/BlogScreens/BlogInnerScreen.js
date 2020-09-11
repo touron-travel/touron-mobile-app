@@ -3,18 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
+  StatusBar,
   Image,
+  TouchableOpacity,
   FlatList,
   Dimensions,
   ScrollView,
 } from "react-native";
-import {
-  Feather,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { AntDesign } from "@expo/vector-icons";
+
 import touron from "../../api/touron";
 
 const WIDTH = Dimensions.get("window").width;
@@ -28,42 +25,58 @@ const BlogInnerScreen = ({ navigation, route }) => {
 
   const filteredTour = (name) => {
     return tour.filter((c) => {
-      return c.cityName.includes(name);
+      return c.countryName.includes(name);
     });
   };
 
   console.log(filteredTour(), "cjnjhjlg");
 
   useEffect(() => {
-    filteredTour();
+    let mounted = true;
+    if (mounted) {
+      filteredTour();
+    }
+    return () => (mounted = false);
   }, []);
 
   //console.log(item, "ITEM");
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
+      <StatusBar />
       <View
         style={{
-          // backgroundColor: "#333",
-          height: HEIGHT / 10,
+          //backgroundColor: "#333",
+          height: HEIGHT / 13,
           alignItems: "center",
-          //  justifyContent: "center",
+          justifyContent: "space-around",
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("Blog")}>
-          <View style={{ flex: 0.2 }}>
-            <MaterialCommunityIcons name="home" color="red" size={260} />
+        <TouchableOpacity onPress={() => navigation.navigate("BlogHome")}>
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              paddingTop: 7,
+              //  paddingRight: HEIGHT / 10,
+              flex: 0.2,
+            }}
+          >
+            <AntDesign name="arrowleft" size={24} color="black" />
           </View>
         </TouchableOpacity>
         <View
           style={{
-            flex: 0.8,
-            alignItems: "center",
             justifyContent: "center",
-            paddingTop: 15,
+            paddingTop: 10,
+            flex: 0.6,
+            //  paddingLeft: WIDTH / 4,
+            // marginRight: HEIGHT / 8,
           }}
         >
-          <Text style={{ color: "white", fontSize: 20 }}>My Requests</Text>
+          <Text style={{ color: "black", fontSize: 30, fontFamily: "WSans" }}>
+            {item.countryName}
+          </Text>
         </View>
       </View>
       <View>
@@ -73,7 +86,9 @@ const BlogInnerScreen = ({ navigation, route }) => {
         />
       </View>
 
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", paddingLeft: 10 }}
+      >
         <Text
           style={{
             backgroundColor: "transparent",
@@ -139,9 +154,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
               <View style={{ bottom: 10, zIndex: 20 }}>
                 <Text
                   style={{
-                    //   borderWidth: 1,
-                    //   borderRadius: 50,
-
                     padding: 3,
                     fontSize: 20,
                     fontFamily: "Avenir",
@@ -170,7 +182,7 @@ const BlogInnerScreen = ({ navigation, route }) => {
             source={require("../../../assets/logo.jpeg")}
           />
         </View>
-        <Text style={{ fontFamily: "Andika", fontSize: 18 }}>
+        <Text style={{ fontFamily: "Andika", fontSize: 16 }}>
           PUBLISHED {item.createdAt.slice(0, 10)} {"\n"}by tour On Team
         </Text>
       </View>
@@ -214,33 +226,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading1)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
-        }}
-      />
       {item.subHeading2 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
@@ -269,33 +254,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading2)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
-        }}
-      />
       {item.subHeading3 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
@@ -324,33 +282,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading3)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
-        }}
-      />
       {item.subHeading4 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
@@ -379,33 +310,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading4)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
-        }}
-      />
       {item.subHeading4 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
@@ -434,33 +338,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading5)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
-        }}
-      />
       {item.subHeading6 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
@@ -489,33 +366,75 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      <FlatList
-        data={filteredTour(item.subHeading6)}
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        renderItem={({ item }) => {
-          console.log(item, "ITEN");
-          return (
-            <Surface
-              style={{
-                width: WIDTH / 3,
-                marginHorizontal: 5,
-                marginVertical: 10,
-              }}
-            >
-              <View>
-                <Image
-                  style={{ height: WIDTH / 2.5, height: HEIGHT / 8 }}
-                  source={{ uri: item.imageUrl }}
-                />
-                <Text style={{ fontSize: 16, fontFamily: "Avenir" }}>
-                  {item.tourName}
-                </Text>
-              </View>
-            </Surface>
-          );
+      <View
+        style={{
+          // marginLeft: 10,
+          //  borderWidth: 1,
+          padding: 5,
+          paddingLeft: 10,
+          backgroundColor: "#EBE5E5",
+          borderRadius: 15,
+          marginTop: HEIGHT / 10,
+          alignItems: "center",
+          paddingVertical: HEIGHT / 17,
         }}
-      />
+      >
+        <Text
+          style={{
+            fontFamily: "Avenir",
+            fontSize: 20,
+            paddingBottom: 20,
+          }}
+        >
+          Explore Tours in {item.countryName}
+        </Text>
+        <FlatList
+          data={filteredTour(item.countryName)}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            console.log(item, "ITEN");
+            return (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("TourInner", { item: item })}
+              >
+                <Surface
+                  style={{
+                    width: WIDTH / 2.3,
+                    marginHorizontal: 5,
+                    marginVertical: 10,
+                    height: HEIGHT / 4,
+                    elevation: 5,
+                    borderRadius: 10,
+                  }}
+                >
+                  <View>
+                    <Image
+                      style={{
+                        height: WIDTH / 2.3,
+                        height: HEIGHT / 6,
+                        borderRadius: 10,
+                      }}
+                      source={{ uri: item.imageUrl }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        fontFamily: "Andika",
+                        paddingHorizontal: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      {item.tourName}
+                    </Text>
+                  </View>
+                </Surface>
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
     </ScrollView>
   );
 };

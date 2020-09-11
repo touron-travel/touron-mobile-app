@@ -9,7 +9,6 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
-  SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
   TextInput,
@@ -34,12 +33,6 @@ function SignUpScreen({ navigation }) {
   const [sessionID, setSessionID] = useState("");
   const [loaded, setLoaded] = useState(true);
   const { isLoggedIn, setIsLoggedIn, user, setUser } = useContext(AuthContext);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoaded(false);
-    }, 1000);
-  }, []);
 
   const storeToken = async (value) => {
     try {
@@ -106,7 +99,9 @@ function SignUpScreen({ navigation }) {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      fetchFont();
+      setTimeout(() => {
+        setLoaded(false);
+      }, 1000);
       firebase.auth().onAuthStateChanged((user) => {
         console.log(user, "MANIVASAGAM");
         setUser(user);
@@ -178,7 +173,7 @@ function SignUpScreen({ navigation }) {
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
-                    value={number.toString()}
+                    value={number}
                     placeholder="Phone Number"
                     keyboardAppearance="dark"
                     keyboardType="number-pad"
@@ -222,6 +217,7 @@ function SignUpScreen({ navigation }) {
                         fontWeight: "900",
                         textAlign: "center",
                         color: "white",
+                        marginVertical: WIDTH / 10,
                       }}
                     >
                       Already have an account? Try Sign In
@@ -378,7 +374,7 @@ const styles = new StyleSheet.create({
     //  fontWeight: "bold",
   },
   otpButtonContainer: {
-    marginBottom: HEIGHT / 14,
+    marginBottom: HEIGHT / 10,
     backgroundColor: "black",
     borderRadius: 10,
     width: WIDTH * 0.9,

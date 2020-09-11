@@ -14,7 +14,7 @@ const HEIGHT = Dimensions.get("window").height;
 
 const CityInnerScreen = ({ navigation, route }) => {
   const item = route.params.item;
-  console.log(item,"TEM");
+  console.log(item, "TEM");
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -181,8 +181,6 @@ const CityInnerScreen = ({ navigation, route }) => {
                 borderRadius: 13,
                 elevation: 200,
                 backgroundColor: "#9EB19E",
-
-                //borderColor: "black",
                 padding: 15,
                 paddingHorizontal: WIDTH / 8,
               }}
@@ -230,42 +228,6 @@ const CityInnerScreen = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        {/* <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("TourHome", { name: item.cityName })
-          }
-        >
-          <View style={{ marginHorizontal: 20 }}>
-            <LinearGradient
-              colors={["#626E7B", "#626E7B"]}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 20,
-                padding: 15,
-                marginBottom: 15,
-              }}
-            >
-              <Text style={{ fontSize: 20, color: "#FFF" }}>Explore Tours</Text>
-            </LinearGradient>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={{ marginHorizontal: 20 }}>
-            <LinearGradient
-              colors={["#626E7B", "#626E7B"]}
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 20,
-                padding: 15,
-                marginBottom: 15,
-              }}
-            >
-              <Text style={{ fontSize: 20, color: "#FFF" }}>Explore Shop</Text>
-            </LinearGradient>
-          </View>
-        </TouchableOpacity> */}
       </View>
     </ScrollView>
   );

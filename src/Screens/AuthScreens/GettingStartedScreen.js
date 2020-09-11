@@ -22,24 +22,31 @@ const GettingStartedScreen = ({ navigation }) => {
       key: 1,
       title: "Title 1",
       text: "Description.\nSay something cool",
-      image:
-        "https://images.pexels.com/photos/3850316/pexels-photo-3850316.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      image: require("../../../assets/intro/1.png"),
+
       backgroundColor: "#59b2ab",
     },
     {
       key: 2,
       title: "Title 2",
       text: "Other cool stuff",
-      image:
-        "https://images.pexels.com/photos/4466814/pexels-photo-4466814.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      image: require("../../../assets/intro/2.png"),
       backgroundColor: "#febe29",
     },
     {
       key: 3,
       title: "Rocket guy",
       text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
-      image:
-        "https://images.pexels.com/photos/3994547/pexels-photo-3994547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+
+      image: require("../../../assets/intro/3.png"),
+      backgroundColor: "#22bcb5",
+    },
+    {
+      key: 4,
+      title: "Rocket guy",
+      text: "I'm already out of descriptions\n\nLorem ipsum bla bla bla",
+
+      image: require("../../../assets/intro/4.png"),
       backgroundColor: "#22bcb5",
     },
   ];
@@ -48,7 +55,8 @@ const GettingStartedScreen = ({ navigation }) => {
       <View style={styles.slide}>
         {/* <Text style={styles.title}>{item.title}</Text> */}
         <Image
-          source={{ uri: item.image }}
+          source={item.image}
+          resizeMode="stretch"
           style={{ height: HEIGHT + 50, width: WIDTH }}
         />
         {/* <Text style={styles.text}>{item.text}</Text> */}
@@ -65,6 +73,7 @@ const GettingStartedScreen = ({ navigation }) => {
     <>
       <AppIntroSlider
         renderItem={_renderItem}
+        keyExtractor={(item) => item.key.toString()}
         data={slides}
         onDone={_onDone}
         nextLabel="Next"

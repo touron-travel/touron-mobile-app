@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "mobile-app",
-    "slug": "mobile-app",
+    "slug": "touron",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -23,5 +21,19 @@
       "favicon": "./assets/favicon.png"
     },
     "description": ""
+  },
+  "expo": {
+    "name": "tour On",
+    "icon": "./assets/playstore.png",
+    "version": "0.0.1",
+    "slug": "touron",
+    "ios": {
+      "bundleIdentifier": "com.touron.travelapp",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.touron.travelapp",
+      "versionCode": 28
+    }
   }
 }

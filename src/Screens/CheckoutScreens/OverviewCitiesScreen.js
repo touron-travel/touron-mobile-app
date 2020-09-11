@@ -247,15 +247,18 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>-</Text>
                   </TouchableOpacity>
                   <View style={styles.inputContainer}>
+                    {/* <View style={styles.inputContainer}> */}
                     <TextInput
+                      keyboardType="number-pad"
                       style={{
-                        textAlign: "center",
-                        fontSize: 18,
+                        fontSize: 20,
+                        marginTop: 10,
                       }}
                       value={adult.toString()}
-                      keyboardType="number-pad"
+                      editable={true}
                       onChangeText={(value) => setAdult(+value)}
                     />
+                    {/* </View> */}
                   </View>
                   <TouchableOpacity onPress={() => setAdult(adult + 1)}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>+</Text>
@@ -278,9 +281,11 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
                   <View style={styles.inputContainer}>
                     <TextInput
                       style={{
-                        textAlign: "center",
-                        fontSize: 18,
+                        marginTop: 10,
+                        fontSize: 20,
+                        //textAlign: "center",
                       }}
+                      editable={true}
                       value={children.toString()}
                       onChangeText={(value) => setChildren(+value)}
                       keyboardType="number-pad"

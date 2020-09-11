@@ -42,6 +42,7 @@ const SelfPlanForm = ({ navigation }) => {
         .includes(destination.toUpperCase().trim());
     });
 
+    //  setLoader(true);
     const result = [...cities, ...countries];
     return result;
   };

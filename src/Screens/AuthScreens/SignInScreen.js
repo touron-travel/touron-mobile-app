@@ -54,8 +54,6 @@ function SignInScreen({ navigation }) {
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         setLoaded(false);
-
-        // console.log(user, "k");
         setUser(user);
         storeToken(user);
         setEmail("");
@@ -120,7 +118,12 @@ function SignInScreen({ navigation }) {
         <View style={{ position: "absolute", bottom: 20, width: WIDTH * 0.9 }}>
           <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
             <Text
-              style={{ fontWeight: "900", color: "white", textAlign: "center" }}
+              style={{
+                fontWeight: "900",
+                color: "white",
+                textAlign: "center",
+                marginVertical: 20,
+              }}
             >
               Don't have a account? Sign Up
             </Text>
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: HEIGHT / 25,
-    marginBottom: HEIGHT / 14,
+    marginBottom: HEIGHT / 10,
     backgroundColor: "#FFF",
     borderRadius: 10,
     width: WIDTH * 0.9,

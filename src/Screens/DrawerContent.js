@@ -21,38 +21,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const DrawerContent = (props) => {
   const { isLoggedIn, setIsLoggedIn, setUser, user } = useContext(AuthContext);
-  // const [user, setUser] = useState();
-  // console.log(user, "USER");
-  const [userData, setUserData] = useState({});
-  // console.log(userData.userData.name, "LO");
-  // const name = userData.userData.name;
-  // console.log(name, "NAME");
-  // useEffect(() => {
-  //   const getToken = async () => {
-  //     try {
-  //       const data = await AsyncStorage.getItem("userToken");
-  //       const userToken = JSON.parse(data);
-  //      // console.log(userToken.user, "Token");
-  //       if (userToken !== null) {
-  //         setIsLoggedIn(true);
-  //         setUser(userToken.user);
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  // getToken();
-
-  // if (isLoggedIn) {
-  //   let mounted = true;
-  //   if (mounted) {
-  //     const userDetails = firebase.auth().currentUser;
-  //     console.log(userDetails, "DETAILS");
-  //     setUser(userDetails);
-  //   }
-  //   return () => (mounted = false);
-  // }
-  // }, []);
 
   const removeToken = async () => {
     try {
@@ -93,12 +61,6 @@ const DrawerContent = (props) => {
           }}
         >
           <DrawerContentScrollView {...props}>
-            <View style={{ flexDirection: "row", marginTop: 20 }}>
-              <Image
-                style={{ height: 100, width: 100 }}
-                source={require("../../assets/clogo.png")}
-              />
-            </View>
             <View style={{ marginVertical: 40 }}>
               <DrawerItem
                 label={() => <Text style={styles.label}>Home</Text>}
@@ -123,7 +85,7 @@ const DrawerContent = (props) => {
                 )}
                 onPress={() => props.navigation.navigate("MyRequest")}
               />
-              <DrawerItem
+              {/* <DrawerItem
                 label={() => <Text style={styles.label}>My Plans</Text>}
                 //   icon={({ color, size }) => <Feather name="menu" />}
                 icon={() => (
@@ -135,7 +97,7 @@ const DrawerContent = (props) => {
                 onPress={() => {
                   props.navigation.navigate("MyPlans");
                 }}
-              />
+              /> */}
               <DrawerItem
                 label={() => <Text style={styles.label}>Saved Tours</Text>}
                 //   icon={({ color, size }) => <Feather name="menu" />}
@@ -210,18 +172,6 @@ const DrawerContent = (props) => {
             </View>
           </DrawerContentScrollView>
           <Drawer.Section>
-            {/* <DrawerItem
-          label="Settings"
-          //   icon={({ color, size }) => <Feather name="menu" />}
-          icon={() => (
-            <Image
-              style={{ height: 30, width: 30 }}
-              source={require("../../assets/settings.png")}
-            />
-          )}
-          onPress={() => {}}
-        /> */}
-
             <DrawerItem
               label={() => (
                 <Text

@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import touron from "../../api/touron";
-
+import * as firebase from "firebase";
 import { Surface } from "react-native-paper";
 import ContentList from "../HomeScreens/components/ContentList";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -20,12 +20,26 @@ const HEIGHT = Dimensions.get("window").height;
 
 const BlogHomeScreen = ({ navigation }) => {
   const [blog, setBlog] = useState([]);
-  console.log(blog, "llk");
+  const [country, setCountry] = useState([]);
+  console.log(country, "llk");
 
   const getBlog = async () => {
     const blogResponse = await touron.get("/blog");
     console.log(blogResponse.data, "lll");
     setBlog(blogResponse.data);
+
+    firebase
+      .database()
+      .ref(`countries/`)
+      .on("value", (data) => {
+        if (data) {
+          let pT = [];
+          data.forEach((c) => {
+            pT.push(c.val());
+          });
+          setCountry(pT);
+        }
+      });
   };
 
   useEffect(() => {
@@ -61,6 +75,8 @@ const BlogHomeScreen = ({ navigation }) => {
                     marginLeft: 0,
                     marginVertical: 10,
                     borderRadius: 20,
+                    elevation: 5,
+                    height: HEIGHT / 2.4,
                   }}
                 >
                   <View>
@@ -76,7 +92,7 @@ const BlogHomeScreen = ({ navigation }) => {
                   <View>
                     <Text
                       style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: "NewYorkl",
                         marginHorizontal: 10,
                         marginTop: 10,
@@ -87,7 +103,7 @@ const BlogHomeScreen = ({ navigation }) => {
                   </View>
                   <View style={{ margin: 10 }}>
                     <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
-                      {item.content.slice(0, 150)}...
+                      {item.content.slice(0, 130)}...
                     </Text>
                   </View>
                 </Surface>
@@ -96,6 +112,11 @@ const BlogHomeScreen = ({ navigation }) => {
           );
         }}
       />
+
+      {country.map((d) => {
+        console.log(d, "l");
+        return <Text key={d._id}>{d.countryName}</Text>;
+      })}
     </ScrollView>
   );
 };

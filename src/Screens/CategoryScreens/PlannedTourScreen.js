@@ -309,23 +309,7 @@ const PlannedTourScreen = ({ navigation }) => {
                 }}
               />
             </View>
-            {/* <Text style={styles.text}>
-              Request Id : {`T0-${date}${formatedMonth}${year}-${random}`}
-            </Text>
-            <Text style={styles.text}>Status: 'Query Received'</Text>
-            <Text style={styles.text}>Name: {name}</Text>
-            <Text style={styles.text}>Number: {number}</Text>
-            <Text style={styles.text}>Budget: {budget}</Text>
-            <Text style={styles.text}>Adult: {adult}</Text>
-            <Text style={styles.text}>Children : {children}</Text>
-            <Text style={styles.text}>From Date: {fromDate}</Text>
-            <Text style={styles.text}>To Date: {toDate}</Text>
-            <Text style={styles.text}>Destination: {destination}</Text>
-            <Text style={styles.text}>Preferance: {preferanece}</Text>
-            <Text style={styles.text}>Start Point: {startPoint}</Text>
-            <Text style={styles.text}>Tour Type: {tourType}</Text>
-            <Text style={styles.text}>Travel Mode: {travelMode}</Text>
-            <Text style={styles.text}>Traveller Type: {travellerType}</Text> */}
+
             <TouchableOpacity onPress={() => navigation.navigate("Main")}>
               <View style={{ alignItems: "center", margin: 10 }}>
                 <Text

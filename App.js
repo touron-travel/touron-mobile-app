@@ -56,10 +56,7 @@ const App = () => {
       // Futura: require("../../../assets/fonts/Futura Std Medium.ttf"),
       Andika: require("./assets/fonts/Andika-Regular.ttf"),
       Avenir: require("./assets/fonts/AvenirLTStd-Black.otf"),
-      SfProDisplay: require("./assets/fonts/SF-Pro-Display-Black.otf"),
       NewYorkl: require("./assets/fonts/NewYorkLargeBlack.otf"),
-      // NewYork400: require("../../../assets/fonts/NEW YORK 400.ttf"),
-      Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
       WSans: require("./assets/fonts/WorkSans-Black.ttf"),
       WSansl: require("./assets/fonts/WorkSans-Light.ttf"),
       SFProDisplayRegular: require("./assets/fonts/SF-Pro-Display-Regular.otf"),
@@ -95,11 +92,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    getToken();
+    let mounted = true;
+    if (mounted) {
+      getToken();
+    }
+    return () => (mounted = false);
   }, []);
 
   const AccountStack = createStackNavigator();
-
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, user, setUser }}>
@@ -130,9 +130,7 @@ const App = () => {
         </Drawer.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
-  )
-
- 
+  );
 };
 
 export default App;

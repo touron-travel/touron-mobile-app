@@ -5,9 +5,11 @@ import {
   TouchableOpacity,
   ScrollView,
   View,
+  Alert,
   Image,
   Dimensions,
 } from "react-native";
+import { Modal, Portal, Provider } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
 const WIDTH = Dimensions.get("window").width;
@@ -17,6 +19,12 @@ const HEIGHT = Dimensions.get("window").height;
 const CountryInnerScreen = ({ navigation, route }) => {
   console.log(route.params.item);
   const item = route.params.item;
+  const [visible, setVisible] = React.useState(false);
+
+  const showModal = () => setVisible(true);
+
+  const hideModal = () => setVisible(false);
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -48,7 +56,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
           width: WIDTH * 0.9,
           alignItems: "center",
           justifyContent: "center",
-
           marginHorizontal: 20,
           marginTop: HEIGHT / 15,
         }}
@@ -56,7 +63,7 @@ const CountryInnerScreen = ({ navigation, route }) => {
         <Text
           style={{
             padding: 10,
-            fontFamily: "Roboto",
+
             lineHeight: 18,
             fontSize: 13,
             fontWeight: "500",
@@ -73,101 +80,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
           marginTop: 20,
         }}
       >
-        {/* <View
-          style={{
-            width: WIDTH * 0.9,
-            marginHorizontal: 20,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-          >
-            <Image
-              style={{ height: 80, width: 80 }}
-              source={require("../../../assets/weather.png")}
-            />
-
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 26, fontFamily: "NewYorkl" }}>
-                {item.weather}
-              </Text>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 14,
-                  // fontWeight: "bold",
-                  fontFamily: "WSansl",
-                }}
-              >
-                Average Weather throughout the Year
-              </Text>
-            </View>
-          </View> */}
-        {/* <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginTop: 20,
-            }}
-          >
-            <Image
-              style={{ height: 80, width: 80 }}
-              source={require("../../../assets/time-zone.png")}
-            />
-
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 26, fontFamily: "NewYorkl" }}>
-                {item.general.timeZone}
-              </Text>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 14,
-                  // fontWeight: "bold",
-                  fontFamily: "WSansl",
-                }}
-              >
-                Average Time Difference From India
-              </Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginTop: 20,
-              marginBottom: 30,
-            }}
-          >
-            <Image
-              style={{ height: 80, width: 80, marginRight: 40 }}
-              source={require("../../../assets/visa.png")}
-            />
-
-            <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 26, fontFamily: "NewYorkl" }}>
-                {item.visa.onArrival}
-              </Text>
-              <Text
-                style={{
-                  color: "black",
-                  fontSize: 14,
-                  // fontWeight: "bold",
-                  fontFamily: "WSansl",
-                }}
-              >
-                Eligible for Visa On Arrival
-              </Text>
-            </View>
-          </View> 
-              </View> */}
         <View
           style={{
             flexDirection: "row",
@@ -191,11 +103,11 @@ const CountryInnerScreen = ({ navigation, route }) => {
             />
             <Image
               style={{ height: 60, width: 60, marginTop: 25 }}
-              source={require("../../../assets/time-zone.png")}
+              source={require("../../../assets/weather.png")}
             />
             <Image
               style={{ height: 60, width: 60, marginTop: 25 }}
-              source={require("../../../assets/weather.png")}
+              source={require("../../../assets/time-zone.png")}
             />
           </View>
           <View
@@ -281,7 +193,11 @@ const CountryInnerScreen = ({ navigation, route }) => {
             marginBottom: 20,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+          <TouchableOpacity
+            onPress={() => {
+              showModal();
+            }}
+          >
             <View
               style={{
                 alignItems: "center",
@@ -308,6 +224,39 @@ const CountryInnerScreen = ({ navigation, route }) => {
               Shopp
             </Text>
           </TouchableOpacity>
+          <View style={{ position: "absolute", top: HEIGHT / 2, zIndex: 20 }}>
+            <TouchableOpacity
+              onPress={() => {
+                showModal();
+              }}
+            >
+              <View
+                style={{
+                  alignItems: "center",
+                  // borderWidth: 2,
+                  borderRadius: 13,
+                  elevation: 200,
+                  // borderColor: "black",
+                  backgroundColor: "#FA3B5A",
+                  padding: 15,
+                }}
+              >
+                <Image
+                  style={{ height: 40, width: 40 }}
+                  source={require("../../../assets/CountryInnericon/shop.png")}
+                />
+              </View>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Andika",
+                  fontSize: 12,
+                }}
+              >
+                Shopp
+              </Text>
+            </TouchableOpacity>
+          </View>
           <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
             <View
               style={{
@@ -395,7 +344,7 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: 15,
-    fontFamily: "sans-serif",
+    //fontFamily: "sans-serif",
     fontWeight: "bold",
     color: "#FFF",
     fontStyle: "normal",

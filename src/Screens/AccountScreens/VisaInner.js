@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
   View,
   Dimensions,
   Image,
+  TextInput,
   TouchableOpacity,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,17 +14,43 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
 import { ScrollView } from "react-native-gesture-handler";
+import { Switch } from "react-native-paper";
+
+import { AuthContext } from "../../context/AuthContext";
 
 const VisaInner = ({ navigation, route }) => {
+  const { user } = useContext(AuthContext);
   const visaDetails = route.params.item;
   const [step, setStep] = useState(0);
   console.log(visaDetails, "asas");
-
+  const [formVisible, setFormVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [country, setCountry] = useState(visaDetails.countryName);
+  const [salaried, setSalaried] = useState(false);
+  const [selfEmployed, setSelfEmployed] = useState(false);
+  const [load, setLoad] = useState(false);
   const nextStep = () => {
     setStep(step + 1);
   };
   const prevStep = () => {
     setStep(step - 1);
+  };
+
+  const submitVisa = () => {
+    console.log(user.uid);
+    console.log(name, number, country, salaried, selfEmployed);
+    firebase
+      .database()
+      .ref(`visaSubmission/${user.uid}`)
+      .push({
+        name: name,
+        phoneNumber: number,
+        countryName: country,
+        workType: salaried ? "Salaried" : "Self Employed",
+      });
+
+    setLoad(true);
   };
 
   const renderItem = () => {
@@ -32,38 +59,116 @@ const VisaInner = ({ navigation, route }) => {
         return (
           <View>
             <Text style={styles.headings}>Document Required</Text>
-            <Text>{visaDetails.salaryDocs.salaryDocsRequired}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Andika",
+                }}
+              >
+                {visaDetails.salaryDocs.salaryDocsRequired}
+              </Text>
+            </View>
             <Text style={styles.headings}>Financials</Text>
-            <Text>{visaDetails.salaryDocs.salaryFinancials}</Text>
-            <Text style={styles.headings}>Submisiion</Text>
-            <Text>{visaDetails.salaryDocs.salarySubmission}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salaryFinancials}
+              </Text>
+            </View>
+
+            <Text style={styles.headings}>Submission</Text>
+
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salarySubmission}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Appointment</Text>
-            <Text>{visaDetails.salaryDocs.salaryAppointment}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salaryAppointment}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Honeymooners</Text>
-            <Text>{visaDetails.salaryDocs.salaryHoneymooners}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salaryHoneymooners}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Duration</Text>
-            <Text>{visaDetails.salaryDocs.salaryDuration}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salaryDuration}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Photograph</Text>
-            <Text>{visaDetails.salaryDocs.salaryPhotography}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.salaryDocs.salaryPhotography}
+              </Text>
+            </View>
           </View>
         );
       case 1:
         return (
           <View>
             <Text style={styles.headings}>Document Required</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedDocsRequired}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontFamily: "Andika",
+                }}
+              >
+                {visaDetails.selfEmployedDocs.selfEmployedDocsRequired}
+              </Text>
+            </View>
             <Text style={styles.headings}>Financials</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedFinancials}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedFinancials}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Submisiion</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedSubmission}</Text>
+
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedSubmission}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Appointment</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedAppointment}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedAppointment}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Honeymooners</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedHoneymooners}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedHoneymooners}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Duration</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedDuration}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedDuration}
+              </Text>
+            </View>
+
             <Text style={styles.headings}>Photograph</Text>
-            <Text>{visaDetails.selfEmployedDocs.selfEmployedPhotography}</Text>
+            <View style={{ marginHorizontal: 20 }}>
+              <Text style={{ fontSize: 16, fontFamily: "Andika" }}>
+                {visaDetails.selfEmployedDocs.selfEmployedPhotography}
+              </Text>
+            </View>
           </View>
         );
     }
@@ -98,65 +203,57 @@ const VisaInner = ({ navigation, route }) => {
           source={{ uri: visaDetails.imageUrl }}
         />
 
-        <View>
-          <View
+        <View
+          style={{
+            position: "absolute",
+            zIndex: 2,
+            justifyContent: "center",
+            alignItems: "center",
+            width: WIDTH,
+            top: -HEIGHT / 10 + 20,
+          }}
+        >
+          <Text
             style={{
-              position: "absolute",
-              zIndex: 2,
-              justifyContent: "center",
-              alignItems: "center",
-              width: WIDTH,
-              top: -HEIGHT / 10 + 20,
+              fontSize: 32,
+              color: "white",
+              fontFamily: "NewYorkl",
             }}
           >
-            <Text
-              style={{
-                fontSize: 32,
-                color: "white",
-                fontFamily: "Avenir",
-                fontWeight: "bold",
-              }}
-            >
-              {visaDetails.countryName}
-            </Text>
-          </View>
+            {visaDetails.countryName}
+          </Text>
         </View>
 
         <View
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            marginTop: 20,
+            marginTop: 30,
+            marginBottom: 20,
           }}
         >
           <TouchableOpacity onPress={() => prevStep()}>
             <Text
               style={{
-                borderColor: "black",
-                borderTopLeftRadius: 20,
-                borderBottomLeftRadius: 20,
-                borderWidth: 2,
+                borderColor: "#A6C5CD",
+                borderWidth: 1,
                 borderRightWidth: 0,
-                paddingVertical: 4,
-                paddingHorizontal: 18,
+                padding: 8,
                 backgroundColor: step == 0 ? "#A6C5CD" : null,
                 color: step == 0 ? "white" : "black",
                 alignItems: "center",
               }}
             >
-              Salary
+              Salaried
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => nextStep()}>
             <Text
               style={{
-                borderColor: "black",
-                borderTopRightRadius: 20,
-                borderBottomRightRadius: 20,
-                borderWidth: 2,
-                padding: 4,
+                borderColor: "#A6C5CD",
+                borderWidth: 1,
+                padding: 8,
                 backgroundColor: step == 1 ? "#A6C5CD" : null,
-
                 color: step == 1 ? "white" : "black",
               }}
             >
@@ -164,7 +261,123 @@ const VisaInner = ({ navigation, route }) => {
             </Text>
           </TouchableOpacity>
         </View>
+        {formVisible ? null : (
+          <TouchableOpacity onPress={() => setFormVisible(true)}>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#FC427B",
+                fontSize: 18,
+                fontFamily: "NewYorkl",
+              }}
+            >
+              Apply visa for {visaDetails.countryName}
+            </Text>
+          </TouchableOpacity>
+        )}
+        {formVisible ? (
+          <View
+            style={{
+              padding: 20,
+              marginHorizontal: 15,
+              borderRadius: 10,
+              backgroundColor: "#7f8c8d",
+              marginTop: 20,
+            }}
+          >
+            {!load ? (
+              <>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.text}>Name : </Text>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="email-address"
+                    value={name}
+                    onChangeText={(value) => setName(value)}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.text}>Country Name : </Text>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="email-address"
+                    value={visaDetails.countryName}
+                    onChangeText={(value) => setCountry(value)}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.text}>Phone Number: </Text>
+                  <TextInput
+                    style={styles.input}
+                    keyboardType="number-pad"
+                    value={number}
+                    onChangeText={(value) => setNumber(value)}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.text}>Work Type : </Text>
+                  <View>
+                    <Switch
+                      value={salaried}
+                      onValueChange={() => setSalaried(!salaried)}
+                      color="#e74c3c"
+                    />
+                    <Text style={styles.text1}>Salaried </Text>
+                  </View>
+                  <View>
+                    <Switch
+                      value={selfEmployed}
+                      onValueChange={() => setSelfEmployed(!selfEmployed)}
+                      color="#e74c3c"
+                    />
+                    <Text style={styles.text1}>Self Employed </Text>
+                  </View>
+                </View>
 
+                <View style={styles.inputContainer}>
+                  <TouchableOpacity onPress={() => submitVisa()}>
+                    <Text style={styles.button}>Apply</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setFormVisible(false)}>
+                    <Text style={styles.button}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <View style={{ alignItems: "center" }}>
+                <Image
+                  style={{
+                    width: WIDTH / 3,
+                    height: WIDTH / 3,
+                    borderBottomLeftRadius: 30,
+                    borderBottomRightRadius: 30,
+                    marginBottom: 20,
+                  }}
+                  source={require("../../../assets/tick.png")}
+                />
+                <Text
+                  style={{
+                    marginVertical: 10,
+                    fontSize: 16,
+                    fontFamily: "NewYorkl",
+                    textAlign: "center",
+                  }}
+                >
+                  Request Submitted {"\n"}
+                  Our Team will reach you back
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setFormVisible(false);
+                    setLoad(false);
+                  }}
+                >
+                  <Text style={styles.button}>Back</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        ) : null}
         {renderItem()}
       </Animatable.View>
     </ScrollView>
@@ -173,10 +386,37 @@ const VisaInner = ({ navigation, route }) => {
 
 const styles = new StyleSheet.create({
   headings: {
-    fontFamily: "Avenir",
+    fontFamily: "NewYorkl",
     fontSize: 24,
     marginLeft: 10,
-    marginTop: 5,
+    marginVertical: 15,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  input: {
+    width: WIDTH * 0.4,
+    backgroundColor: "#ecf0f1",
+  },
+  text: {
+    fontSize: 17,
+    fontFamily: "Andika",
+  },
+  text1: {
+    fontSize: 14,
+    fontFamily: "Andika",
+  },
+  button: {
+    backgroundColor: "#34495e",
+    paddingVertical: 13,
+    paddingHorizontal: 20,
+    color: "white",
+    fontSize: 18,
+    fontFamily: "WSansl",
+    borderRadius: 20,
   },
 });
 

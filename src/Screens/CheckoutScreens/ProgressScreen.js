@@ -513,7 +513,7 @@ const ProgressScreen = ({ navigation, route }) => {
           style={{ flex: 1.5 }}
           onPress={() => {
             const user = firebase.auth().currentUser;
-            console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
+            //  console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
             const userID = user.uid;
             console.log(userID);
             firebase
@@ -534,6 +534,9 @@ const ProgressScreen = ({ navigation, route }) => {
               })
               .then((data) => console.log(data))
               .catch((err) => console.log(err));
+            alert("Query Submitted");
+
+            navigation.navigate("Home");
           }}
         >
           <View

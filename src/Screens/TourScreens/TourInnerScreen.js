@@ -19,20 +19,9 @@ const TourInnerScreen = ({ navigation, route }) => {
   console.log(item);
   return (
     <ScrollView>
-      <Animatable.View
-        animation="zoomInUp"
-        iterationCount={1}
-        direction="bounceInDown"
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <View>
-          <Animatable.Image
-            style={styles.image}
-            animation="zoomInUp"
-            iterationCount={1}
-            direction="normal"
-            source={{ uri: item.imageUrl }}
-          />
+          <Image style={styles.image} source={{ uri: item.imageUrl }} />
 
           <LinearGradient
             colors={["#fff", "#fff"]}
@@ -279,7 +268,7 @@ const TourInnerScreen = ({ navigation, route }) => {
               style={{
                 lineHeight: 20,
                 fontSize: 15,
-                fontFamily: "serif",
+                //fontFamily: "serif",
                 fontWeight: "800",
               }}
             >
@@ -358,7 +347,7 @@ const TourInnerScreen = ({ navigation, route }) => {
             <Text
               style={{
                 fontSize: 15,
-                fontFamily: "serif",
+                // fontFamily: "",
                 fontWeight: "800",
               }}
             >
@@ -384,7 +373,7 @@ const TourInnerScreen = ({ navigation, route }) => {
             </Text>
           </LinearGradient>
         </View>
-      </Animatable.View>
+      </View>
     </ScrollView>
   );
 };
