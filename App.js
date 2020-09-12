@@ -134,3 +134,11 @@ const App = () => {
 };
 
 export default App;
+{/* <Drawer.Screen name="HomeDrawer" component={RootStackScreen} />
+<Drawer.Screen name="MyRequest" component={MyRequestScreen} />
+<Drawer.Screen name="MyPlans" component={MyPlansScreen} />
+<Drawer.Screen name="Profile" component={ProfileScreen} />
+<Drawer.Screen name="Visa" component={VisaDetailsScreen} />
+<Drawer.Screen name="VisaInner" component={VisaInner} />
+<Drawer.Screen name="WishList" component={WishListScreen} />
+<Drawer.Screen name="Reque */}
