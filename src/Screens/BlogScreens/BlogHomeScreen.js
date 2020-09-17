@@ -8,6 +8,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  ActivityIndicator
 } from "react-native";
 import touron from "../../api/touron";
 import * as firebase from "firebase";
@@ -20,34 +21,32 @@ const HEIGHT = Dimensions.get("window").height;
 
 const BlogHomeScreen = ({ navigation }) => {
   const [blog, setBlog] = useState([]);
-  const [country, setCountry] = useState([]);
-  console.log(country, "llk");
+  
+  const [loaded, setLoaded] = useState(true);
+  
 
   const getBlog = async () => {
     const blogResponse = await touron.get("/blog");
     console.log(blogResponse.data, "lll");
     setBlog(blogResponse.data);
-
-    firebase
-      .database()
-      .ref(`countries/`)
-      .on("value", (data) => {
-        if (data) {
-          let pT = [];
-          data.forEach((c) => {
-            pT.push(c.val());
-          });
-          setCountry(pT);
-        }
-      });
+    
+   
   };
 
   useEffect(() => {
+    setTimeout(() => {
+      setLoaded(false);
+    }, 1000);
+
     getBlog();
   }, []);
 
+ 
+   
+  
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView>
+
       <View style={{ marginHorizontal: 25 }}>
         <ContentList
           title={"Blogs Name"}
@@ -55,23 +54,28 @@ const BlogHomeScreen = ({ navigation }) => {
           content={"Content Goes Here"}
         />
       </View>
-
+      {loaded ? (
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
       <FlatList
+        numColumns={2}
         data={blog}
         keyExtractor={(item) => item._id}
-        showsHorizontalScrollIndicator={false}
-        horizontal
         renderItem={({ item }) => {
           console.log(item);
           return (
-            <View style={{ marginHorizontal: 10 }}>
+            <View style={{ marginHorizontal: 15 }}>
               <TouchableOpacity
                 onPress={() => navigation.navigate("BlogInner", { item: item })}
               >
                 <Surface
                   style={{
-                    width: WIDTH / 1.5,
-                    marginHorizontal: 0,
+                    width: WIDTH / 2.4,
+                    marginHorizontal:0,
                     marginLeft: 0,
                     marginVertical: 10,
                     borderRadius: 20,
@@ -83,7 +87,7 @@ const BlogHomeScreen = ({ navigation }) => {
                     <Image
                       style={{
                         height: HEIGHT / 4.8,
-                        width: WIDTH / 1.5,
+                        width: WIDTH / 2.4 ,
                         borderRadius: 15,
                       }}
                       source={{ uri: item.imageSrc }}
@@ -103,7 +107,7 @@ const BlogHomeScreen = ({ navigation }) => {
                   </View>
                   <View style={{ margin: 10 }}>
                     <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
-                      {item.content.slice(0, 130)}...
+                      {item.content.slice(0, 50)}...
                     </Text>
                   </View>
                 </Surface>
@@ -112,11 +116,8 @@ const BlogHomeScreen = ({ navigation }) => {
           );
         }}
       />
-
-      {country.map((d) => {
-        console.log(d, "l");
-        return <Text key={d._id}>{d.countryName}</Text>;
-      })}
+        )  }
+     
     </ScrollView>
   );
 };

@@ -88,10 +88,11 @@ function SignUpScreen({ navigation }) {
               setUser(user);
               setIsLoggedIn(true);
               storeToken(user);
+              navigation.navigate("Main");
+              prevStep();
             })
             .catch((err) => console.log(err));
-          navigation.navigate("Main");
-          prevStep();
+         
         }
       })
       .catch((err) => Alert.alert("Otp is wrong"));

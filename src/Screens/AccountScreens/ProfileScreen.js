@@ -89,8 +89,10 @@ const ProfileScreen = ({ navigation }) => {
     getUserData();
   }, [user]);
 
-  const updateProfilePic = (uri) => {
+  const updateProfilePic = async (uri) => {
+  
     setLoading(true);
+   
     if (user !== null) {
       user
         .updateProfile({
@@ -129,13 +131,29 @@ const ProfileScreen = ({ navigation }) => {
   const _pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         //  allowsEditing: true,
         aspect: [1, 3],
         quality: 1,
       });
       if (!result.cancelled) {
-        updateProfilePic(result.uri);
+        const response = await fetch(result.uri);
+    const blob = await response.blob();
+    firebase.storage().ref(`users/${user.uid}/profile.jpg`).put(blob).then(()=>{
+      firebase.storage().ref(`users/${user.uid}/profile.jpg`).getDownloadURL().then(imageUrl=>{
+        updateProfilePic(imageUrl)
+        console.log('uploaded');
+      })
+     
+
+    }).catch((err)=>{
+      console.log(err);
+    })
+
+    
+    
+        
+        
       }
 
       //  console.log(result);
@@ -236,9 +254,7 @@ const ProfileScreen = ({ navigation }) => {
                       fontSize: 14,
                     }}
                   >
-                    {/* Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Ratione adipisci exercitationem sapiente modi. Perspiciatis
-                  ipsum veniam sapiente officia, fugit obcaecati. */}
+                   
                     {aboutMe}
                   </Text>
                   <TouchableOpacity onPress={() => nextStep()}>
@@ -298,8 +314,8 @@ const ProfileScreen = ({ navigation }) => {
                   <View style={{ position: "absolute", top: HEIGHT / 1.45 }}>
                     <Text
                       style={{
-                        fontSize: 50,
-                        color: "white",
+                        fontSize: 35,
+                        color: "black",
                         marginHorizontal: WIDTH / 10,
                         paddingBottom: 10,
                         fontFamily: "NewYorkl",
@@ -327,7 +343,7 @@ const ProfileScreen = ({ navigation }) => {
                           <Text
                             style={{
                               marginLeft: WIDTH / 20,
-                              color: "white",
+                              color: "black",
                               fontFamily: "Andika",
                             }}
                           >

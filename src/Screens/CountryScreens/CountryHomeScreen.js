@@ -17,7 +17,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const CountryHomeScreen = ({ navigation }) => {
-  const [country, setCountry] = useState([]);
+  const [country] = useData();
   const [loader, setLoader] = useState(true);
   // const [loader, setLoader] = useState(true);
   const [countryName, setCountryName] = useState("");
@@ -29,23 +29,23 @@ const CountryHomeScreen = ({ navigation }) => {
   };
   console.log(country);
 
-  const getCountry = () => {
-    firebase
-      .database()
-      .ref(`countries/`)
-      .on("value", (data) => {
-        if (data) {
-          let pT = [];
-          data.forEach((c) => {
-            pT.push(c.val());
-          });
-          setCountry(pT);
-        }
-      });
-  };
+  // const getCountry = () => {
+  //   firebase
+  //     .database()
+  //     .ref(`countries/`)
+  //     .on("value", (data) => {
+  //       if (data) {
+  //         let pT = [];
+  //         data.forEach((c) => {
+  //           pT.push(c.val());
+  //         });
+  //         setCountry(pT);
+  //       }
+  //     });
+  // };
 
   useEffect(() => {
-    getCountry();
+    // getCountry();
     showLoader();
   }, []);
 
@@ -92,7 +92,7 @@ const CountryHomeScreen = ({ navigation }) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    save();
+                    
                     navigation.navigate("CountryInner", { item: item });
                   }}
                 >
