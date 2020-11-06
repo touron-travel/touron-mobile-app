@@ -78,7 +78,6 @@ const Tourtype = ({
                   height: 120,
                   width: 120,
                 }}
-                // source={imgScr2}
                 source={imgScr2}
               />
             </View>

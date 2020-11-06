@@ -4,10 +4,10 @@ import {
   Text,
   Button,
   Image,
+  Linking,
   View,
   Dimensions,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -15,6 +15,18 @@ const HEIGHT = Dimensions.get("window").height;
 const CityInnerScreen = ({ navigation, route }) => {
   const item = route.params.item;
   console.log(item, "TEM");
+  const openWhatsApp = (name) => {
+    let url = `whatsapp://send?text=Hi,I would like to go ${name} help me to plan on that &phone= +91 8667801206`;
+
+    Linking.openURL(url)
+      .then((data) => {
+        console.log("WhatsApp Opened successfully " + data);
+      })
+      .catch(() => {
+        alert("Make sure WhatsApp installed on your device");
+      });
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -81,13 +93,7 @@ const CityInnerScreen = ({ navigation, route }) => {
             <Text style={{ fontSize: 15 }}>{item.idealDays} Required</Text>
           </View>
         </View>
-        {/* <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            marginVertical: 10,
-          }}
-        > */}
+
         <View
           style={{
             flexDirection: "row",
@@ -104,7 +110,6 @@ const CityInnerScreen = ({ navigation, route }) => {
           <Text style={{ fontSize: 15, marginTop: 15 }}>
             {item.airportName}
           </Text>
-          {/* </View> */}
         </View>
         <View
           style={{
@@ -116,7 +121,7 @@ const CityInnerScreen = ({ navigation, route }) => {
         >
           <Text
             style={{
-              marginTop: 20,
+              marginVertical: 20,
               fontSize: 36,
               textAlign: "left",
               width: WIDTH,
@@ -126,30 +131,25 @@ const CityInnerScreen = ({ navigation, route }) => {
           >
             Famous Places
           </Text>
-          {/* {item.famousPlacesToVisit.split(" ").map((d) => {
-            return <Text style={{ fontSize: 15 }}>{d}</Text>;
-          })} */}
+
           <Text style={{ fontFamily: "Andika", fontSize: 16 }}>
             {item.famousPlacesToVisit}
           </Text>
-          {/* </View> */}
         </View>
 
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
-            marginBottom: 20,
+            marginVertical: 10,
           }}
         >
-          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+          <TouchableOpacity>
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 borderRadius: 13,
                 elevation: 200,
-                // borderColor: "black",
                 backgroundColor: "#FA3B5A",
                 padding: 15,
               }}
@@ -177,7 +177,6 @@ const CityInnerScreen = ({ navigation, route }) => {
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 borderRadius: 13,
                 elevation: 200,
                 backgroundColor: "#9EB19E",
@@ -200,15 +199,13 @@ const CityInnerScreen = ({ navigation, route }) => {
               Explore {item.cityName}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+          <TouchableOpacity onPress={() => openWhatsApp(item.cityName)}>
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 backgroundColor: "#FFB400",
                 borderRadius: 13,
                 elevation: 200,
-                // borderColor: "black",
                 padding: 15,
               }}
             >
@@ -247,9 +244,9 @@ const styles = StyleSheet.create({
   },
   cityName: {
     marginTop: 60,
-    marginLeft: 30,
     fontSize: 40,
     fontFamily: "NewYorkl",
+    textAlign: "center",
   },
   innerDetail: {
     top: -30,

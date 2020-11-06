@@ -3,25 +3,33 @@ import AsyncStorage from "@react-native-community/async-storage";
 import {
   View,
   Text,
-  KeyboardAvoidingView,
   TouchableOpacity,
   ImageBackground,
   StyleSheet,
   Dimensions,
-  Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
+  ScrollView,
   TextInput,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
 import * as firebase from "firebase";
-
+import { Spinner } from "native-base";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
+import Constants from "expo-constants";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 function SignUpScreen({ navigation }) {
   const [number, setNumber] = useState("");
@@ -31,9 +39,18 @@ function SignUpScreen({ navigation }) {
   const [step, setStep] = useState(0);
   const [code, setCode] = useState(0);
   const [sessionID, setSessionID] = useState("");
-  const [loaded, setLoaded] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const { isLoggedIn, setIsLoggedIn, user, setUser } = useContext(AuthContext);
-
+  const [err, setErr] = useState("");
+  const [numerr, setNumErr] = useState(false);
+  const [emailerr, setEmailErr] = useState(false);
+  const [nameerr, setNameErr] = useState(false);
+  const [passerr, setPassErr] = useState(false);
+  const [otperr, setOtpErr] = useState(false);
+  const [expoToken, setExpoToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
   const storeToken = async (value) => {
     try {
       const userToken = JSON.stringify(value);
@@ -45,66 +62,180 @@ function SignUpScreen({ navigation }) {
 
   const nextStep = () => {
     setStep(step + 1);
+    setLoaded(false);
   };
   const prevStep = () => {
     setStep(step - 1);
+    setLoaded(false);
   };
 
   const sendOtp = () => {
     console.log("clicked");
-    axios
-      .get(
-        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN`
-      )
-      .then((response) => {
-        //console.log(response.data);
-        let session = response.data.Details;
-        console.log(session, "RESPONSE DATA");
-        setSessionID(session);
-      })
-      .catch((err) => console.log(err));
+    setEmailErr(false);
+    setNumErr(false);
+    setPassErr(false);
+    setNameErr(false);
+
+    if (
+      number.length === 10 &&
+      email.includes("@") &&
+      password !== "" &&
+      name !== " "
+    ) {
+      setLoaded(true);
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          setUser(user.user);
+          firebase.database().ref(`userGeneralInfo/${user.user.uid}`).set({
+            phoneNumber: number,
+            name: name,
+            address: "",
+            age: "",
+            gender: "",
+            aboutMe: "",
+            travellerType: "",
+            admin: false,
+            pushNotificationToken: expoToken,
+          });
+          user.user
+            .updateProfile({
+              displayName: name,
+            })
+            .then((displayName) => console.log(displayName))
+            .catch((err) => console.log(err));
+          setIsLoggedIn(true);
+          storeToken(user.user);
+          axios
+            .get(
+              `https://2factor.in/API/V1/4196cbc9-0df2-11eb-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN`
+            )
+            .then((response) => {
+              let session = response.data.Details;
+              console.log(session, "RESPONSE DATA");
+              setLoaded(false);
+              setSessionID(session);
+              nextStep();
+            })
+            .catch((err) => {
+              console.log(err, "kjhk");
+            });
+        })
+        .catch((err) => {
+          setLoaded(false);
+          setErr(err.message);
+          console.log(err.message);
+        });
+    } else {
+      if (email.includes("@") === false) {
+        setEmailErr(true);
+      }
+      if (number.length !== 10) {
+        setNumErr(true);
+      }
+      if (name == "") {
+        setNameErr(true);
+      }
+      if (password.length < 6) {
+        setPassErr(true);
+      }
+    }
   };
 
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalStatus = existingStatus;
+      console.log(finalStatus, existingStatus, "stst");
+
+      if (existingStatus !== "granted" || Platform.OS === "android") {
+        const { status } = await Permissions.askAsync(
+          Permissions.NOTIFICATIONS
+        );
+        finalStatus = status;
+
+        console.log(finalStatus, "fianl");
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    return token;
+  };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => setExpoToken(token));
+    // This listener is fired whenever a notification is received while the app is foregrounded
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        setNotification(notification);
+      }
+    );
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        console.log(response);
+      }
+    );
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, []);
+
   const verifyOtp = () => {
+    setLoaded(true);
     axios
       .get(
-        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
+        `https://2factor.in/API/V1/4196cbc9-0df2-11eb-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
       )
       .then((response) => {
         console.log(response, "RESPONSE");
         const status = response.data.Details;
         console.log(status, "STATUS");
         if (status == "OTP Matched") {
-          firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then((user) => {
-              setUser(user);
-              firebase.database().ref("users").push({
-                name: name,
-                phoneNumber: number,
-                email: email,
-              });
-              setUser(user);
-              setIsLoggedIn(true);
-              storeToken(user);
-              navigation.navigate("Main");
-              prevStep();
-            })
-            .catch((err) => console.log(err));
-         
+          setName("");
+          setNumber("");
+          setPassword("");
+          setEmail("");
+          setUser(user);
+          setIsLoggedIn(true);
+          storeToken(user);
+          setLoaded(false);
+          navigation.navigate("Main");
+          prevStep();
         }
       })
-      .catch((err) => Alert.alert("Otp is wrong"));
+      .catch((err) => {
+        setLoaded(false);
+        console.log(err, "err");
+        setOtpErr(true);
+      });
   };
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      setTimeout(() => {
-        setLoaded(false);
-      }, 1000);
       firebase.auth().onAuthStateChanged((user) => {
-        console.log(user, "MANIVASAGAM");
         setUser(user);
       });
     }
@@ -115,7 +246,7 @@ function SignUpScreen({ navigation }) {
     switch (step) {
       case 0:
         return (
-          <View>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.skip}>
               <TouchableOpacity onPress={() => navigation.navigate("Main")}>
                 <Text
@@ -134,7 +265,11 @@ function SignUpScreen({ navigation }) {
               <Animatable.View
                 animation="fadeInUp"
                 duration={1500}
-                style={{ alignItems: "center" }}
+                style={{
+                  alignItems: "flex-end",
+                  alignItems: "center",
+                  marginTop: HEIGHT / 6,
+                }}
               >
                 <View
                   style={{ marginBottom: HEIGHT / 7, alignItems: "center" }}
@@ -158,19 +293,70 @@ function SignUpScreen({ navigation }) {
                     keyboardAppearance="dark"
                     keyboardType="email-address"
                     onChangeText={(value) => setName(value)}
+                    placeholderTextColor="white"
                   />
                 </View>
+                {!nameerr ? null : (
+                  <View
+                    style={
+                      ([styles.inputContainer],
+                      { backgroundColor: "transparent", marginBottom: 0 })
+                    }
+                  >
+                    <Text
+                      style={{
+                        color: "yellow",
+                        marginBottom: 10,
+                        fontSize: 16,
+                      }}
+                    >
+                      Enter Your Name
+                    </Text>
+                  </View>
+                )}
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
                     placeholder="Email"
+                    autoCapitalize="none"
                     value={email}
                     keyboardType="visible-password"
                     keyboardAppearance="dark"
                     keyboardType="email-address"
                     onChangeText={(value) => setEmail(value)}
+                    placeholderTextColor="white"
                   />
                 </View>
+                {!emailerr ? (
+                  null && err !== ""
+                ) : (
+                  <View
+                    style={
+                      ([styles.inputContainer],
+                      { backgroundColor: "transparent", marginBottom: 10 })
+                    }
+                  >
+                    <Text style={{ color: "yellow", margin: 0, fontSize: 16 }}>
+                      Enter a Valid email id
+                    </Text>
+                    <Text style={{ color: "yellow", margin: 0, fontSize: 16 }}>
+                      {err}
+                    </Text>
+                  </View>
+                )}
+                {err == "" ? null : (
+                  <View
+                    style={
+                      ([styles.inputContainer],
+                      { backgroundColor: "transparent", marginBottom: 10 })
+                    }
+                  >
+                    <Text style={{ color: "yellow", margin: 0, fontSize: 14 }}>
+                      {err}
+                    </Text>
+                  </View>
+                )}
+
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
@@ -178,31 +364,61 @@ function SignUpScreen({ navigation }) {
                     placeholder="Phone Number"
                     keyboardAppearance="dark"
                     keyboardType="number-pad"
+                    placeholderTextColor="white"
                     onChangeText={(value) => setNumber(value)}
                   />
                 </View>
+                {!numerr ? null : (
+                  <View
+                    style={
+                      ([styles.inputContainer],
+                      { backgroundColor: "transparent", marginBottom: 10 })
+                    }
+                  >
+                    <Text style={{ color: "yellow", margin: 0, fontSize: 16 }}>
+                      Phone number should be 10 number
+                    </Text>
+                  </View>
+                )}
                 <View style={styles.inputContainer}>
                   <TextInput
                     style={styles.input}
+                    secureTextEntry={true}
                     placeholder="Password"
                     value={password}
-                    keyboardType="visible-password"
-                    keyboardAppearance="dark"
+                    placeholderTextColor="white"
                     keyboardType="email-address"
                     onChangeText={(value) => setPassword(value)}
                   />
                 </View>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    sendOtp();
-                    nextStep();
-                  }}
-                >
-                  <View style={styles.otpButtonContainer}>
-                    <Text style={styles.optButtonText}>Send Otp</Text>
+                {!passerr ? null : (
+                  <View
+                    style={
+                      ([styles.inputContainer],
+                      { backgroundColor: "transparent", marginBottom: 10 })
+                    }
+                  >
+                    <Text style={{ color: "yellow", margin: 0, fontSize: 16 }}>
+                      Password should be atleast minimum 6 charecters
+                    </Text>
                   </View>
-                </TouchableOpacity>
+                )}
+
+                <View style={styles.otpButtonContainer}>
+                  {loaded ? (
+                    <View style={{ paddingVertical: -10 }}>
+                      <Spinner color="white" />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        sendOtp();
+                      }}
+                    >
+                      <Text style={styles.optButtonText}>Send Otp</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
                 <View
                   style={{
                     position: "absolute",
@@ -218,7 +434,7 @@ function SignUpScreen({ navigation }) {
                         fontWeight: "900",
                         textAlign: "center",
                         color: "white",
-                        marginVertical: WIDTH / 10,
+                        marginVertical: WIDTH / 14,
                       }}
                     >
                       Already have an account? Try Sign In
@@ -227,7 +443,7 @@ function SignUpScreen({ navigation }) {
                 </View>
               </Animatable.View>
             </View>
-          </View>
+          </ScrollView>
         );
       case 1:
         return (
@@ -235,7 +451,6 @@ function SignUpScreen({ navigation }) {
             <View
               style={{
                 marginVertical: HEIGHT / 10,
-                //  justifyContent: "t",
                 position: "absolute",
                 bottom: HEIGHT * 0.7,
               }}
@@ -244,7 +459,6 @@ function SignUpScreen({ navigation }) {
                 style={{
                   fontSize: 25,
                   color: "white",
-                  // marginBottom: 10,
                   fontFamily: "Andika",
                 }}
               >
@@ -266,6 +480,24 @@ function SignUpScreen({ navigation }) {
                   onChangeText={(value) => setCode(value)}
                 />
               </View>
+              {!otperr ? null : (
+                <View
+                  style={
+                    ([styles.inputContainer],
+                    { backgroundColor: "transparent", marginBottom: 0 })
+                  }
+                >
+                  <Text
+                    style={{
+                      color: "red",
+                      marginBottom: 0,
+                      fontSize: 20,
+                    }}
+                  >
+                    Enter Valid Otp
+                  </Text>
+                </View>
+              )}
 
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
@@ -277,22 +509,28 @@ function SignUpScreen({ navigation }) {
                     <Text style={styles.otpText}> Back</Text>
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    verifyOtp();
 
-                    navigation.navigate("Main");
-                    prevStep();
-                  }}
-                >
-                  <View
-                    style={[styles.otpButton, { backgroundColor: "white" }]}
-                  >
-                    <Text style={[styles.otpText, { color: "black" }]}>
-                      Sign Up
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                <View style={[styles.otpButton, { backgroundColor: "white" }]}>
+                  {loaded ? (
+                    <View>
+                      <Spinner
+                        color="black"
+                        size="large"
+                        style={{ padding: 20, margin: -15 }}
+                      />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        verifyOtp();
+                      }}
+                    >
+                      <Text style={[styles.otpText, { color: "black" }]}>
+                        Sign Up
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
             </View>
           </View>
@@ -302,7 +540,6 @@ function SignUpScreen({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {/* <KeyboardAvoidingView style={{ flex: 1 }} behavior="position"> */}
       <Animatable.View
         duration={1000}
         style={{
@@ -318,7 +555,6 @@ function SignUpScreen({ navigation }) {
             position: "absolute",
             //zIndex: -2,
           }}
-          // source={require("../../../assets/loginimage.jpg")}
           source={{
             uri:
               "https://images.pexels.com/photos/2249602/pexels-photo-2249602.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -326,7 +562,6 @@ function SignUpScreen({ navigation }) {
         />
         {renderView(step)}
       </Animatable.View>
-      {/* </KeyboardAvoidingView> */}
     </TouchableWithoutFeedback>
   );
 }
@@ -375,7 +610,7 @@ const styles = new StyleSheet.create({
     //  fontWeight: "bold",
   },
   otpButtonContainer: {
-    marginBottom: HEIGHT / 10,
+    marginBottom: HEIGHT / 8,
     backgroundColor: "black",
     borderRadius: 10,
     width: WIDTH * 0.9,

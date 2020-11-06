@@ -2,7 +2,6 @@ import React from "react";
 import {
   StyleSheet,
   Text,
-  Button,
   Image,
   View,
   Dimensions,
@@ -16,7 +15,6 @@ const HEIGHT = Dimensions.get("window").height;
 
 const SelfTourInner = ({ navigation, route }) => {
   const item = route.params.item;
-  console.log(item);
   return (
     <ScrollView>
       <Animatable.View
@@ -72,7 +70,6 @@ const SelfTourInner = ({ navigation, route }) => {
             <View>
               <LinearGradient
                 colors={["#E76847", "#FF9B60"]}
-                // colors={["#28C9E1", "#1CD5C6"]}
                 style={{ padding: 10, borderRadius: 18 }}
               >
                 <View>
@@ -89,7 +86,6 @@ const SelfTourInner = ({ navigation, route }) => {
                     <Text style={{ fontSize: 18 }}>₹ - Very Low</Text>
                   )}
                 </View>
-                {/* <Text>{item.tourCost.adult}</Text> */}
               </LinearGradient>
             </View>
 
@@ -173,19 +169,6 @@ const SelfTourInner = ({ navigation, route }) => {
                 marginVertical: 10,
               }}
             >
-              {/* <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  style={{ height: 40, width: 40 }}
-                  source={require("../../../assets/Star.png")}
-                />
-                <Text>{item.tourType}</Text>
-              </View> */}
               <View
                 style={{
                   flexDirection: "row",
@@ -249,15 +232,6 @@ const SelfTourInner = ({ navigation, route }) => {
             justifyContent: "center",
           }}
         >
-          {/* <LinearGradient
-            colors={["#98F7A7", "#98F7A7"]}
-            style={{
-              width: WIDTH / 2.7,
-              padding: 3,
-              borderTopRightRadius: 25,
-              borderBottomRightRadius: 25,
-            }}
-          > */}
           <Text
             style={{
               fontSize: 20,
@@ -265,7 +239,6 @@ const SelfTourInner = ({ navigation, route }) => {
           >
             Itinerary
           </Text>
-          {/* </LinearGradient> */}
           <View
             style={{
               margin: 20,
@@ -288,7 +261,6 @@ const SelfTourInner = ({ navigation, route }) => {
           </View>
         </View>
 
-        {/* Pickups */}
         <View
           style={{
             flexDirection: "row",
@@ -324,8 +296,6 @@ const SelfTourInner = ({ navigation, route }) => {
           </View>
         </View>
 
-        {/* Additional information */}
-
         <View
           style={{
             justifyContent: "center",
@@ -333,16 +303,6 @@ const SelfTourInner = ({ navigation, route }) => {
             marginVertical: 10,
           }}
         >
-          {/* <LinearGradient
-            colors={["#FFE588", "#FFE588"]}
-            style={{
-              width: WIDTH / 1.7,
-              paddingVertical: 10,
-              paddingLeft: 15,
-              borderTopLeftRadius: 25,
-              borderBottomLeftRadius: 25,
-            }}
-          > */}
           <Text style={{ fontSize: 20 }}>Additional Information</Text>
           {/* </LinearGradient> */}
           <View
@@ -367,7 +327,6 @@ const SelfTourInner = ({ navigation, route }) => {
           </View>
         </View>
 
-        {/* Button */}
         <View style={{ marginHorizontal: 20 }}>
           <LinearGradient
             colors={["#626E7B", "#626E7B"]}

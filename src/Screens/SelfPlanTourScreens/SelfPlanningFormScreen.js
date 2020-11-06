@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -10,24 +10,24 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
-import useData from "../../hooks/useData";
+
 import { Feather } from "@expo/vector-icons";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { AuthContext } from "../../context/AuthContext";
 const HEIGHT = Dimensions.get("window").height;
 const WIDTH = Dimensions.get("window").width;
-//  c.countryName.trim().toUpperCase() == destination1.trim().toUpperCase()
 const SelfPlanForm = ({ navigation }) => {
-  const [country, city] = useData();
+  const { cities } = useContext(AuthContext);
+  const [city, setCity] = useState(cities);
   const [destination, setDestination] = useState("");
   const [selectedCity, setSelectedCity] = useState([]);
   const [cityDates, setCityDates] = useState([]);
   const [loader, setLoader] = useState(false);
 
-  console.log(cityDates);
+  console.log(city);
 
   const getCity = () => {
     const cities = city.filter((c) => {
-      // if (destination1 == "")
       return c.cityName
         .trim()
         .toUpperCase()
@@ -35,14 +35,12 @@ const SelfPlanForm = ({ navigation }) => {
     });
 
     const countries = city.filter((c) => {
-      // if (destination1 == "")
       return c.countryName
         .trim()
         .toUpperCase()
         .includes(destination.toUpperCase().trim());
     });
 
-    //  setLoader(true);
     const result = [...cities, ...countries];
     return result;
   };
@@ -50,7 +48,7 @@ const SelfPlanForm = ({ navigation }) => {
   const showLoader = () => {
     setTimeout(() => {
       setLoader(true);
-    }, 2000);
+    }, 300);
   };
 
   useEffect(() => {

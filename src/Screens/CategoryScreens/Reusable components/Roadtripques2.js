@@ -25,8 +25,6 @@ const Roadtripques2 = ({
   func1,
   func2,
   func3,
-  placeholder1,
-  placeholder2,
   placeholder3,
 }) => {
   return (

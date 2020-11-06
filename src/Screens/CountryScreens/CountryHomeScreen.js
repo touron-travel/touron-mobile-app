@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,58 +11,46 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import * as firebase from "firebase";
-import useData from "../../hooks/useData";
+import touron from "../../api/touron";
+import { AuthContext } from "../../context/AuthContext";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const CountryHomeScreen = ({ navigation }) => {
-  const [country] = useData();
-  const [loader, setLoader] = useState(true);
-  // const [loader, setLoader] = useState(true);
+  const { countries } = useContext(AuthContext);
+  const [country, setCountry] = useState(countries);
+  const [loader, setLoader] = useState(false);
+  const [error, setErrorMessage] = useState("");
   const [countryName, setCountryName] = useState("");
 
   const showLoader = () => {
     setTimeout(() => {
       setLoader(false);
-    }, 2000);
+    }, 500);
   };
-  console.log(country);
-
-  // const getCountry = () => {
-  //   firebase
-  //     .database()
-  //     .ref(`countries/`)
-  //     .on("value", (data) => {
-  //       if (data) {
-  //         let pT = [];
-  //         data.forEach((c) => {
-  //           pT.push(c.val());
-  //         });
-  //         setCountry(pT);
-  //       }
-  //     });
-  // };
-
   useEffect(() => {
-    // getCountry();
+    getCountry();
     showLoader();
   }, []);
 
+  const getCountry = async () => {
+    try {
+      const countryResponse = await touron.get("/country");
+      setCountry(countryResponse.data);
+    } catch (err) {
+      setErrorMessage("Something went wrong");
+    }
+  };
   const search = () => {
     console.log(countryName, "NAME");
 
-    if (country.length > 0) {
-      const d = country.filter((c) => {
-        return c.countryName
-          .trim()
-          .toUpperCase()
-          .includes(countryName.trim().toUpperCase());
-      });
-      console.log(d, "popopopopop");
-      return d;
-      // setVisa(d);
-    }
+    const d = country.filter((c) => {
+      return c.countryName
+        .trim()
+        .toUpperCase()
+        .includes(countryName.trim().toUpperCase());
+    });
+    return d;
   };
 
   return (
@@ -75,7 +63,7 @@ const CountryHomeScreen = ({ navigation }) => {
             <Feather name="search" style={styles.iconStyle}></Feather>
             <TextInput
               style={styles.inputStyle}
-              placeholder="Search"
+              placeholder="Ex. Dubai,Australia"
               onChangeText={(value) => setCountryName(value)}
               onSubmitEditing={search}
               autoCapitalize="none"
@@ -92,7 +80,6 @@ const CountryHomeScreen = ({ navigation }) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
-                    
                     navigation.navigate("CountryInner", { item: item });
                   }}
                 >
@@ -140,7 +127,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#fff",
     fontWeight: "bold",
-
     zIndex: 1,
     top: 10,
     left: 20,
@@ -150,7 +136,6 @@ const styles = StyleSheet.create({
     height: HEIGHT / 15,
     borderRadius: 20,
     flexDirection: "row",
-    //  borderWidth: 1,
     width: WIDTH * 0.9,
     marginVertical: 20,
     marginHorizontal: 10,

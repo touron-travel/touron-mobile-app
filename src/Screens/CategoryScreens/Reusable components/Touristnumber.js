@@ -11,7 +11,6 @@ import {
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
-import Checked from "./Checked";
 const Touristnumber = ({
   imgSrc1,
   imgScr2,

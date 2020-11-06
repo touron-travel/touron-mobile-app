@@ -25,15 +25,26 @@
   "expo": {
     "name": "tour On",
     "icon": "./assets/playstore.png",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "slug": "touron",
+    "notification":{
+      "icon": "./assets/playstore.png"
+     }, 
+
     "ios": {
       "bundleIdentifier": "com.touron.travelapp",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "usesIcloudStorage":true
     },
     "android": {
       "package": "com.touron.travelapp",
-      "versionCode": 28
-    }
+      "versionCode": 13,
+      "useNextNotificationsApi": true,
+        "googleServicesFile": "./google-services.json"
+    },
+    "assetBundlePatterns": [
+      "./assets/images/*"
+    ]
   }
+   
 }

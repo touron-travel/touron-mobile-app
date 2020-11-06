@@ -11,8 +11,6 @@ import {
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 const Header = ({ navigation, name }) => {
-  // console.log(navigation);
-  // console.log(HEIGHT);
   return (
     <View style={styles.container}>
       <View
@@ -45,7 +43,6 @@ const Header = ({ navigation, name }) => {
             flexBasis: "80%",
             justifyContent: "center",
             marginTop: HEIGHT / 10 / 2.2,
-            // alignItems: "flex-start",
             height: HEIGHT / 10 + 20,
           }}
         >

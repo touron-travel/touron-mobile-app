@@ -20,9 +20,7 @@ import { DatePicker } from "native-base";
 import Expediture from "./Reusable components/Expediture";
 import Tourpreferance from "./Reusable components/Tourpreferance";
 import * as firebase from "firebase";
-
 import { AuthContext } from "../../context/AuthContext";
-
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -44,13 +42,36 @@ const SurpriseTourScreen = ({ navigation }) => {
   const [budget, setBudget] = useState("");
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const [date, setDate] = useState();
   const [month, setMonth] = useState();
   const [year, setYear] = useState();
+  const [dates, setDates] = useState("");
+  const [years, setYears] = useState("");
+  const [months, setMonths] = useState("");
+  console.log(dates, months, years, "mok");
   let random;
   let formatedMonth;
 
+  const [userInfo, setUserInfo] = useState({});
+  console.log(userInfo.phoneNumber, "ijnfo");
+
+  const getUserData = () => {
+    if (user !== null) {
+      firebase
+        .database()
+        .ref(`userGeneralInfo/${user.uid}`)
+        .on("value", (data) => {
+          setUserInfo(data.val());
+          setName(data.val().name);
+          setNumber(data.val().phoneNumber);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
   useEffect(() => {
     if (!isLoggedIn) {
       navigation.replace("SignInScreen");
@@ -78,11 +99,13 @@ const SurpriseTourScreen = ({ navigation }) => {
     console.log(date, "LOLOLOLO");
     setDatePickerVisibility(false);
     setFromDate(date.toLocaleDateString("en-GB"));
+    setDates(date.getDate());
+    setMonths(date.getMonth());
+    setYears[date.getFullYear()];
   };
 
   const handleToDate = (date) => {
     setDatePickerVisibility(false);
-
     setToDate(date.toLocaleDateString("en-GB"));
   };
 
@@ -92,7 +115,6 @@ const SurpriseTourScreen = ({ navigation }) => {
   const prevStep = () => {
     setStep(step - 1);
   };
-
   const description = `We surprise you with the best suitable location within your budget and according to your travel preferences. We don’t have concrete itineraries as we believe that you should decide where you want to invest your money. We also recommend various things to do which you can book yourself or we can book upon your confirmation.`;
   const renderForm = (step) => {
     switch (step) {
@@ -100,7 +122,6 @@ const SurpriseTourScreen = ({ navigation }) => {
         return (
           <Tourname
             step={() => nextStep()}
-            // imgSrc={require("../../../assets/surprise-tour/Surprise.png")}
             imgSrc={
               "https://image.freepik.com/free-vector/xmas-surprise-concept-illustration_114360-1824.jpg"
             }
@@ -204,31 +225,43 @@ const SurpriseTourScreen = ({ navigation }) => {
           <View style={{ alignItems: "center" }}>
             <View style={styles.imageContainer}>
               <Image
-                style={{ height: HEIGHT / 2.5, width: WIDTH * 0.8 }}
+                style={{ height: HEIGHT / 3, width: WIDTH * 0.8 }}
                 source={{
                   uri:
                     "https://image.freepik.com/free-vector/build-your-program-appointment-booking_23-2148552954.jpg",
                 }}
               />
             </View>
-
             <View style={{ marginVertical: 20 }}>
-              <Text style={{ fontSize: 20, textAlign: "center" }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  textAlign: "center",
+                  fontFamily: "NewYorkl",
+                }}
+              >
                 When do you want to embark on your journey?
               </Text>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 4 }}>
-                  <Text style={{ fontSize: 20 }}>From:</Text>
+                <View style={{ width: WIDTH / 3.8 }}>
+                  <Text style={{ fontSize: 20, fontFamily: "Andika" }}>
+                    From:
+                  </Text>
                 </View>
                 <View style={styles.dateContainer}>
                   <View>
                     <TouchableOpacity onPress={showDatePicker}>
                       {fromDate == "" ? (
-                        <Text style={{ fontSize: 16, marginRight: 18 }}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            marginRight: 15,
+                          }}
+                        >
                           Select date
                         </Text>
                       ) : (
-                        <Text style={{ fontSize: 16, marginLeft: 55 }}>
+                        <Text style={{ fontSize: 16, marginRight: 25 }}>
                           {fromDate}
                         </Text>
                       )}
@@ -238,7 +271,7 @@ const SurpriseTourScreen = ({ navigation }) => {
 
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
-                  mode="date"
+                  // mode="date"
                   value={fromDate}
                   onConfirm={handleFromDate}
                   onCancel={hideDatePicker}
@@ -246,15 +279,21 @@ const SurpriseTourScreen = ({ navigation }) => {
                 />
               </View>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 6 }}>
-                  <Text style={{ fontSize: 20, marginLeft: 20 }}>To:</Text>
+                <View style={{ width: WIDTH / 4 }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginRight: 0,
+                      fontFamily: "Andika",
+                    }}
+                  >
+                    To:
+                  </Text>
                 </View>
-                <View style={styles.dateContainer}></View>
 
                 <DatePicker
                   locale={"en"}
-                  timeZoneOffsetInMinutes={undefined}
-                  modalTransparent={false}
+                  minimumDate={new Date(2020, months, dates)}
                   animationType={"fade"}
                   androidMode={"spinner"}
                   onDateChange={handleToDate}
@@ -320,7 +359,6 @@ const SurpriseTourScreen = ({ navigation }) => {
               <View style={{ alignItems: "center", margin: 10 }}>
                 <Text
                   style={{
-                    // backgroundColor: "red",
                     textAlign: "center",
                     padding: 8,
                     borderWidth: 1,
@@ -340,10 +378,7 @@ const SurpriseTourScreen = ({ navigation }) => {
   };
 
   const submitData = () => {
-    const user = firebase.auth().currentUser;
     const userID = user.uid;
-    console.log(userID);
-
     const tourData = {
       requestID: `T0-${date}${formatedMonth}${year}-${random}`,
       tourCategory: "Surprise Tour",
@@ -362,35 +397,19 @@ const SurpriseTourScreen = ({ navigation }) => {
       name: name,
       number: number,
       budget: budget,
+      userID: userID,
       status: "Query Received",
+      tourCost: 0,
     };
     firebase
       .database()
-      .ref(`surprise-tours/${userID}`)
+      .ref(`requests`)
       .push(tourData)
       .then((data) => {
         console.log(data);
         nextStep();
       })
       .catch((err) => console.log(err));
-
-    console.log(
-      tourType,
-      travellerType,
-      fromDate,
-      adult,
-      children,
-      travelMode,
-      startPoint,
-      toDate,
-      expediture1,
-      expediture2,
-      expediture3,
-      tourPreferance,
-      name,
-      number,
-      budget
-    );
   };
 
   return (

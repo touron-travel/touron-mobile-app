@@ -9,7 +9,6 @@ import {
 } from "react-native";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-
 import Checked from "./Checked";
 const Travelmode = ({
   imgSrc1,

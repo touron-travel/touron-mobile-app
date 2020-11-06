@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  KeyboardAvoidingView,
   Dimensions,
   Text,
   Image,
@@ -25,7 +26,7 @@ import { AuthContext } from "../../context/AuthContext";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
-const PlannedTourScreen = ({ navigation }) => {
+const PlannedTourScreen = ({ navigation, route }) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [tourType, setTourType] = React.useState("");
   const [travellerType, setTravellerType] = React.useState("");
@@ -41,12 +42,45 @@ const PlannedTourScreen = ({ navigation }) => {
   const [budget, setBudget] = useState("");
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const [date, setDate] = useState();
   const [month, setMonth] = useState();
   const [year, setYear] = useState();
+  const [dates, setDates] = useState("");
+  const [years, setYears] = useState("");
+  const [months, setMonths] = useState("");
+  console.log(dates, months, years, "mok");
   let random;
   let formatedMonth;
+  console.log(user, "plannkwfed");
+
+  const [userInfo, setUserInfo] = useState({});
+  console.log(userInfo.phoneNumber, "ijnfo");
+
+  const getUserData = () => {
+    if (user !== null) {
+      firebase
+        .database()
+        .ref(`userGeneralInfo/${user.uid}`)
+        .on("value", (data) => {
+          setUserInfo(data.val());
+          setName(data.val().name);
+          setNumber(data.val().phoneNumber);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+    if (route.params !== undefined) {
+      const countryName = route.params.countryName;
+      const type = route.params.type;
+      {
+        type == "International" ? setTourType(type) : setTourType("Domestic");
+      }
+      setDestination(countryName);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -75,6 +109,9 @@ const PlannedTourScreen = ({ navigation }) => {
     setDatePickerVisibility(false);
 
     setFromDate(date.toLocaleDateString("en-GB"));
+    setDates(date.getDate());
+    setMonths(date.getMonth());
+    setYears[date.getFullYear()];
   };
 
   const handleToDate = (date) => {
@@ -196,7 +233,7 @@ const PlannedTourScreen = ({ navigation }) => {
                 When do you want to embark on your journey?
               </Text>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 4 }}>
+                <View style={{ width: WIDTH / 3.8 }}>
                   <Text style={{ fontSize: 20, fontFamily: "Andika" }}>
                     From:
                   </Text>
@@ -208,14 +245,13 @@ const PlannedTourScreen = ({ navigation }) => {
                         <Text
                           style={{
                             fontSize: 16,
-                            marginRight: 18,
-                            // fontFamily: "Andika",
+                            marginRight: 15,
                           }}
                         >
                           Select date
                         </Text>
                       ) : (
-                        <Text style={{ fontSize: 16, marginLeft: 5 }}>
+                        <Text style={{ fontSize: 16, marginRight: 25 }}>
                           {fromDate}
                         </Text>
                       )}
@@ -225,7 +261,7 @@ const PlannedTourScreen = ({ navigation }) => {
 
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
-                  mode="date"
+                  // mode="date"
                   value={fromDate}
                   onConfirm={handleFromDate}
                   onCancel={hideDatePicker}
@@ -233,23 +269,20 @@ const PlannedTourScreen = ({ navigation }) => {
                 />
               </View>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 6 }}>
+                <View style={{ width: WIDTH / 4 }}>
                   <Text
                     style={{
                       fontSize: 20,
-                      marginLeft: WIDTH / 12,
+                      marginRight: 0,
                       fontFamily: "Andika",
                     }}
                   >
                     To:
                   </Text>
                 </View>
-                <View style={styles.dateContainer}></View>
-
                 <DatePicker
                   locale={"en"}
-                  timeZoneOffsetInMinutes={undefined}
-                  modalTransparent={false}
+                  minimumDate={new Date(2020, months, dates)}
                   animationType={"fade"}
                   androidMode={"spinner"}
                   onDateChange={handleToDate}
@@ -334,117 +367,107 @@ const PlannedTourScreen = ({ navigation }) => {
   };
 
   const submitData = () => {
-    const user = firebase.auth().currentUser;
     const userID = user.uid;
-    console.log(userID);
 
+    const data = {
+      requestID: `T0-${date}${formatedMonth}${year}-${random}`,
+      tourCategory: "Planned Tour",
+      tourType: tourType,
+      travellerType: travellerType,
+      fromDate: fromDate,
+      adult: adult,
+      children: children,
+      travelMode: travelMode,
+      startPoint: startPoint,
+      toDate: toDate,
+      preferanece: preferanece,
+      destination: destination,
+      name: name,
+      number: number,
+      budget: budget,
+      status: "Query Received",
+      userID: userID,
+      plans: "",
+      reports: "",
+      tourCost: 0,
+    };
     firebase
       .database()
-      .ref(`planned-tours/${userID}`)
-      .push({
-        requestID: `T0-${date}${formatedMonth}${year}-${random}`,
-        tourCategory: "Planned Tour",
-        tourType: tourType,
-        travellerType: travellerType,
-        fromDate: fromDate,
-        adult: adult,
-        children: children,
-        travelMode: travelMode,
-        startPoint: startPoint,
-        toDate: toDate,
-        preferanece: preferanece,
-        destination: destination,
-        name: name,
-        number: number,
-        budget: budget,
-        status: "Query Received",
-      })
+      .ref(`requests`)
+      .push(data)
       .then((data) => {
         console.log(data);
         nextStep();
       })
       .catch((err) => console.log(err));
-    // console.log(
-    //   tourType,
-    //   travellerType,
-    //   fromDate,
-    //   adult,
-    //   children,
-    //   travelMode,
-    //   startPoint,
-    //   toDate,
-    //   preferanece,
-    //   destination,
-    //   name,
-    //   number,
-    //   budget
-    // );
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {step == 9 ? null : (
-        <View style={styles.arrowsContainer}>
-          {step == 1 ? (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.goBack("Home");
-                //   console.log("logged");
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        {step == 9 ? null : (
+          <View style={styles.arrowsContainer}>
+            {step == 1 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack("Home");
+                  //   console.log("logged");
+                }}
+              >
+                <View>
+                  <AntDesign name="arrowleft" size={28} />
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={() => prevStep()}>
+                <View>
+                  <AntDesign name="arrowleft" size={28} />
+                </View>
+              </TouchableOpacity>
+            )}
+
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "NewYorkl",
+                marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
               }}
             >
-              <View>
-                <AntDesign name="arrowleft" size={28} />
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={() => prevStep()}>
-              <View>
-                <AntDesign name="arrowleft" size={28} />
-              </View>
-            </TouchableOpacity>
-          )}
+              Planned Tour
+            </Text>
 
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: "NewYorkl",
-              marginTop: Platform.OS == "android" ? HEIGHT / 14 : 80,
-            }}
-          >
-            Planned Tour
-          </Text>
-
-          <TouchableOpacity
-            onPress={() => {
-              nextStep();
-            }}
-          >
-            {step !== 8 && step !== 2 && step !== 3 && step !== 5 ? (
-              <View>
-                <AntDesign name="arrowright" size={28} />
-              </View>
-            ) : null}
-          </TouchableOpacity>
-        </View>
-      )}
-      {step == 1 || step == 9 ? null : (
-        <View style={styles.progressContainer}>
-          <View
-            style={{
-              borderRadius: 20,
-              height: 6.5,
-              borderWidth: 2,
-              borderColor: "#a2cffe",
-              paddingVertical: 1,
-              width: WIDTH == 360 ? 38.5 * step : 45 * step,
-              overflow: "hidden",
-              backgroundColor: "#a2cffe",
-            }}
-          ></View>
-        </View>
-      )}
-      {renderForm(step)}
-    </ScrollView>
+            <TouchableOpacity
+              onPress={() => {
+                nextStep();
+              }}
+            >
+              {step !== 8 && step !== 2 && step !== 3 && step !== 5 ? (
+                <View>
+                  <AntDesign name="arrowright" size={28} />
+                </View>
+              ) : null}
+            </TouchableOpacity>
+          </View>
+        )}
+        {step == 1 || step == 9 ? null : (
+          <View style={styles.progressContainer}>
+            <View
+              style={{
+                borderRadius: 20,
+                height: 6.5,
+                borderWidth: 2,
+                borderColor: "#a2cffe",
+                paddingVertical: 1,
+                width: WIDTH == 360 ? 38.5 * step : 45 * step,
+                overflow: "hidden",
+                backgroundColor: "#a2cffe",
+              }}
+            ></View>
+          </View>
+        )}
+        {renderForm(step)}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

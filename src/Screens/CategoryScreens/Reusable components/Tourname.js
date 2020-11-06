@@ -12,11 +12,6 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 const Tourname = ({ imgSrc, step, description }) => {
-  //   const [step, setStep] = useState(1);
-  //   const nextStep = () => {
-  //     setStep(stepCount + 1);
-  //   };
-  // console.log(imgSrc);
   return (
     <View>
       <View
@@ -52,7 +47,6 @@ const Tourname = ({ imgSrc, step, description }) => {
   );
 };
 
-// backgroundColor: "#FFB400",
 const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
@@ -61,11 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonText: {
-    // borderWidth: 2,
-    // borderColor: "black",
-    // backgroundColor: "#ECF6F9",
     padding: 15,
-
     fontSize: 18,
   },
 });

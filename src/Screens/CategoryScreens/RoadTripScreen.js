@@ -7,13 +7,12 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import Tourname from "./Reusable components/Tourname";
-import Tourtype from "./Reusable components/Tourtype";
 import Travellertype from "./Reusable components/Travellertype";
 import Checkout from "./Reusable components/Checkout";
-
 import Touristnumber from "./Reusable components/Touristnumber";
 import Travelmode from "./Reusable components/Travelmode";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -22,9 +21,7 @@ import Roadtripques from "./Reusable components/Roadtripques";
 import Roadtripques2 from "./Reusable components/Roadtripques2";
 import Drivetype from "./Reusable components/Drivetype";
 import * as firebase from "firebase";
-
 import { AuthContext } from "../../context/AuthContext";
-
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -48,17 +45,37 @@ const RoadTripScreen = ({ navigation }) => {
   const [budget, setBudget] = useState("");
   const [number, setNumber] = useState("");
   const [step, setStep] = useState(1);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const [date, setDate] = useState();
   const [month, setMonth] = useState();
   const [year, setYear] = useState();
+  const [dates, setDates] = useState("");
+  const [years, setYears] = useState("");
+  const [months, setMonths] = useState("");
+  console.log(dates, months, years, "mok");
   let random;
   let formatedMonth;
+  const [userInfo, setUserInfo] = useState({});
+  console.log(userInfo.phoneNumber, "ijnfo");
 
+  const getUserData = () => {
+    if (user !== null) {
+      firebase
+        .database()
+        .ref(`userGeneralInfo/${user.uid}`)
+        .on("value", (data) => {
+          setUserInfo(data.val());
+          setName(data.val().name);
+          setNumber(data.val().phoneNumber);
+        });
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
   const onCarRent = () => setIsSwitchOn(!carRent);
-
   const onAdditionalInfo = () => setIsSwitchOn(!additionalInfo);
-
   useEffect(() => {
     if (!isLoggedIn) {
       navigation.replace("SignInScreen");
@@ -81,15 +98,16 @@ const RoadTripScreen = ({ navigation }) => {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-
   const handleFromDate = (date) => {
     setDatePickerVisibility(false);
     setFromDate(date.toLocaleDateString("en-GB"));
+    setDates(date.getDate());
+    setMonths(date.getMonth());
+    setYears[date.getFullYear()];
   };
 
   const handleToDate = (date) => {
     setDatePickerVisibility(false);
-
     setToDate(date.toLocaleDateString("en-GB"));
   };
 
@@ -111,9 +129,6 @@ const RoadTripScreen = ({ navigation }) => {
             imgSrc={
               "https://image.freepik.com/free-vector/off-road-concept-illustration_114360-1220.jpg"
             }
-            // imgSrc={
-            //   "https://image.freepik.com/free-vector/tourists-wearing-face-masks_23-2148602316.jpg"
-            // }
             description={description}
           />
         );
@@ -180,31 +195,43 @@ const RoadTripScreen = ({ navigation }) => {
           <View style={{ alignItems: "center" }}>
             <View style={styles.imageContainer}>
               <Image
-                style={{ height: HEIGHT / 2.5, width: WIDTH * 0.8 }}
+                style={{ height: HEIGHT / 3, width: WIDTH * 0.8 }}
                 source={{
                   uri:
                     "https://image.freepik.com/free-vector/build-your-program-appointment-booking_23-2148552954.jpg",
                 }}
               />
             </View>
-
             <View style={{ marginVertical: 20 }}>
-              <Text style={{ fontSize: 20, textAlign: "center" }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  textAlign: "center",
+                  fontFamily: "NewYorkl",
+                }}
+              >
                 When do you want to embark on your journey?
               </Text>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 4 }}>
-                  <Text style={{ fontSize: 20 }}>From:</Text>
+                <View style={{ width: WIDTH / 3.8 }}>
+                  <Text style={{ fontSize: 20, fontFamily: "Andika" }}>
+                    From:
+                  </Text>
                 </View>
                 <View style={styles.dateContainer}>
                   <View>
                     <TouchableOpacity onPress={showDatePicker}>
                       {fromDate == "" ? (
-                        <Text style={{ fontSize: 16, marginRight: 18 }}>
+                        <Text
+                          style={{
+                            fontSize: 16,
+                            marginRight: 15,
+                          }}
+                        >
                           Select date
                         </Text>
                       ) : (
-                        <Text style={{ fontSize: 16, marginLeft: 55 }}>
+                        <Text style={{ fontSize: 16, marginRight: 25 }}>
                           {fromDate}
                         </Text>
                       )}
@@ -214,7 +241,6 @@ const RoadTripScreen = ({ navigation }) => {
 
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
-                  mode="date"
                   value={fromDate}
                   onConfirm={handleFromDate}
                   onCancel={hideDatePicker}
@@ -222,22 +248,20 @@ const RoadTripScreen = ({ navigation }) => {
                 />
               </View>
               <View style={styles.dateContainer}>
-                <View style={{ width: WIDTH / 6 }}>
-                  <Text style={{ fontSize: 20, marginLeft: 20 }}>To:</Text>
+                <View style={{ width: WIDTH / 4 }}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginRight: 0,
+                      fontFamily: "Andika",
+                    }}
+                  >
+                    To:
+                  </Text>
                 </View>
-                <View
-                  style={{
-                    justifyContent: "space-around",
-                    alignItems: "center",
-                    flexDirection: "row",
-                    marginVertical: 20,
-                  }}
-                ></View>
-
                 <DatePicker
                   locale={"en"}
-                  timeZoneOffsetInMinutes={undefined}
-                  modalTransparent={false}
+                  minimumDate={new Date(2020, months, dates)}
                   animationType={"fade"}
                   androidMode={"spinner"}
                   onDateChange={handleToDate}
@@ -354,7 +378,6 @@ const RoadTripScreen = ({ navigation }) => {
               <View style={{ alignItems: "center", margin: 10 }}>
                 <Text
                   style={{
-                    // backgroundColor: "red",
                     textAlign: "center",
                     padding: 8,
                     borderWidth: 1,
@@ -373,13 +396,12 @@ const RoadTripScreen = ({ navigation }) => {
     }
   };
   const submitData = () => {
-    const user = firebase.auth().currentUser;
     const userID = user.uid;
     console.log(userID);
 
     firebase
       .database()
-      .ref(`roadtrip-tours/${userID}`)
+      .ref(`requests/`)
       .push({
         requestID: `TO-${date}${formatedMonth}${year}-${random}`,
         tourCategory: "Road Trip",
@@ -401,35 +423,21 @@ const RoadTripScreen = ({ navigation }) => {
         driverType: driverType,
         driveType: driveType,
         status: "Query Received",
+        userID: userID,
+        plans: "",
+        reports: "",
+        tourCost: 0,
       })
       .then((data) => {
         console.log(data);
         nextStep();
       })
       .catch((err) => console.log(err));
-    console.log(
-      travellerType,
-      fromDate,
-      adult,
-      children,
-      travelMode,
-      startPoint,
-      driveRestriction,
-      driveDuration,
-      toDate,
-      stops,
-      carRent,
-      additionalInfo,
-      name,
-      number,
-      budget,
-      driverType,
-      driveType
-    );
   };
 
   return (
     <ScrollView style={styles.container}>
+      <StatusBar />
       {step == 10 ? null : (
         <View style={styles.arrowsContainer}>
           {step == 1 ? (

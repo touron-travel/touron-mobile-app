@@ -1,19 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Text, Image, View, Dimensions, TouchableOpacity } from "react-native";
-
 import { AuthContext } from "../../context/AuthContext";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
 import { Feather } from "@expo/vector-icons";
-
 const MyPlansScreen = ({ navigation }) => {
   const [plannedTour, setPlannedTour] = useState([]);
-  const { user, setUser } = useContext(AuthContext);
-  // console.log(plannedTour[0].tourDetails[0]);
-
-  const userId = user.user.uid;
-
+  const { user } = useContext(AuthContext);
+  const userId = user.uid;
   useEffect(() => {
     const getUserPlans = () => {
       const plans = [];
@@ -22,7 +17,6 @@ const MyPlansScreen = ({ navigation }) => {
         .ref(`self-planned-tours/${userId}/`)
         .on("value", (data) => {
           data.forEach((c) => {
-            //  console.log(c, "LLLLLL");
             plans.push(c.val());
           });
         });
@@ -32,16 +26,6 @@ const MyPlansScreen = ({ navigation }) => {
 
     getUserPlans();
   }, []);
-  // let plan = [];
-
-  // plannedTour.map((c) => {
-  //   plan.push(c.tourDetails);
-  // });
-
-  // console.log(plan);
-  // plan.forEach((c) => console.log(c.cityName, "OP"));
-
-  // console.log(plan, "lll");
   return (
     <View
       animation="bounceIn"
@@ -53,7 +37,6 @@ const MyPlansScreen = ({ navigation }) => {
           backgroundColor: "#28C9E1",
           height: HEIGHT / 8,
           alignItems: "center",
-          //  justifyContent: "center",
           flexDirection: "row",
         }}
       >
@@ -83,7 +66,6 @@ const MyPlansScreen = ({ navigation }) => {
           style={{
             alignItems: "center",
             justifyContent: "center",
-            // flex: 1,
           }}
         >
           <Image

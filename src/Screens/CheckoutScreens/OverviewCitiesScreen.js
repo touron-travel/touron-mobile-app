@@ -14,9 +14,7 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { Surface } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
-
-import { SelfTourContext } from "../../context/SelfTourContext";
-
+import { SelfTourContext } from "../../context/ SelfTourContext";
 const OverviewCitiesScreen = ({ navigation, route }) => {
   const { details, setDetails } = useContext(SelfTourContext);
   const cities = route.params.cities;
@@ -30,20 +28,18 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
   const [cityDetails, setCityDetails] = useState([...cities]);
   const [adult, setAdult] = useState(0);
   const [children, setChildren] = useState(0);
-  // console.log(year, fromDate, toDate);
   const handleToDate = (date) => {
     setDatePickerVisibility(false);
     const updatedDate = date.toDateString();
-    // console.log(updatedDate);
     setToDate(updatedDate);
   };
-  // console.log(cityDates);
   const handleFromDate = (date) => {
     setDatePickerVisibility(false);
     setFromDate(date.toDateString());
     setDate(date.getDate());
     setMonth(date.getMonth());
-    setYear[date.getFullYear()];
+    setYear(date.getFullYear());
+    console.log(date.getFullYear(), "op");
   };
 
   const getCurrentCity = (item) => {
@@ -205,13 +201,12 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
             <View style={styles.picker}>
               <DatePicker
                 textStyle={{ color: "#FFF", fontFamily: "Andika" }}
-                maximumDate={new Date(2020, month, date * 1 + totalDays - 1)}
-                minimumDate={new Date(2020, month, date)}
+                minimumDate={new Date(year, month, date * 1 + totalDays - 1)}
+                maximumDate={new Date(year, month, date * 1 + totalDays - 1)}
                 animationType={"fade"}
                 textStyle={{ fontFamily: "Andika" }}
                 androidMode={"spinner"}
                 onDateChange={handleToDate}
-                te
               />
             </View>
           </View>
@@ -247,7 +242,6 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>-</Text>
                   </TouchableOpacity>
                   <View style={styles.inputContainer}>
-                    {/* <View style={styles.inputContainer}> */}
                     <TextInput
                       keyboardType="number-pad"
                       style={{
@@ -258,7 +252,6 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
                       editable={true}
                       onChangeText={(value) => setAdult(+value)}
                     />
-                    {/* </View> */}
                   </View>
                   <TouchableOpacity onPress={() => setAdult(adult + 1)}>
                     <Text style={{ fontSize: 20, fontWeight: "bold" }}>+</Text>
@@ -283,7 +276,6 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
                       style={{
                         marginTop: 10,
                         fontSize: 20,
-                        //textAlign: "center",
                       }}
                       editable={true}
                       value={children.toString()}
@@ -320,7 +312,6 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
             <Text style={styles.exploreButton}>Explore Tours</Text>
           </View>
         </TouchableOpacity>
-        {/* </View> */}
       </View>
     </ScrollView>
   );

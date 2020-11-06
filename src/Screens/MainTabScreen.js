@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Image, Text, StyleSheet, Button } from "react-native";
 
-import AccountScreen from "./AccountScreens/AccountScreen";
 import HomeScreen from "./HomeScreens/HomeScreen";
 import PlannedTourScreen from "./CategoryScreens/PlannedTourScreen";
 import SurpriseTourScreen from "./CategoryScreens/SupriseTourScreen";
@@ -20,21 +19,21 @@ import SelfTourHome from "./SelfPlanTourScreens/SelfTourHome";
 import SelfTourInner from "./SelfPlanTourScreens/SelfTourInner";
 import ProgressScreen from "./CheckoutScreens/ProgressScreen";
 import PaymentScreen from "./CheckoutScreens/PaymentScreen";
-import Animated from "react-native-reanimated";
 import {
   Feather,
-  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import OverviewToursScreen from "./CheckoutScreens/OverviewToursScreen";
 import OverviewCitiesScreen from "./CheckoutScreens/OverviewCitiesScreen";
 
-import { SelfTourContext } from "../context/SelfTourContext";
-
+import PromotionPage from "./AccountScreens/PromotionPage";
+import { SelfTourContext } from "../context/ SelfTourContext";
+import AboutUs from "./AccountScreens/AboutUs";
+import ContactUs from "./AccountScreens/ContactUs";
+import BookingDetails from "./AccountScreens/BookingDetails";
 const HomeStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -82,7 +81,6 @@ const HomeStackScreen = () => {
           headerTransparent: true,
           headerTitleStyle: {
             fontWeight: "bold",
-            // marginLeft: WIDTH / 5,
           },
         }}
         name="CountryHome"
@@ -99,13 +97,8 @@ const HomeStackScreen = () => {
       />
       <HomeStack.Screen
         options={{
-          title: "Explore Cities",
-          headerShown: true,
+          title: "",
           headerTransparent: true,
-          headerTitleStyle: {
-            fontWeight: "bold",
-            // marginLeft: WIDTH / 7,
-          },
         }}
         name="CityHome"
         component={CityHomeScreen}
@@ -121,13 +114,9 @@ const HomeStackScreen = () => {
       />
       <HomeStack.Screen
         options={{
-          title: "",
+          title: "Blogs",
           headerShown: true,
-          headerTransparent: true,
-          headerTitleStyle: {
-            fontWeight: "bold",
-            //   marginLeft: WIDTH / 5,
-          },
+          headerTransparent: false,
         }}
         name="BlogHome"
         component={BlogHomeScreen}
@@ -144,7 +133,6 @@ const HomeStackScreen = () => {
           headerTransparent: true,
           headerTitleStyle: {
             fontWeight: "bold",
-            //   marginLeft: WIDTH / 5,
           },
         }}
         name="TourHome"
@@ -158,6 +146,42 @@ const HomeStackScreen = () => {
         }}
         name="TourInner"
         component={TourInnerScreen}
+      />
+      <HomeStack.Screen
+        options={{
+          title: "",
+          headerShown: true,
+          headerTransparent: true,
+        }}
+        name="Promotion"
+        component={PromotionPage}
+      />
+      <HomeStack.Screen
+        options={{
+          title: "About Us",
+          headerShown: true,
+          headerTransparent: false,
+        }}
+        name="AboutUs"
+        component={AboutUs}
+      />
+      <HomeStack.Screen
+        options={{
+          title: "Contact Us",
+          headerShown: true,
+          headerTransparent: false,
+        }}
+        name="ContactUs"
+        component={ContactUs}
+      />
+      <HomeStack.Screen
+        options={{
+          title: "",
+          headerShown: true,
+          headerTransparent: false,
+        }}
+        name="Bookings"
+        component={BookingDetails}
       />
     </HomeStack.Navigator>
   );
@@ -186,7 +210,15 @@ const SelfTourStackScreen = () => {
           name="OverviewTours"
           component={OverviewToursScreen}
         />
-        <SelfTourStack.Screen name="Progress" component={ProgressScreen} />
+        <SelfTourStack.Screen
+          name="Progress"
+          options={{
+            title: "",
+            headerShown: true,
+            headerTransparent: true,
+          }}
+          component={ProgressScreen}
+        />
         <SelfTourStack.Screen name="Payment" component={PaymentScreen} />
       </SelfTourStack.Navigator>
     </SelfTourContext.Provider>
@@ -198,32 +230,11 @@ const MainTabScreen = () => (
     tabBarOptions={{
       keyboardHidesTabBar: true,
     }}
-    // screenOptions={({ route }) => ({
-    //   key
-    //   tabBarIcon: ({ focused, color, size }) => {
-    //     let iconName;
-
-    //     if (route.name === "Home") {
-    //       iconName = focused
-    //         ? "ios-information-circle"
-    //         : "ios-information-circle-outline";
-    //     } else if (route.name === "Settings") {
-    //       iconName = focused ? "ios-list-box" : "ios-list";
-    //     }
-
-    //     // You can return any component that you like here!
-    //     return <Ionicons name={iconName} size={size} color={color} />;
-    //   },
-    // })}
   >
     <Tab.Screen
       options={{
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons name="home" color={color} size={26} />
-          // <Image
-          //   style={{ height: 25, width: 25, marginBottom: 0 }}
-          //   source={require("../../assets/House.png")}
-          // />
         ),
       }}
       name="Home"
@@ -233,41 +244,20 @@ const MainTabScreen = () => (
       options={{
         tabBarIcon: ({ color }) => (
           <MaterialIcons name="flight-takeoff" size={24} color={color} />
-          // <Image
-          //   style={{ height: 25, width: 25, marginBottom: 0 }}
-          //   source={require("../../assets/Compass.png")}
-          // />
         ),
       }}
-      name="Tour"
+      name="Plan Myself"
       component={SelfTourStackScreen}
     />
     <Tab.Screen
       options={{
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons name="shopping" size={24} color={color} />
-          // <Images
-          //   style={{ height: 25, width: 25, marginBottom: 0 }}
-          //   source={require("../../assets/CountryInnericon/shop.png")}
-          // />
         ),
       }}
-      name="Blog"
+      name="Blogs"
       component={BlogHomeScreen}
     />
-    {/* <Tab.Screen
-      options={{
-        tabBarIcon: ({ color }) => (
-          // <MaterialCommunityIcons name="home" color={color} size={26} />
-          <Image
-            style={{ height: 25, width: 25, marginBottom: 0 }}
-            source={require("../../assets/Profile.png")}
-          />
-        ),
-      }}
-      name="Plan"
-      component={PaymentScreen}
-    /> */}
   </Tab.Navigator>
 );
 

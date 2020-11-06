@@ -1,35 +1,28 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
   Text,
   View,
   StatusBar,
   Image,
   TouchableOpacity,
   FlatList,
+  Platform,
   Dimensions,
   ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-
 import touron from "../../api/touron";
-
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-import useData from "../../hooks/useData";
 import { Surface } from "react-native-paper";
 const BlogInnerScreen = ({ navigation, route }) => {
   const item = route.params.item;
   const [click, setClick] = useState(false);
-  const [country, city, tour, errorMessage] = useData();
 
-  const filteredTour = (name) => {
-    return tour.filter((c) => {
-      return c.countryName.includes(name);
-    });
+  const filteredTour = async (name) => {
+    const tourResponse = await touron.get(`/tour/countryname/${name}`);
+    return tourResponse.data;
   };
-
-  console.log(filteredTour(), "cjnjhjlg");
 
   useEffect(() => {
     let mounted = true;
@@ -39,27 +32,21 @@ const BlogInnerScreen = ({ navigation, route }) => {
     return () => (mounted = false);
   }, []);
 
-  //console.log(item, "ITEM");
   return (
     <ScrollView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <StatusBar />
       <View
         style={{
-          //backgroundColor: "#333",
-          height: HEIGHT / 13,
+          height: HEIGHT / 10,
           alignItems: "center",
-          justifyContent: "space-around",
           flexDirection: "row",
+          marginTop: Platform.OS === "ios" ? 20 : 0,
         }}
       >
         <TouchableOpacity onPress={() => navigation.navigate("BlogHome")}>
           <View
             style={{
-              alignItems: "center",
-              justifyContent: "center",
-              paddingTop: 7,
-              //  paddingRight: HEIGHT / 10,
-              flex: 0.2,
+              paddingHorizontal: 30,
             }}
           >
             <AntDesign name="arrowleft" size={24} color="black" />
@@ -67,14 +54,19 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         <View
           style={{
-            justifyContent: "center",
-            paddingTop: 10,
-            flex: 0.6,
-            //  paddingLeft: WIDTH / 4,
-            // marginRight: HEIGHT / 8,
+            paddingHorizontal: 50,
+            paddingVertical: Platform.OS === "ios" ? 20 : 0,
           }}
         >
-          <Text style={{ color: "black", fontSize: 30, fontFamily: "WSans" }}>
+          <Text
+            style={{
+              color: "black",
+              fontSize: 30,
+              fontFamily: "WSans",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {item.countryName}
           </Text>
         </View>
@@ -157,7 +149,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
                     padding: 3,
                     fontSize: 20,
                     fontFamily: "Avenir",
-                    //  zIndex: 100,
                   }}
                 >
                   X
@@ -368,8 +359,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
 
       <View
         style={{
-          // marginLeft: 10,
-          //  borderWidth: 1,
           padding: 5,
           paddingLeft: 10,
           backgroundColor: "#EBE5E5",
@@ -394,7 +383,6 @@ const BlogInnerScreen = ({ navigation, route }) => {
           horizontal
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => {
-            console.log(item, "ITEN");
             return (
               <TouchableOpacity
                 onPress={() => navigation.navigate("TourInner", { item: item })}

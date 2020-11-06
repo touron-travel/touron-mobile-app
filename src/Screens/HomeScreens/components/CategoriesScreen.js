@@ -6,12 +6,11 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
-// import { Feather } from "@expo/vector-icons";
-// import { FontAwesome } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -27,7 +26,6 @@ const Categories = ({ navigation }) => {
   useEffect(() => {
     fetchFont();
   }, []);
-  // console.log(navigation, "ytryt");
 
   if (!fontLoaded) {
     console.log("not");
@@ -44,13 +42,16 @@ const Categories = ({ navigation }) => {
               justifyContent: "center",
             }}
           >
-            {/* <Feather name="search" style={styles.icon} color="black" /> */}
             <LinearGradient
-              // colors={["#A6C5CD", "#FF83A1"]}
               colors={["#cfeeec", "#cfeeec"]}
-              style={{ padding: 6, alignItems: "center", borderRadius: 50 }}
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+                alignItems: "center",
+                borderRadius: Platform.OS === "ios" ? 40 : 50,
+              }}
             >
-              <View style={{ borderRadius: 50, padding: 10 }}>
+              <View style={{ padding: 10 }}>
                 <Image
                   style={{
                     height: HEIGHT / 18,
@@ -73,9 +74,13 @@ const Categories = ({ navigation }) => {
             }}
           >
             <LinearGradient
-              // colors={["#A6C5CD", "#D7EDF3"]}
               colors={["#cfeeec", "#cfeeec"]}
-              style={{ padding: 6, alignItems: "center", borderRadius: 50 }}
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+                alignItems: "center",
+                borderRadius: Platform.OS === "ios" ? 40 : 50,
+              }}
             >
               <View style={{ borderRadius: 50, padding: 10 }}>
                 <Image
@@ -100,17 +105,18 @@ const Categories = ({ navigation }) => {
               borderRadius: 20,
             }}
           >
-            {/* <Feather name="search" style={styles.icon} color="black" /> */}
-
             <LinearGradient
-              // colors={["#A6C5CD", "#D7EDF3"]}
               colors={["#cfeeec", "#cfeeec"]}
-              style={{ padding: 6, alignItems: "center", borderRadius: 50 }}
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 6,
+                alignItems: "center",
+                borderRadius: Platform.OS === "ios" ? 40 : 50,
+              }}
             >
               <View
                 style={{
                   borderColor: "#cfeeec",
-
                   borderRadius: 50,
                   padding: 10,
                 }}
@@ -136,7 +142,7 @@ export default Categories;
 
 const styles = StyleSheet.create({
   container: {
-    height: HEIGHT / 4.7,
+    height: HEIGHT / 5.8,
     justifyContent: "center",
   },
   iconContainer: {
@@ -144,19 +150,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
   },
-  // icon: {
-  //   fontSize: 55,
-  //   width: 100,
-  //   height: 100,
-  //   borderRadius: 100,
-  //   padding: 20,
-  //   backgroundColor: "#fff",
-  // },
+
   text: {
     fontSize: 15,
     fontWeight: "900",
     justifyContent: "space-evenly",
-    marginVertical: 10,
+    marginTop: 10,
     marginHorizontal: 5,
     fontFamily: "WSansl",
   },

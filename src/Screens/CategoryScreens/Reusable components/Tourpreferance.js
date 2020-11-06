@@ -23,7 +23,6 @@ const Tourpreferance = ({
   setExplore,
   nextStep,
 }) => {
-  // console.log(imgSrc2);
   return (
     <View>
       <View style={{ marginVertical: HEIGHT / 20, marginHorizontal: 5 }}>
@@ -177,13 +176,11 @@ export default Tourpreferance;
 const styles = StyleSheet.create({
   travelTypeContainer: {
     width: WIDTH,
-
     height: HEIGHT / 3.7,
     flexDirection: "row",
   },
   travelTypeView: {
     width: WIDTH / 2,
-
     height: HEIGHT / 3.9,
     alignItems: "center",
   },

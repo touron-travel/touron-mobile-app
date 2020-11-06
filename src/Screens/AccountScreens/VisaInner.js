@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,6 +7,8 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Platform,
+  Picker,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import * as Animatable from "react-native-animatable";
@@ -15,42 +17,66 @@ const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
 import { ScrollView } from "react-native-gesture-handler";
 import { Switch } from "react-native-paper";
-
 import { AuthContext } from "../../context/AuthContext";
-
 const VisaInner = ({ navigation, route }) => {
   const { user } = useContext(AuthContext);
   const visaDetails = route.params.item;
   const [step, setStep] = useState(0);
-  console.log(visaDetails, "asas");
+  const [userInfo, setUserInfo] = useState({});
   const [formVisible, setFormVisible] = useState(false);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [country, setCountry] = useState(visaDetails.countryName);
   const [salaried, setSalaried] = useState(false);
   const [selfEmployed, setSelfEmployed] = useState(false);
+  const [travelMonth, setTravelMonth] = useState("");
   const [load, setLoad] = useState(false);
   const nextStep = () => {
     setStep(step + 1);
   };
   const prevStep = () => {
     setStep(step - 1);
+    setName("");
+    setNumber("");
+    setCountry("");
   };
 
   const submitVisa = () => {
-    console.log(user.uid);
-    console.log(name, number, country, salaried, selfEmployed);
     firebase
       .database()
-      .ref(`visaSubmission/${user.uid}`)
+      .ref(`visaSubmission`)
       .push({
+        userID: user.uid,
         name: name,
         phoneNumber: number,
-        countryName: country,
+        countryName: visaDetails.countryName,
         workType: salaried ? "Salaried" : "Self Employed",
+        travelMonth: travelMonth,
       });
 
     setLoad(true);
+    setName("");
+    setNumber("");
+    setCountry("");
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+  const getUserData = () => {
+    if (user !== null) {
+      firebase
+        .database()
+        .ref(`userGeneralInfo/${user.uid}`)
+        .on("value", (data) => {
+          if (data.val() !== null) {
+            let val = data.val();
+            setUserInfo(val);
+            setName(val.name);
+            setNumber(val.phoneNumber);
+          }
+        });
+    }
   };
 
   const renderItem = () => {
@@ -176,7 +202,7 @@ const VisaInner = ({ navigation, route }) => {
 
   return (
     <ScrollView>
-      <Animatable.View
+      <View
         animation="bounceIn"
         duration={3000}
         style={{ flex: 1, position: "relative" }}
@@ -301,7 +327,7 @@ const VisaInner = ({ navigation, route }) => {
                   <TextInput
                     style={styles.input}
                     keyboardType="email-address"
-                    value={visaDetails.countryName}
+                    value={country}
                     onChangeText={(value) => setCountry(value)}
                   />
                 </View>
@@ -312,6 +338,14 @@ const VisaInner = ({ navigation, route }) => {
                     keyboardType="number-pad"
                     value={number}
                     onChangeText={(value) => setNumber(value)}
+                  />
+                </View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.text}>Travel Month: </Text>
+                  <TextInput
+                    style={styles.input}
+                    value={travelMonth}
+                    onChangeText={(value) => setTravelMonth(value)}
                   />
                 </View>
                 <View style={styles.inputContainer}>
@@ -334,6 +368,32 @@ const VisaInner = ({ navigation, route }) => {
                   </View>
                 </View>
 
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginVertical: 20,
+                  }}
+                >
+                  <Text style={{ fontSize: 20, marginHorizontal: 20 }}>
+                    Filter :
+                  </Text>
+
+                  <Picker
+                    style={{ height: 50, width: WIDTH / 3 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                      console.log(itemValue, "ko");
+                      setCountry(itemValue);
+                    }}
+                  >
+                    <Picker.Item label="All" value="" />
+                    <Picker.Item label="Planned Tour" value="Planned Tour" />
+                    <Picker.Item label="Road Trip" value="Road Trip" />
+                    <Picker.Item label="Surprise Tour" value="Surprise Tour" />
+                  </Picker>
+                </View>
                 <View style={styles.inputContainer}>
                   <TouchableOpacity onPress={() => submitVisa()}>
                     <Text style={styles.button}>Apply</Text>
@@ -379,7 +439,7 @@ const VisaInner = ({ navigation, route }) => {
           </View>
         ) : null}
         {renderItem()}
-      </Animatable.View>
+      </View>
     </ScrollView>
   );
 };
@@ -399,6 +459,7 @@ const styles = new StyleSheet.create({
   },
   input: {
     width: WIDTH * 0.4,
+    height: Platform.OS === "ios" ? 40 : 20,
     backgroundColor: "#ecf0f1",
   },
   text: {

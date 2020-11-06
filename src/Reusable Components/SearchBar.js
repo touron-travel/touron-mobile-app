@@ -1,10 +1,8 @@
 import React from "react";
 import { Feather } from "@expo/vector-icons";
 import { View, TextInput, Image, StyleSheet, Dimensions } from "react-native";
-import Search from "../.././assets/Search.png";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
-
 const SearchBar = () => {
   return (
     <View style={styles.background}>
@@ -12,8 +10,6 @@ const SearchBar = () => {
       <TextInput
         style={styles.inputStyle}
         placeholder="Search"
-        // onChangeText = {onTermChange}
-        // onEndEditing={onTermSubmitted}
         autoCapitalize="none"
         autoCorrect={false}
       />
@@ -39,11 +35,6 @@ const styles = new StyleSheet.create({
     alignSelf: "center",
     marginHorizontal: 15,
   },
-  // iconStyle: {
-  //   height: 40,
-  //   width: 40,
-  //   alignSelf: "center",
-  // },
 });
 
 export default SearchBar;

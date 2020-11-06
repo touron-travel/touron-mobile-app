@@ -1,60 +1,60 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  Button,
-  Dimensions,
-  Alert,
-} from "react-native";
+import { Text, View, Image, TouchableOpacity, Dimensions } from "react-native";
 import * as firebase from "firebase";
 
 import { ScrollView, FlatList } from "react-native-gesture-handler";
-import { ProgressCircle } from "react-native-svg-charts";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import { PieChart } from "react-native-svg-charts";
 import { Surface } from "react-native-paper";
-import { SelfTourContext } from "../../context/SelfTourContext";
-
+import { AuthContext } from "../../context/AuthContext";
+import { SelfTourContext } from "../../context/ SelfTourContext";
 const ProgressScreen = ({ navigation, route }) => {
   const { details } = useContext(SelfTourContext);
+  const { user } = useContext(AuthContext);
   const finalTour = route.params.selectedTours;
   const cityDetails = route.params.cityDetails;
+  const [date, setDate] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
 
+  console.log(cityDetails, "tour");
   const cityTourNames = [];
+  console.log(user, "pl");
 
   finalTour.forEach((tour) => {
-    cityTourNames.push({
-      cityName: tour.cityName,
-      tourName: tour.tourName,
-    });
+    cityTourNames.push(tour);
   });
 
-  console.log(cityTourNames);
-  //console.log(demo);
-  console.log(finalTour, "LLLLL");
-  let empty = {};
-
-  cityDetails.forEach((city) => {
-    const CITYNAME = city.name;
-    const arr3 = finalTour.filter((tour) => {
-      return CITYNAME.includes(tour.cityName);
-    });
-    console.log(arr3);
-
-    empty[CITYNAME] = arr3;
+  useEffect(() => {
+    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
+    const requestDate = new Date();
+    let currentYear = requestDate.getFullYear();
+    setDate(requestDate.getDate());
+    setMonth(requestDate.getMonth() + 1);
+    setYear(currentYear.toString().slice(2, 5));
+    formatedMonth = month < 10 ? "0" + month : month;
   });
 
-  console.log(empty, "Empty");
+  // let empty = {};
+
+  // cityDetails.forEach((city) => {
+  //   const CITYNAME = city.name;
+  //   const arr3 = finalTour.filter((tour) => {
+  //     return CITYNAME.includes(tour.cityName);
+  //   });
+  //   // console.log(arr3);
+
+  //   empty[CITYNAME] = arr3;
+  // });
 
   // Filtering specific city and tours
 
+  let selectedCityNames = [];
   let specificCityTours = [];
 
   cityDetails.forEach((city) => {
+    selectedCityNames.push(city.name);
     const CITYNAME = city.name;
     const arr3 = finalTour.filter((tour) => {
       return CITYNAME.includes(tour.cityName);
@@ -64,7 +64,8 @@ const ProgressScreen = ({ navigation, route }) => {
       tours: arr3,
     });
   });
-  //console.log(specificCityTours, "SJSJSJSJSJSJ");
+
+  console.log(selectedCityNames, "names");
 
   // calculating specific city tours duratiom
 
@@ -72,9 +73,11 @@ const ProgressScreen = ({ navigation, route }) => {
   specificCityTours.forEach((c) => {
     let tourduration = 0;
     const durations = c.tours.forEach((t) => {
-      let length = t.duration.length;
+      let length = t.tourDuration.length;
       tourduration +=
-        length < 11 ? t.duration.slice(2, 4) * 1 : t.duration.slice(3, 5) * 1;
+        length < 11
+          ? t.tourDuration.slice(2, 4) * 1
+          : t.tourDuration.slice(3, 5) * 1;
       return tourduration;
     });
 
@@ -512,28 +515,22 @@ const ProgressScreen = ({ navigation, route }) => {
         <TouchableOpacity
           style={{ flex: 1.5 }}
           onPress={() => {
-            const user = firebase.auth().currentUser;
-            //  console.log(user, "GHGHGHJGHJHGGHJHHGHGGHHJGGHJHJGGHGH");
-            const userID = user.uid;
-            console.log(userID);
             firebase
               .database()
-              .ref(`self-planned-tours/${userID}`)
+              .ref(`self-planned-tours`)
               .push({
-                details: details,
-                tourDetails: empty,
-              })
-              .then((data) => console.log(data))
-              .catch((err) => console.log(err));
-            firebase
-              .database()
-              .ref(`self-planned-tours-admin/${userID}`)
-              .push({
-                details: details,
+                requestID: `T0-${date}${formatedMonth}${year}-${random}`,
+                userId: user.uid,
+                adult: details.adult,
+                children: details.children,
+                fromData: details.fromDate,
+                toData: details.toDate,
                 tourDetails: cityTourNames,
+                selectedCities: selectedCityNames,
               })
               .then((data) => console.log(data))
               .catch((err) => console.log(err));
+
             alert("Query Submitted");
 
             navigation.navigate("Home");

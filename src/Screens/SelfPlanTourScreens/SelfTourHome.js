@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   StyleSheet,
@@ -18,9 +18,11 @@ const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
 import SearchBar from "../../Reusable Components/SearchBar";
+import { AuthContext } from "../../context/AuthContext";
 
 const SelfTourHome = ({ navigation, route }) => {
-  // console.log(route.params.cities,'klklklklkl',route.params.selectedCity)
+  const { tours } = useContext(AuthContext);
+
   const [tour, setTour] = useState([]);
   const [error, setErrorMessage] = useState();
   const [loader, setLoader] = useState(true);
@@ -36,27 +38,21 @@ const SelfTourHome = ({ navigation, route }) => {
       setLoader(false);
     }, 1000);
   };
-
   const getTour = async (city) => {
-    // console.log(city);
     try {
-      const tourResponse = await touron.get("/tour");
-      const data = tourResponse.data.filter((tour) => {
-        if (city) {
-          //  console.log(city);
-          return tour.cityName == city;
-        }
-        return tour.cityName == selectedCity[active];
-      });
-      setTour(data);
+      // console.log(city, "cotty");
+      const tourResponse = await touron.get(`/tour/cityname/${city}`);
+      // console.log(tourResponse.data.length, "length");
+      setTour(tourResponse.data);
       setLoader(false);
     } catch (err) {
+      console.log(err, "err");
       setErrorMessage("Something went wrong");
     }
   };
 
   useEffect(() => {
-    getTour();
+    getTour(selectedCity[active]);
     showLoader();
   }, []);
 
@@ -133,16 +129,17 @@ const SelfTourHome = ({ navigation, route }) => {
                           //  console.log(item);
                           setSelectedTours([
                             ...selectedTours,
-                            {
-                              cityName: item.cityName,
-                              tourName: item.tourName,
-                              duration: item.tourDuration,
-                              tourType: item.tourType,
-                              idealType: item.idealType,
-                              pickUpType: item.pickUpPoint,
-                              imageUrl: item.imageUrl,
-                              isFinal: true,
-                            },
+                            item,
+                            // {
+                            //   cityName: item.cityName,
+                            //   tourName: item.tourName,
+                            //   duration: item.tourDuration,
+                            //   tourType: item.tourType,
+                            //   idealType: item.idealType,
+                            //   pickUpType: item.pickUpPoint,
+                            //   imageUrl: item.imageUrl,
+                            //   isFinal: true,
+                            // },
                           ]);
 
                           //    navigation.navigate("SelfTourInner", { item: item });
@@ -273,8 +270,8 @@ const SelfTourHome = ({ navigation, route }) => {
 
                 //   console.log(active);
                 if (active <= cityLength) {
-                  getTour(selectedCity[active + 1]);
                   setActive(active + 1);
+                  getTour(selectedCity[active + 1]);
                 }
                 setLoader(true);
               }}

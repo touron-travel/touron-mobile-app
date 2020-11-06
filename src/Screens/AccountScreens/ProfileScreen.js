@@ -6,28 +6,22 @@ import {
   View,
   TextInput,
   Dimensions,
-  Button,
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
+  ActivityIndicator,
   ImageBackground,
+  Platform,
 } from "react-native";
-
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
 import { Feather, AntDesign, FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-// import Constants from "expo-constants";
-// import * as Permissions from "expo-permissions";
-import { ActivityIndicator } from "react-native-paper";
 import { AuthContext } from "../../context/AuthContext";
-
 const ProfileScreen = ({ navigation }) => {
-  // const [user, setUser] = useState({});
   const [userInfo, setUserInfo] = useState({});
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
@@ -35,16 +29,13 @@ const ProfileScreen = ({ navigation }) => {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
-
+  const [isAdmin, setIsAdmin] = useState(false);
   const [step, setStep] = useState(1);
   const [aboutMe, setAboutMe] = useState("");
   const [travellerType, setTravellerType] = useState("");
   const { user } = useContext(AuthContext);
-
-  console.log(userInfo, "P");
   const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(user, "ojjjjp");
 
   const getUserData = () => {
     if (user !== null) {
@@ -55,9 +46,6 @@ const ProfileScreen = ({ navigation }) => {
         .database()
         .ref(`userGeneralInfo/${user.uid}`)
         .on("value", (data) => {
-          console.log(data, "DATA");
-          console.log(user.uid, "klkkkkkk");
-
           if (data.val() == null) {
             setAboutMe("");
             setAddress("");
@@ -65,8 +53,8 @@ const ProfileScreen = ({ navigation }) => {
             setNumber("");
             setGender("");
             setTravellerType("");
+            setIsAdmin("");
           }
-
           if (data.val() !== null) {
             let val = data.val();
             setUserInfo(val);
@@ -76,23 +64,25 @@ const ProfileScreen = ({ navigation }) => {
             setNumber(val.phoneNumber);
             setGender(val.gender);
             setTravellerType(val.travellerType);
+            setIsAdmin(val.admin);
           }
         });
     }
-    // }
-    // });
   };
   useEffect(() => {
-    setTimeout(() => {
-      setLoaded(true);
-    }, 1500);
-    getUserData();
+    let mounted = true;
+    if (mounted) {
+      setTimeout(() => {
+        setLoaded(true);
+      }, 1500);
+      getUserData();
+    }
+    return () => (mounted = false);
   }, [user]);
 
   const updateProfilePic = async (uri) => {
-  
     setLoading(true);
-   
+
     if (user !== null) {
       user
         .updateProfile({
@@ -114,62 +104,51 @@ const ProfileScreen = ({ navigation }) => {
         .catch((err) => console.log(err));
     }
     prevStep();
-    console.log(user, "p");
 
-    firebase.database().ref(`userGeneralInfo/${user.uid}`).set({
+    firebase.database().ref(`userGeneralInfo/${user.uid}`).update({
+      name: name,
       phoneNumber: number,
       address: address,
       age: age,
       gender: gender,
       aboutMe: aboutMe,
       travellerType: travellerType,
+      admin: false,
     });
   };
-
-  // console.log(image);
 
   const _pickImage = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        //  allowsEditing: true,
+        allowsEditing: true,
         aspect: [1, 3],
         quality: 1,
       });
       if (!result.cancelled) {
         const response = await fetch(result.uri);
-    const blob = await response.blob();
-    firebase.storage().ref(`users/${user.uid}/profile.jpg`).put(blob).then(()=>{
-      firebase.storage().ref(`users/${user.uid}/profile.jpg`).getDownloadURL().then(imageUrl=>{
-        updateProfilePic(imageUrl)
-        console.log('uploaded');
-      })
-     
-
-    }).catch((err)=>{
-      console.log(err);
-    })
-
-    
-    
-        
-        
+        const blob = await response.blob();
+        firebase
+          .storage()
+          .ref(`users/${user.uid}/profile.jpg`)
+          .put(blob)
+          .then(() => {
+            firebase
+              .storage()
+              .ref(`users/${user.uid}/profile.jpg`)
+              .getDownloadURL()
+              .then((imageUrl) => {
+                updateProfilePic(imageUrl);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-
-      //  console.log(result);
     } catch (E) {
       console.log(E);
     }
   };
-
-  // const getPermissionAsync = async () => {
-  //   const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-  //   // console.log(status, "STATUS");
-  //   if (status !== "granted") {
-  //     alert("Sorry, we need camera roll permissions to make this work!");
-  //   }
-  // };
-
   const nextStep = () => {
     setStep(step + 1);
   };
@@ -181,18 +160,13 @@ const ProfileScreen = ({ navigation }) => {
     switch (step) {
       case 1:
         return (
-          <ScrollView
-            animation="bounceIn"
-            duration={3000}
-            // style={{ flex: 1, backgroundColor: "white" }}
-          >
+          <ScrollView animation="bounceIn" duration={3000}>
             {user == null ? null : (
               <>
                 <View
                   style={{
                     flex: 1,
                     zIndex: -2,
-                    // position: "relative",
                   }}
                 >
                   {user.photoURL == null ? (
@@ -201,7 +175,6 @@ const ProfileScreen = ({ navigation }) => {
                         uri:
                           "https://image.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg",
                       }}
-                      // source={require("../../../assets/Profile.png")}
                       style={{
                         width: WIDTH,
                         height: HEIGHT / 1.2,
@@ -211,12 +184,12 @@ const ProfileScreen = ({ navigation }) => {
                     />
                   ) : loading ? (
                     <ActivityIndicator
-                      size="small"
+                      size="large"
                       color="black"
                       style={{
                         alignItems: "center",
                         justifyContent: "center",
-                        width: WIDTH / 1,
+                        width: WIDTH,
                         marginRight: WIDTH / 10,
                         height: HEIGHT,
                         flex: 1,
@@ -237,24 +210,19 @@ const ProfileScreen = ({ navigation }) => {
 
                 <View
                   style={{
-                    // height: HEIGHT / 12,
                     marginHorizontal: WIDTH / 13,
-
                     justifyContent: "center",
-                    // flexDirection: "row",
                     alignItems: "center",
                   }}
                 >
                   <Text
                     style={{
-                      // marginHorizontal: WIDTH / 10,
                       color: "black",
                       fontFamily: "Andika",
                       marginVertical: 10,
                       fontSize: 14,
                     }}
                   >
-                   
                     {aboutMe}
                   </Text>
                   <TouchableOpacity onPress={() => nextStep()}>
@@ -291,10 +259,10 @@ const ProfileScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
                       <View>
                         <Feather
-                          name="menu"
+                          name="arrow-left"
                           size={28}
                           color="white"
-                          style={{ paddingHorizontal: 20, paddingTop: 10 }}
+                          style={{ paddingRight: 20, paddingTop: Platform.OS }}
                         />
                       </View>
                     </TouchableOpacity>
@@ -329,7 +297,6 @@ const ProfileScreen = ({ navigation }) => {
                           style={{
                             flexDirection: "row",
                             alignItems: "center",
-                            // paddingBottom: 20,
                           }}
                         >
                           <FontAwesome
@@ -384,7 +351,6 @@ const ProfileScreen = ({ navigation }) => {
                       overflow: "hidden",
                     }}
                     resizeMode="stretch"
-                    // source={{ uri: user.photoURL }}
                     source={{
                       uri:
                         "https://images.pexels.com/photos/207237/pexels-photo-207237.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
@@ -396,7 +362,6 @@ const ProfileScreen = ({ navigation }) => {
                     height: HEIGHT / 8,
                     alignItems: "center",
                     flexDirection: "row",
-                    // position: "absolute",
                   }}
                 >
                   <TouchableOpacity
@@ -410,7 +375,10 @@ const ProfileScreen = ({ navigation }) => {
                         name="left"
                         size={28}
                         color="black"
-                        style={{ paddingHorizontal: 20, paddingTop: 10 }}
+                        style={{
+                          paddingHorizontal: 20,
+                          paddingTop: Platform.OS === "ios" ? -10 : 10,
+                        }}
                         onPress={() => prevStep()}
                       />
                     </View>
@@ -442,6 +410,13 @@ const ProfileScreen = ({ navigation }) => {
                         style={styles.input}
                         placeholder="Name"
                         value={name}
+                        onChangeText={(value) => setName(value)}
+                      />
+                    </View>
+                    <View style={styles.inputContainer}>
+                      <TextInput
+                        style={styles.input}
+                        value={user.uid}
                         onChangeText={(value) => setName(value)}
                       />
                     </View>
@@ -576,15 +551,10 @@ const styles = new StyleSheet.create({
   inputContainer: {
     height: HEIGHT / 15,
     borderRadius: 10,
-    // backgroundColor: "#0009",
     marginBottom: 20,
     borderBottomColor: "grey",
-    // borderWidth: 2,
-    // borderBottomWidth: 2,
   },
   otpButton: {
-    // marginTop: HEIGHT / 25,
-    // marginBottom: 85,
     backgroundColor: "black",
     borderRadius: 10,
     width: WIDTH / 3,
@@ -599,6 +569,5 @@ const styles = new StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontFamily: "Andika",
-    // fontWeight: "bold",
   },
 });

@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { HelperText } from "react-native-paper";
 import {
   View,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   Text,
@@ -25,13 +23,10 @@ const Checkout = ({
   budget,
 }) => {
   const [val, setVal] = useState();
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {/* <KeyboardAvoidingView
-        style={{ flex: 1, height: HEIGHT }}
-        behavior="position"
-      > */}
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
         <View
           style={{
             height: HEIGHT / 2.5,
@@ -69,6 +64,7 @@ const Checkout = ({
                 onChangeText={(value) => setName(value)}
                 placeholder="Vikash"
                 value={name}
+                maxLength={10}
               />
             </View>
           </View>
@@ -121,24 +117,11 @@ const Checkout = ({
               />
             </View>
           </View>
-          <HelperText
-            type="info"
-            visible={val === "" ? false : true}
-            style={{
-              fontFamily: "Avenir",
-              color: "red",
-              textAlign: "center",
-            }}
-          >
-            Enter valid Whatsapp number to reach you
-          </HelperText>
           <View
             style={{
               height: HEIGHT / 13,
-
               width: WIDTH * 0.9,
               justifyContent: "center",
-
               alignItems: "center",
             }}
           >
@@ -167,7 +150,6 @@ const Checkout = ({
           </View>
         </View>
       </View>
-      {/* </KeyboardAvoidingView> */}
     </TouchableWithoutFeedback>
   );
 };

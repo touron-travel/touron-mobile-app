@@ -5,25 +5,32 @@ import {
   TouchableOpacity,
   ScrollView,
   View,
-  Alert,
   Image,
   Dimensions,
+  Linking,
 } from "react-native";
-import { Modal, Portal, Provider } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+import { AntDesign } from "@expo/vector-icons";
 
 const WIDTH = Dimensions.get("window").width;
 
 const HEIGHT = Dimensions.get("window").height;
-
 const CountryInnerScreen = ({ navigation, route }) => {
-  console.log(route.params.item);
   const item = route.params.item;
   const [visible, setVisible] = React.useState(false);
-
   const showModal = () => setVisible(true);
-
   const hideModal = () => setVisible(false);
+  const openWhatsApp = (name) => {
+    let url = `whatsapp://send?text=Hi,I would like to go ${name} help me to plan on that &phone= +91 8667801206`;
+
+    Linking.openURL(url)
+      .then((data) => {
+        console.log("WhatsApp Opened successfully " + data);
+      })
+      .catch(() => {
+        alert("Make sure WhatsApp installed on your device");
+      });
+  };
 
   return (
     <ScrollView>
@@ -63,7 +70,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
         <Text
           style={{
             padding: 10,
-
             lineHeight: 18,
             fontSize: 13,
             fontWeight: "500",
@@ -75,7 +81,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
 
       <View
         style={{
-          // flexDirection: "row",
           justifyContent: "center",
           marginTop: 20,
         }}
@@ -85,7 +90,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
             flexDirection: "row",
             marginBottom: 30,
             justifyContent: "space-evenly",
-            //   alignItems: "flex-start",
             width: WIDTH * 0.9,
           }}
         >
@@ -94,7 +98,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
               justifyContent: "space-evenly",
               alignItems: "center",
               width: WIDTH / 2,
-              // height: HEIGHT / 3,
             }}
           >
             <Image
@@ -108,6 +111,12 @@ const CountryInnerScreen = ({ navigation, route }) => {
             <Image
               style={{ height: 60, width: 60, marginTop: 25 }}
               source={require("../../../assets/time-zone.png")}
+            />
+            <AntDesign
+              style={{ marginTop: 18 }}
+              name="calendar"
+              size={54}
+              color="black"
             />
           </View>
           <View
@@ -133,7 +142,6 @@ const CountryInnerScreen = ({ navigation, route }) => {
                 style={{
                   color: "black",
                   fontSize: 14,
-                  // fontWeight: "bold",
                   fontFamily: "WSansl",
                 }}
               >
@@ -183,6 +191,27 @@ const CountryInnerScreen = ({ navigation, route }) => {
                 Average Time Difference From India
               </Text>
             </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 30,
+              }}
+            >
+              <Text style={{ fontSize: 12, fontFamily: "NewYorkl" }}>
+                {item.general.bestTimeToVisit.join("/")}
+              </Text>
+              <Text
+                style={{
+                  color: "black",
+                  fontSize: 14,
+                  textAlign: "center",
+                  fontFamily: "WSansl",
+                }}
+              >
+                Best Time to Visit
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -201,10 +230,8 @@ const CountryInnerScreen = ({ navigation, route }) => {
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 borderRadius: 13,
                 elevation: 200,
-                // borderColor: "black",
                 backgroundColor: "#FA3B5A",
                 padding: 15,
               }}
@@ -233,10 +260,8 @@ const CountryInnerScreen = ({ navigation, route }) => {
               <View
                 style={{
                   alignItems: "center",
-                  // borderWidth: 2,
                   borderRadius: 13,
                   elevation: 200,
-                  // borderColor: "black",
                   backgroundColor: "#FA3B5A",
                   padding: 15,
                 }}
@@ -257,16 +282,20 @@ const CountryInnerScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Planned", {
+                countryName: item.countryName,
+                type: "International",
+              })
+            }
+          >
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 borderRadius: 13,
                 elevation: 200,
                 backgroundColor: "#9EB19E",
-
-                //borderColor: "black",
                 padding: 15,
               }}
             >
@@ -285,15 +314,13 @@ const CountryInnerScreen = ({ navigation, route }) => {
               Start Planning for {item.countryName}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("Planned")}>
+          <TouchableOpacity onPress={() => openWhatsApp(item.countryName)}>
             <View
               style={{
                 alignItems: "center",
-                // borderWidth: 2,
                 backgroundColor: "#FFB400",
                 borderRadius: 13,
                 elevation: 200,
-                // borderColor: "black",
                 padding: 15,
               }}
             >
@@ -344,7 +371,6 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: 15,
-    //fontFamily: "sans-serif",
     fontWeight: "bold",
     color: "#FFF",
     fontStyle: "normal",

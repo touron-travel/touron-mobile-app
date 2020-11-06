@@ -24,7 +24,6 @@ const Drivetype = ({
   driverType,
   nextStep,
 }) => {
-  // console.log(imgSrc2);
   return (
     <View>
       <View style={{ width: WIDTH, marginHorizontal: 30, marginVertical: 30 }}>

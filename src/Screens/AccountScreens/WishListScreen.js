@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
   Image,
   View,
-  ScrollView,
   Dimensions,
   FlatList,
+  Platform,
   ActivityIndicator,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 import * as firebase from "firebase";
 import { Feather, AntDesign } from "@expo/vector-icons";
-
+import { AuthContext } from "../../context/AuthContext";
 const WishListScreen = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
   const [loaded, setLoaded] = useState(false);
   const [savedTours, setSavedTours] = useState([]);
-  console.log(savedTours);
-  const userId = firebase.auth().currentUser.uid;
+  console.log(user, "saved");
+
   const getSavedTours = () => {
     firebase
       .database()
-      .ref(`saved-tours/${userId}`)
+      .ref(`saved-tours/${user.uid}`)
       .on("value", (data) => {
         if (data) {
           let sT = [];
           data.forEach((c) => {
             sT.push(c.val());
-            //  console.log(surpriseTour);
           });
           setSavedTours(sT);
         }
@@ -40,9 +37,6 @@ const WishListScreen = ({ navigation }) => {
 
   useEffect(() => {
     getSavedTours();
-    // setTimeout(() => {
-    //   setLoaded(false);
-    // }, 150);
   }, []);
 
   return (
@@ -60,17 +54,19 @@ const WishListScreen = ({ navigation }) => {
               backgroundColor: "#28C9E1",
               height: HEIGHT / 8,
               alignItems: "center",
-              //  justifyContent: "center",
               flexDirection: "row",
             }}
           >
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
               <View style={{ flex: 0.2 }}>
                 <Feather
-                  name="menu"
+                  name="arrow-left"
                   size={28}
                   color="black"
-                  style={{ paddingHorizontal: 20, paddingTop: 10 }}
+                  style={{
+                    paddingHorizontal: 20,
+                    paddingTop: Platform.OS === "ios" ? 0 : 0,
+                  }}
                 />
               </View>
             </TouchableOpacity>
@@ -91,7 +87,6 @@ const WishListScreen = ({ navigation }) => {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                // flex: 1,
               }}
             >
               <Image
@@ -120,12 +115,11 @@ const WishListScreen = ({ navigation }) => {
                   textAlign: "center",
                 }}
               >
-                Conent goes here
+                Content goes here
               </Text>
             </View>
           ) : (
             <View>
-              {/* <Text>Planned Tour</Text> */}
               <FlatList
                 data={savedTours}
                 keyExtractor={(item) => item.tourName}
@@ -168,14 +162,6 @@ const WishListScreen = ({ navigation }) => {
                               navigation.navigate("TourInner", { item: item });
                             }}
                           >
-                            {/* <LinearGradient
-                              colors={["#E76847", "#FF9B60"]}
-                              style={{
-                                padding: 5,
-                                borderRadius: 18,
-                                // width: 60,
-                              }}
-                            > */}
                             <Text
                               style={{
                                 fontSize: 16,
@@ -185,7 +171,6 @@ const WishListScreen = ({ navigation }) => {
                             >
                               {item.cityName}
                             </Text>
-                            {/* </LinearGradient> */}
                             <Text style={{ fontSize: 16 }}>
                               {item.tourName}
                             </Text>
@@ -206,16 +191,14 @@ const WishListScreen = ({ navigation }) => {
                                 return c.tourName != item.tourName;
                               });
 
-                              // setSavedTours(filterTour);
                               firebase
                                 .database()
-                                .ref(`saved-tours/${userId}`)
+                                .ref(`saved-tours/${user.uid}`)
                                 .set(filterTour)
                                 .then((data) => console.log(data))
                                 .catch((err) => console.log(err));
                               setTimeout(() => {
                                 setSavedTours(filterTour);
-                                const userId = firebase.auth().currentUser.uid;
                               }, 1000);
                             }}
                           >

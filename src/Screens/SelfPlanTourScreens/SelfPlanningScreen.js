@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import {
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -14,7 +15,7 @@ const WIDTH = Dimensions.get("window").width;
 import { AuthContext } from "../../context/AuthContext";
 const SelfPlanningScreen = ({ navigation }) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
-  console.log(isLoggedIn, "k");
+  // console.log(isLoggedIn, "k");
 
   useEffect(() => {
     const user = firebase.auth().currentUser;
@@ -24,7 +25,7 @@ const SelfPlanningScreen = ({ navigation }) => {
     }
   });
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{ marginTop: HEIGHT / 12 }}>
         <Text style={{ textAlign: "center", fontSize: 20 }}>
           Self Planned Tour
@@ -62,7 +63,7 @@ const SelfPlanningScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

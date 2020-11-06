@@ -17,11 +17,7 @@ import { ScrollView } from "react-native-gesture-handler";
 const OverviewToursScreen = ({ navigation, route }) => {
   const selectedTours = route.params.selectedTours;
   const cityDetails = route.params.cityDetails;
-  console.log(cityDetails);
-  //console.log(selectedTours);
-
   const [finalTour, setFinalTour] = useState([...selectedTours]);
-  const [changableTour, setChangableTour] = useState([...selectedTours]);
   return (
     <ScrollView style={{ backgroundColor: "#fff" }}>
       <View
@@ -73,7 +69,7 @@ const OverviewToursScreen = ({ navigation, route }) => {
                 color: "#4E4E4E",
               }}
             >
-              Congragulation
+              Hurray!! 🥳 🥳 🥳
             </Text>
             <Text style={{ color: "#C5C5CC" }}>
               You have successfully selected the tours you want

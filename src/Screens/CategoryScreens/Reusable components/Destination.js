@@ -2,7 +2,6 @@ import React from "react";
 import {
   View,
   Image,
-  TouchableOpacity,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -56,7 +55,6 @@ const Destination = ({
                 marginTop: 20,
                 width: WIDTH * 0.9,
                 marginHorizontal: 40,
-                // justifyContent: "space-around",
                 alignItems: "center",
               }}
             >

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import touron from "../../api/touron";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,43 +11,41 @@ import {
   Dimensions,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-
-import { ScrollView } from "react-native-gesture-handler";
+import { AuthContext } from "../../context/AuthContext";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
+import touron from "../../api/touron";
 
 const CityHomeScreen = ({ navigation, route }) => {
+  const { cities } = useContext(AuthContext);
   const [city, setCity] = useState([]);
   const [error, setErrorMessage] = useState("");
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState();
   const [cityName, setCityName] = useState("");
 
   const showLoader = () => {
     setTimeout(() => {
       setLoader(false);
-    }, 2000);
+    }, 500);
   };
 
   const getCity = async () => {
     console.log(route.params.name, "kk");
     if (route.params.name) {
+      const countryname = route.params.name;
       try {
-        const cityResponse = await touron.get("/city");
-        const data = cityResponse.data.filter((d) => {
-          return d.countryName == route.params.name;
-        });
-        setCity(data);
-      } catch (err) {
-        setErrorMessage("Something went wrong");
-      }
-    } else {
-      try {
-        const cityResponse = await touron.get("/city");
-        console.log(cityResponse.data, "hghjgjgh");
+        const cityResponse = await touron.get(
+          `/city/countryname/${countryname}`
+        );
+        console.log(cityResponse.data, "dataata");
+
         setCity(cityResponse.data);
       } catch (err) {
         setErrorMessage("Something went wrong");
       }
+    } else {
+      console.log("executed");
+      setCity(cities);
     }
   };
 
@@ -66,9 +63,7 @@ const CityHomeScreen = ({ navigation, route }) => {
           .toUpperCase()
           .includes(cityName.trim().toUpperCase());
       });
-      console.log(d, "popopopopop");
       return d;
-      // setVisa(d);
     }
   };
 
@@ -82,7 +77,7 @@ const CityHomeScreen = ({ navigation, route }) => {
             <Feather name="search" style={styles.iconStyle}></Feather>
             <TextInput
               style={styles.inputStyle}
-              placeholder="Search"
+              placeholder="Ex. Paris,Sharjah"
               onChangeText={(value) => setCityName(value)}
               onSubmitEditing={search}
               autoCapitalize="none"
@@ -97,20 +92,6 @@ const CityHomeScreen = ({ navigation, route }) => {
             keyExtractor={(c) => c._id}
             numColumns={2}
             renderItem={({ item, index }) => {
-              console.log(item, "ITEM");
-
-              // return (
-              //   <View
-              //     style={{
-              //       flex: 1,
-              //       justifyContent: "center",
-              //       alignItems: "center",
-              //     }}
-              //   >
-              //     <Text>No countriesbasd on your result</Text>
-              //   </View>
-              // );
-
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -162,7 +143,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#fff",
     fontWeight: "bold",
-
     zIndex: 1,
     top: 10,
     left: 20,
@@ -172,14 +152,12 @@ const styles = StyleSheet.create({
     height: HEIGHT / 15,
     borderRadius: 20,
     flexDirection: "row",
-    // borderWidth: 1,
     width: WIDTH * 0.9,
     marginVertical: 20,
     marginHorizontal: 10,
   },
   inputStyle: {
     fontSize: 18,
-    flex: 1,
   },
   iconStyle: {
     fontSize: 30,
