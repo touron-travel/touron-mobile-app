@@ -168,7 +168,10 @@ const RoadTripScreen = ({ navigation }) => {
             }
             travellerType={travellerType}
             nextStep={() => nextStep()}
-            setSolo={() => setTravellerType("Solo")}
+            setSolo={() => {
+              setTravellerType("Solo");
+              setStep(5);
+            }}
             setFamily={() => setTravellerType("Family")}
             setFriends={() => setTravellerType("Friends")}
             setHoneymoon={() => setTravellerType("Honeymoon")}

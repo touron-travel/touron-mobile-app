@@ -183,13 +183,25 @@ const HomeScreen = ({ navigation, route }) => {
           <View>
             <TouchableOpacity>
               <View style={{ height: HEIGHT / 10, width: HEIGHT / 10 }}>
-                <Feather
+                {/* <Feather
                   name="menu"
                   size={28}
                   color="black"
                   style={{ paddingHorizontal: 10, paddingTop: 20 }}
                   onPress={() => navigation.toggleDrawer()}
-                />
+                /> */}
+                <TouchableOpacity
+                  onPress={() => navigation.toggleDrawer()}
+                  style={{ paddingTop: Platform.OS === "ios" ? 20 : 0 }}
+                >
+                  <Image
+                    style={{
+                      height: 70,
+                      width: 70,
+                    }}
+                    source={require("../../../assets/logo.jpeg")}
+                  />
+                </TouchableOpacity>
               </View>
             </TouchableOpacity>
           </View>
@@ -204,9 +216,7 @@ const HomeScreen = ({ navigation, route }) => {
             {user == null ? (
               <Text style={styles.title}>Hey, Start Planning your...</Text>
             ) : (
-              <Text style={styles.title}>
-                Hey {user.displayName}, Start Planning your...
-              </Text>
+              <Text style={styles.title}>Hey, Start Planning your...</Text>
             )}
           </View>
           <ContentList

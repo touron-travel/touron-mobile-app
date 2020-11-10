@@ -17,6 +17,26 @@ const ProgressScreen = ({ navigation, route }) => {
   const [date, setDate] = useState();
   const [month, setMonth] = useState();
   const [year, setYear] = useState();
+  const [userInfo, setUserInfo] = useState({});
+  console.log(userInfo, "ijnfo");
+  let random;
+  let formatedMonth;
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = () => {
+    if (user !== null) {
+      firebase
+        .database()
+        .ref(`userGeneralInfo/${user.uid}`)
+        .on("value", (data) => {
+          let val = data.val();
+          console.log(val, "val");
+          setUserInfo(val);
+        });
+    }
+  };
 
   console.log(cityDetails, "tour");
   const cityTourNames = [];
@@ -527,6 +547,9 @@ const ProgressScreen = ({ navigation, route }) => {
                 toData: details.toDate,
                 tourDetails: cityTourNames,
                 selectedCities: selectedCityNames,
+                cityDetails: cityDetails,
+                name: userInfo.name,
+                phoneNumber: userInfo.phoneNumber,
               })
               .then((data) => console.log(data))
               .catch((err) => console.log(err));

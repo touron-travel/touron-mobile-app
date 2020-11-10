@@ -89,157 +89,180 @@ const SelfTourHome = ({ navigation, route }) => {
             }}
           />
         ) : (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(c) => c._id}
-            data={tour}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ position: "relative" }}>
-                  {selectedTourNames.includes(item.tourName) ? (
-                    <TouchableOpacity
-                      style={styles.tickImageContainer}
-                      onPress={() => {
-                        let tours = selectedTourNames.filter((c) => {
-                          return c !== item.tourName;
-                        });
-                        setSelectedTourNames(tours);
+          <>
+            {tour.length == 0 ? (
+              <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <View>
+                  <Image
+                    style={{ width: WIDTH * 0.9, height: WIDTH * 0.9 }}
+                    source={require("../../../assets/oops.jpg")}
+                  />
+                </View>
+                <Text style={{ fontFamily: "Avenir", fontSize: 23 }}>
+                  No Tours Found
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(c) => c._id}
+                data={tour}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={{ position: "relative" }}>
+                      {selectedTourNames.includes(item.tourName) ? (
+                        <TouchableOpacity
+                          style={styles.tickImageContainer}
+                          onPress={() => {
+                            let tours = selectedTourNames.filter((c) => {
+                              return c !== item.tourName;
+                            });
+                            setSelectedTourNames(tours);
 
-                        let updatedTours = selectedTours.filter((c) => {
-                          return c.tourName !== item.tourName;
-                        });
-                        setSelectedTours(updatedTours);
-                      }}
-                    >
-                      <Image
-                        style={styles.tickImage}
-                        source={require("../../../assets/tick.png")}
-                      />
-                    </TouchableOpacity>
-                  ) : null}
-
-                  <View style={styles.imageContainer}>
-                    <View style={styles.shadow}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedTourNames([
-                            ...selectedTourNames,
-                            item.tourName,
-                          ]);
-                          //  console.log(item);
-                          setSelectedTours([
-                            ...selectedTours,
-                            item,
-                            // {
-                            //   cityName: item.cityName,
-                            //   tourName: item.tourName,
-                            //   duration: item.tourDuration,
-                            //   tourType: item.tourType,
-                            //   idealType: item.idealType,
-                            //   pickUpType: item.pickUpPoint,
-                            //   imageUrl: item.imageUrl,
-                            //   isFinal: true,
-                            // },
-                          ]);
-
-                          //    navigation.navigate("SelfTourInner", { item: item });
-                        }}
-                      >
-                        <Image
-                          style={styles.image}
-                          source={{ uri: item.imageUrl }}
-                        />
-                      </TouchableOpacity>
-                      <View style={styles.cityNameContainer}>
-                        <LinearGradient
-                          colors={["#FFA26E", "#E36D5D"]}
-                          style={styles.gradient}
-                        >
-                          <View>
-                            <Text style={styles.cityname}>{item.cityName}</Text>
-                          </View>
-                        </LinearGradient>
-                        <View>
-                          <Feather
-                            name="bookmark"
-                            color="#fff"
-                            style={styles.iconStyle}
-                          ></Feather>
-                        </View>
-                      </View>
-                      <View style={styles.tourDetails}>
-                        <Text style={styles.tourFeatures}>
-                          {item.tourCategory.join(", ")}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 18,
-                            fontFamily: "Avenir",
+                            let updatedTours = selectedTours.filter((c) => {
+                              return c.tourName !== item.tourName;
+                            });
+                            setSelectedTours(updatedTours);
                           }}
                         >
-                          {item.tourName}
-                        </Text>
-                        <Text style={styles.tourFeatures}>{item.tourType}</Text>
-                        <View style={styles.star}>
-                          <View style={styles.costContainer}>
-                            {item.tourCost.adult == 15000 &&
-                            item.tourCost.adult >= 10000 ? (
-                              <Text style={styles.cost}>₹₹₹₹ - High</Text>
-                            ) : item.tourCost.adult < 10000 &&
-                              item.tourCost.adult >= 5000 ? (
-                              <Text style={styles.cost}>₹₹₹ - Medium</Text>
-                            ) : item.tourCost.adult > 2500 &&
-                              item.tourCost.adult < 500205 ? (
-                              <Text style={styles.cost}>₹₹ - Low</Text>
-                            ) : (
-                              <Text style={styles.cost}>₹ - Very Low</Text>
-                            )}
-                          </View>
-                          <View
-                            style={[
-                              styles.costContainer,
-                              {
-                                paddingVertical: 3,
-                                paddingHorizontal: 5,
-                              },
-                            ]}
+                          <Image
+                            style={styles.tickImage}
+                            source={require("../../../assets/tick.png")}
+                          />
+                        </TouchableOpacity>
+                      ) : null}
+
+                      <View style={styles.imageContainer}>
+                        <View style={styles.shadow}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setSelectedTourNames([
+                                ...selectedTourNames,
+                                item.tourName,
+                              ]);
+                              //  console.log(item);
+                              setSelectedTours([
+                                ...selectedTours,
+                                item,
+                                // {
+                                //   cityName: item.cityName,
+                                //   tourName: item.tourName,
+                                //   duration: item.tourDuration,
+                                //   tourType: item.tourType,
+                                //   idealType: item.idealType,
+                                //   pickUpType: item.pickUpPoint,
+                                //   imageUrl: item.imageUrl,
+                                //   isFinal: true,
+                                // },
+                              ]);
+
+                              //    navigation.navigate("SelfTourInner", { item: item });
+                            }}
                           >
-                            <TouchableOpacity
-                              onPress={() => {
-                                navigation.navigate("SelfTourInner", {
-                                  item: item,
-                                });
+                            <Image
+                              style={styles.image}
+                              source={{ uri: item.imageUrl }}
+                            />
+                          </TouchableOpacity>
+                          <View style={styles.cityNameContainer}>
+                            <LinearGradient
+                              colors={["#FFA26E", "#E36D5D"]}
+                              style={styles.gradient}
+                            >
+                              <View>
+                                <Text style={styles.cityname}>
+                                  {item.cityName}
+                                </Text>
+                              </View>
+                            </LinearGradient>
+                            <View>
+                              <Feather
+                                name="bookmark"
+                                color="#fff"
+                                style={styles.iconStyle}
+                              ></Feather>
+                            </View>
+                          </View>
+                          <View style={styles.tourDetails}>
+                            <Text style={styles.tourFeatures}>
+                              {item.tourCategory.join(", ")}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontFamily: "Avenir",
                               }}
                             >
-                              <Text
-                                style={{ fontSize: 13, fontFamily: "Andika" }}
-                              >
-                                See More
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-
-                          <View style={styles.star}>
-                            <Image
-                              style={{
-                                height: 25,
-                                width: 25,
-                                marginRight: 4,
-                              }}
-                              source={require("../../../assets/Star.png")}
-                            />
-                            <Text style={{ fontSize: 18 }}>
-                              {item.ratings}/5
+                              {item.tourName}
                             </Text>
+                            <Text style={styles.tourFeatures}>
+                              {item.tourType}
+                            </Text>
+                            <View style={styles.star}>
+                              <View style={styles.costContainer}>
+                                {item.tourCost.adult == 15000 &&
+                                item.tourCost.adult >= 10000 ? (
+                                  <Text style={styles.cost}>₹₹₹₹ - High</Text>
+                                ) : item.tourCost.adult < 10000 &&
+                                  item.tourCost.adult >= 5000 ? (
+                                  <Text style={styles.cost}>₹₹₹ - Medium</Text>
+                                ) : item.tourCost.adult > 2500 &&
+                                  item.tourCost.adult < 500205 ? (
+                                  <Text style={styles.cost}>₹₹ - Low</Text>
+                                ) : (
+                                  <Text style={styles.cost}>₹ - Very Low</Text>
+                                )}
+                              </View>
+                              <View
+                                style={[
+                                  styles.costContainer,
+                                  {
+                                    paddingVertical: 3,
+                                    paddingHorizontal: 5,
+                                  },
+                                ]}
+                              >
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    navigation.navigate("SelfTourInner", {
+                                      item: item,
+                                    });
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      fontSize: 13,
+                                      fontFamily: "Andika",
+                                    }}
+                                  >
+                                    See More
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+
+                              <View style={styles.star}>
+                                <Image
+                                  style={{
+                                    height: 25,
+                                    width: 25,
+                                    marginRight: 4,
+                                  }}
+                                  source={require("../../../assets/Star.png")}
+                                />
+                                <Text style={{ fontSize: 18 }}>
+                                  {item.ratings}/5
+                                </Text>
+                              </View>
+                            </View>
                           </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                </View>
-              );
-            }}
-          />
+                  );
+                }}
+              />
+            )}
+          </>
         )}
 
         <View style={styles.buttonContainer}>

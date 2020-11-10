@@ -98,6 +98,7 @@ function SignUpScreen({ navigation }) {
             travellerType: "",
             admin: false,
             pushNotificationToken: expoToken,
+            photoURL: "",
           });
           user.user
             .updateProfile({

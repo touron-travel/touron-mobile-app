@@ -38,7 +38,6 @@ const Travellertype = ({
           <TouchableOpacity
             onPress={() => {
               setSolo();
-              nextStep();
             }}
           >
             <View style={styles.travelTypeView}>

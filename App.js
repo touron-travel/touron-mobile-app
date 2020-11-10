@@ -31,6 +31,7 @@ import touron from "./src/api/touron";
 import MyVisaRequestsScreen from "./src/Screens/AccountScreens/MyVisaRequests";
 import * as Network from "expo-network";
 import { Surface } from "react-native-paper";
+import MyPlansInner from "./src/Screens/AccountScreens/MyPlansInner";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCCZ2bo_iPbtvarsADQe84qX2s9cWPMq3U",
@@ -143,24 +144,24 @@ const App = () => {
     return () => (mounted = false);
   }, []);
 
-  if (appLoading) {
-    return (
-      <Surface
-        style={{
-          backgroundColor: "white",
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          elevation: 20,
-        }}
-      >
-        <Image
-          source={require("./assets/logo.jpeg")}
-          style={{ width: WIDTH, height: HEIGHT / 2 }}
-        />
-      </Surface>
-    );
-  }
+  // if (appLoading) {
+  //   return (
+  //     <Surface
+  //       style={{
+  //         backgroundColor: "white",
+  //         flex: 1,
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //         elevation: 20,
+  //       }}
+  //     >
+  //       <Image
+  //         source={require("./assets/logo.jpeg")}
+  //         style={{ width: WIDTH, height: HEIGHT / 2 }}
+  //       />
+  //     </Surface>
+  //   );
+  // }
 
   return (
     <>
@@ -242,6 +243,7 @@ const App = () => {
               <Drawer.Screen name="VisaInner" component={VisaInner} />
               <Drawer.Screen name="WishList" component={WishListScreen} />
               <Drawer.Screen name="RequestInner" component={RequestInner} />
+              <Drawer.Screen name="MyPlanInner" component={MyPlansInner} />
             </Drawer.Navigator>
           </NavigationContainer>
         </AuthContext.Provider>

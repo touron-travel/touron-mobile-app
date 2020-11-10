@@ -22,7 +22,7 @@ const SelfPlanForm = ({ navigation }) => {
   const [destination, setDestination] = useState("");
   const [selectedCity, setSelectedCity] = useState([]);
   const [cityDates, setCityDates] = useState([]);
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
 
   console.log(city);
 
@@ -54,7 +54,7 @@ const SelfPlanForm = ({ navigation }) => {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
-      showLoader();
+      // showLoader();
     }
     return () => (mounted = false);
   }, []);

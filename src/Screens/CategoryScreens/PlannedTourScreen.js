@@ -78,6 +78,7 @@ const PlannedTourScreen = ({ navigation, route }) => {
       {
         type == "International" ? setTourType(type) : setTourType("Domestic");
       }
+      setStep(3);
       setDestination(countryName);
     }
   }, []);
@@ -170,7 +171,10 @@ const PlannedTourScreen = ({ navigation, route }) => {
             }
             travellerType={travellerType}
             nextStep={() => nextStep()}
-            setSolo={() => setTravellerType("Solo")}
+            setSolo={() => {
+              setTravellerType("Solo");
+              setStep(5);
+            }}
             setFamily={() => setTravellerType("Family")}
             setFriends={() => setTravellerType("Friends")}
             setHoneymoon={() => setTravellerType("Honeymoon")}

@@ -34,6 +34,7 @@ import { SelfTourContext } from "../context/ SelfTourContext";
 import AboutUs from "./AccountScreens/AboutUs";
 import ContactUs from "./AccountScreens/ContactUs";
 import BookingDetails from "./AccountScreens/BookingDetails";
+import MyPlansInner from "./AccountScreens/MyPlansInner";
 const HomeStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -183,6 +184,15 @@ const HomeStackScreen = () => {
         name="Bookings"
         component={BookingDetails}
       />
+      {/* <HomeStack.Screen
+        options={{
+          title: "",
+          headerShown: false,
+          headerTransparent: false,
+        }}
+        name="MyPlanInner"
+        component={MyPlansInner}
+      /> */}
     </HomeStack.Navigator>
   );
 };
@@ -218,6 +228,15 @@ const SelfTourStackScreen = () => {
             headerTransparent: true,
           }}
           component={ProgressScreen}
+        />
+        <SelfTourStack.Screen
+          options={{
+            title: "",
+            headerShown: false,
+            headerTransparent: false,
+          }}
+          name="MyPlanInner"
+          component={MyPlansInner}
         />
         <SelfTourStack.Screen name="Payment" component={PaymentScreen} />
       </SelfTourStack.Navigator>

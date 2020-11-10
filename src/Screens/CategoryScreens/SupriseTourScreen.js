@@ -158,13 +158,32 @@ const SurpriseTourScreen = ({ navigation }) => {
             }
             travellerType={travellerType}
             nextStep={() => nextStep()}
-            setSolo={() => setTravellerType("Solo")}
+            setSolo={() => {
+              setTravellerType("Solo");
+              setStep(5);
+            }}
             setFamily={() => setTravellerType("Family")}
             setFriends={() => setTravellerType("Friends")}
             setHoneymoon={() => setTravellerType("Honeymoon")}
           />
         );
       case 4:
+        return (
+          <Touristnumber
+            imgSrc1={
+              "https://image.freepik.com/free-vector/illustration-with-young-people-concept_23-2148467324.jpg"
+            }
+            imgScr2={
+              "https://image.freepik.com/free-vector/smiling-boy-girl-kids-holding-hands-childhood-friendship-concept-love-romance-children-cartoon-characters-flat-vector-illustration-isolated-white-background_71593-450.jpg"
+            }
+            nextStep={() => nextStep()}
+            adult={adult}
+            children={children}
+            setChildren={(value) => setChildren(value)}
+            setAdult={(value) => setAdult(value)}
+          />
+        );
+      case 5:
         return (
           <Tourpreferance
             imgSrc1={
@@ -185,22 +204,6 @@ const SurpriseTourScreen = ({ navigation }) => {
             setCultural={() => setTourPreferance("Cultural")}
             setExplore={() => setTourPreferance("Explore")}
             nextStep={() => nextStep()}
-          />
-        );
-      case 5:
-        return (
-          <Touristnumber
-            imgSrc1={
-              "https://image.freepik.com/free-vector/illustration-with-young-people-concept_23-2148467324.jpg"
-            }
-            imgScr2={
-              "https://image.freepik.com/free-vector/smiling-boy-girl-kids-holding-hands-childhood-friendship-concept-love-romance-children-cartoon-characters-flat-vector-illustration-isolated-white-background_71593-450.jpg"
-            }
-            nextStep={() => nextStep()}
-            adult={adult}
-            children={children}
-            setChildren={(value) => setChildren(value)}
-            setAdult={(value) => setAdult(value)}
           />
         );
       case 6:

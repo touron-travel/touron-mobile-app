@@ -712,7 +712,7 @@ const TourHomeScreen = ({ navigation, route }) => {
                       />
                     </View>
                     <Text style={{ fontFamily: "Avenir", fontSize: 23 }}>
-                      No Tours Found for {route.params.name}
+                      No Tours Found
                     </Text>
                   </View>
                 ) : (
@@ -724,202 +724,145 @@ const TourHomeScreen = ({ navigation, route }) => {
                       renderItem={({ item, index }) => {
                         return (
                           <>
-                            <View style={styles.imageContainer}>
-                              <View style={styles.shadow}>
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    navigation.navigate("TourInner", {
-                                      item: item,
-                                    });
-                                  }}
-                                >
+                            <TouchableOpacity
+                              onPress={() => {
+                                navigation.navigate("TourInner", {
+                                  item: item,
+                                });
+                              }}
+                            >
+                              <View style={styles.imageContainer}>
+                                <View style={styles.shadow}>
                                   <Image
                                     style={styles.image}
                                     source={{ uri: item.imageUrl }}
                                   />
-                                </TouchableOpacity>
-                                <View
-                                  style={{
-                                    flexDirection: "row",
-                                    position: "absolute",
-                                    width: WIDTH * 0.9,
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <LinearGradient
-                                    colors={["#FFA26E", "#E36D5D"]}
-                                    style={{
-                                      marginHorizontals: 15,
-                                      marginTop: 10,
-                                      padding: 2,
-                                      borderRadius: 5,
-                                      left: 10,
-                                    }}
-                                  >
-                                    <View>
-                                      <Text style={styles.cityname}>
-                                        {item.cityName}
-                                      </Text>
-                                    </View>
-                                  </LinearGradient>
-                                </View>
-                                <View style={styles.tourDetails}>
                                   <View
                                     style={{
                                       flexDirection: "row",
-                                      justifyContent: "space-between",
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        color: "#8395A7",
-                                        fontSize: 15,
-                                        fontFamily: "Andika",
-                                      }}
-                                    >
-                                      {item.tourCategory.join(",")}
-                                    </Text>
-                                    <View>
-                                      {savedTours.includes(item.tourName) ? (
-                                        <TouchableOpacity
-                                          onPress={() => {
-                                            let filterData = savedTours.filter(
-                                              (c) => {
-                                                return c != item.tourName;
-                                              }
-                                            );
-
-                                            setSavedTours(filterData);
-
-                                            const filterDetails = savedToursDetails.filter(
-                                              (c) => {
-                                                return (
-                                                  c.tourName !== item.tourName
-                                                );
-                                              }
-                                            );
-
-                                            setSavedToursDetails(filterDetails);
-                                          }}
-                                        >
-                                          <AntDesign
-                                            style={{ marginRight: 0 }}
-                                            name="heart"
-                                            size={24}
-                                            color="#FF4500"
-                                          />
-                                        </TouchableOpacity>
-                                      ) : (
-                                        <TouchableOpacity
-                                          onPress={() => {
-                                            if (isLoggedIn) {
-                                              setSavedTours([
-                                                ...savedTours,
-                                                item.tourName,
-                                              ]);
-                                              setSavedToursDetails([
-                                                ...savedToursDetails,
-                                                item,
-                                              ]);
-                                            } else {
-                                              navigation.navigate(
-                                                "SignUpScreen"
-                                              );
-                                            }
-                                          }}
-                                        >
-                                          <Image
-                                            style={{
-                                              height: 35,
-
-                                              width: 35,
-                                            }}
-                                            source={require("../../../assets/heart.png")}
-                                          />
-                                        </TouchableOpacity>
-                                      )}
-                                    </View>
-                                  </View>
-
-                                  <Text
-                                    style={{
-                                      fontSize: 18,
-                                      // fontWeight: "bold",
-                                      fontFamily: "NewYorkl",
-                                      marginTop: 2,
-                                    }}
-                                  >
-                                    {item.tourName}
-                                  </Text>
-                                  <Text
-                                    style={{
-                                      color: "#8395A7",
-                                      fontSize: 15,
-                                      marginVertical: 5,
-                                      fontFamily: "Andika",
-                                    }}
-                                  >
-                                    {item.tourType}
-                                  </Text>
-                                  <View
-                                    style={{
-                                      flexDirection: "row",
+                                      position: "absolute",
+                                      width: WIDTH * 0.9,
                                       justifyContent: "space-between",
                                       alignItems: "center",
                                     }}
                                   >
-                                    <View
+                                    <LinearGradient
+                                      colors={["#FFA26E", "#E36D5D"]}
                                       style={{
-                                        padding: 8,
-                                        marginTop: 4,
-                                        borderWidth: 1,
-                                        borderColor: "#333",
-                                        borderRadius: 14,
+                                        marginHorizontals: 15,
+                                        marginTop: 10,
+                                        padding: 2,
+                                        borderRadius: 5,
+                                        left: 10,
                                       }}
                                     >
-                                      {item.tourCost.adult == 15000 &&
-                                      item.tourCost.adult >= 10000 ? (
-                                        <Text
-                                          style={{
-                                            fontSize: 13,
-                                            fontFamily: "Andika",
-                                          }}
-                                        >
-                                          ₹₹₹₹ - High
+                                      <View>
+                                        <Text style={styles.cityname}>
+                                          {item.cityName}
                                         </Text>
-                                      ) : item.tourCost.adult < 10000 &&
-                                        item.tourCost.adult >= 5000 ? (
-                                        <Text
-                                          style={{
-                                            fontSize: 13,
-                                            fontFamily: "NewYorkl",
-                                          }}
-                                        >
-                                          ₹₹₹ - Medium
-                                        </Text>
-                                      ) : item.tourCost.adult > 2500 &&
-                                        item.tourCost.adult < 500205 ? (
-                                        <Text
-                                          style={{
-                                            fontSize: 13,
-                                            fontFamily: "NewYorkl",
-                                          }}
-                                        >
-                                          ₹₹ - Low
-                                        </Text>
-                                      ) : (
-                                        <Text
-                                          style={{
-                                            fontSize: 13,
-                                            fontFamily: "NewYorkl",
-                                          }}
-                                        >
-                                          ₹ - Very Low
-                                        </Text>
-                                      )}
+                                      </View>
+                                    </LinearGradient>
+                                  </View>
+                                  <View style={styles.tourDetails}>
+                                    <View
+                                      style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                      }}
+                                    >
+                                      <Text
+                                        style={{
+                                          color: "#8395A7",
+                                          fontSize: 15,
+                                          fontFamily: "Andika",
+                                        }}
+                                      >
+                                        {item.tourCategory.join(",")}
+                                      </Text>
+                                      <View>
+                                        {savedTours.includes(item.tourName) ? (
+                                          <TouchableOpacity
+                                            onPress={() => {
+                                              let filterData = savedTours.filter(
+                                                (c) => {
+                                                  return c != item.tourName;
+                                                }
+                                              );
+
+                                              setSavedTours(filterData);
+
+                                              const filterDetails = savedToursDetails.filter(
+                                                (c) => {
+                                                  return (
+                                                    c.tourName !== item.tourName
+                                                  );
+                                                }
+                                              );
+
+                                              setSavedToursDetails(
+                                                filterDetails
+                                              );
+                                            }}
+                                          >
+                                            <AntDesign
+                                              style={{ marginRight: 0 }}
+                                              name="heart"
+                                              size={24}
+                                              color="#FF4500"
+                                            />
+                                          </TouchableOpacity>
+                                        ) : (
+                                          <TouchableOpacity
+                                            onPress={() => {
+                                              if (isLoggedIn) {
+                                                setSavedTours([
+                                                  ...savedTours,
+                                                  item.tourName,
+                                                ]);
+                                                setSavedToursDetails([
+                                                  ...savedToursDetails,
+                                                  item,
+                                                ]);
+                                              } else {
+                                                navigation.navigate(
+                                                  "SignUpScreen"
+                                                );
+                                              }
+                                            }}
+                                          >
+                                            <Image
+                                              style={{
+                                                height: 35,
+
+                                                width: 35,
+                                              }}
+                                              source={require("../../../assets/heart.png")}
+                                            />
+                                          </TouchableOpacity>
+                                        )}
+                                      </View>
                                     </View>
 
+                                    <Text
+                                      style={{
+                                        fontSize: 18,
+                                        // fontWeight: "bold",
+                                        fontFamily: "NewYorkl",
+                                        marginTop: 2,
+                                      }}
+                                    >
+                                      {item.tourName}
+                                    </Text>
+                                    <Text
+                                      style={{
+                                        color: "#8395A7",
+                                        fontSize: 15,
+                                        marginVertical: 5,
+                                        fontFamily: "Andika",
+                                      }}
+                                    >
+                                      {item.tourType}
+                                    </Text>
                                     <View
                                       style={{
                                         flexDirection: "row",
@@ -927,27 +870,86 @@ const TourHomeScreen = ({ navigation, route }) => {
                                         alignItems: "center",
                                       }}
                                     >
-                                      <Image
+                                      <View
                                         style={{
-                                          height: 25,
-                                          width: 25,
-                                          marginRight: 4,
-                                        }}
-                                        source={require("../../../assets/Star.png")}
-                                      />
-                                      <Text
-                                        style={{
-                                          fontSize: 18,
-                                          fontFamily: "NewYorkl",
+                                          padding: 8,
+                                          marginTop: 4,
+                                          borderWidth: 1,
+                                          borderColor: "#333",
+                                          borderRadius: 14,
                                         }}
                                       >
-                                        {item.ratings}/5
-                                      </Text>
+                                        {item.tourCost.adult == 15000 &&
+                                        item.tourCost.adult >= 10000 ? (
+                                          <Text
+                                            style={{
+                                              fontSize: 13,
+                                              fontFamily: "Andika",
+                                            }}
+                                          >
+                                            ₹₹₹₹ - High
+                                          </Text>
+                                        ) : item.tourCost.adult < 10000 &&
+                                          item.tourCost.adult >= 5000 ? (
+                                          <Text
+                                            style={{
+                                              fontSize: 13,
+                                              fontFamily: "NewYorkl",
+                                            }}
+                                          >
+                                            ₹₹₹ - Medium
+                                          </Text>
+                                        ) : item.tourCost.adult > 2500 &&
+                                          item.tourCost.adult < 500205 ? (
+                                          <Text
+                                            style={{
+                                              fontSize: 13,
+                                              fontFamily: "NewYorkl",
+                                            }}
+                                          >
+                                            ₹₹ - Low
+                                          </Text>
+                                        ) : (
+                                          <Text
+                                            style={{
+                                              fontSize: 13,
+                                              fontFamily: "NewYorkl",
+                                            }}
+                                          >
+                                            ₹ - Very Low
+                                          </Text>
+                                        )}
+                                      </View>
+
+                                      <View
+                                        style={{
+                                          flexDirection: "row",
+                                          justifyContent: "space-between",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <Image
+                                          style={{
+                                            height: 25,
+                                            width: 25,
+                                            marginRight: 4,
+                                          }}
+                                          source={require("../../../assets/Star.png")}
+                                        />
+                                        <Text
+                                          style={{
+                                            fontSize: 18,
+                                            fontFamily: "NewYorkl",
+                                          }}
+                                        >
+                                          {item.ratings}/5
+                                        </Text>
+                                      </View>
                                     </View>
                                   </View>
                                 </View>
                               </View>
-                            </View>
+                            </TouchableOpacity>
                           </>
                         );
                       }}
@@ -1059,7 +1061,6 @@ const TourHomeScreen = ({ navigation, route }) => {
                         style={{
                           height: HEIGHT / 12.6,
                           alignItems: "center",
-
                           justifyContent: "center",
                           paddingHorizontal: 15,
                           backgroundColor:
@@ -1257,5 +1258,9 @@ const styles = StyleSheet.create({
     fontSize: 28,
     alignSelf: "center",
     marginHorizontal: 15,
+    // backgroundColor: "red",
+    // padding: 10,
+    // borderTopRightRadius: 10,
+    // borderBottomRightRadius: 10,
   },
 });

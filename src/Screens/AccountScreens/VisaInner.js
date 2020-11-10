@@ -332,7 +332,7 @@ const VisaInner = ({ navigation, route }) => {
                   />
                 </View>
                 <View style={styles.inputContainer}>
-                  <Text style={styles.text}>Phone Number: </Text>
+                  <Text style={styles.text}>Phone Number : </Text>
                   <TextInput
                     style={styles.input}
                     keyboardType="number-pad"
@@ -341,7 +341,7 @@ const VisaInner = ({ navigation, route }) => {
                   />
                 </View>
                 <View style={styles.inputContainer}>
-                  <Text style={styles.text}>Travel Month: </Text>
+                  <Text style={styles.text}>Travel Month : </Text>
                   <TextInput
                     style={styles.input}
                     value={travelMonth}
@@ -355,6 +355,7 @@ const VisaInner = ({ navigation, route }) => {
                       value={salaried}
                       onValueChange={() => setSalaried(!salaried)}
                       color="#e74c3c"
+                      ios_backgroundColor="white"
                     />
                     <Text style={styles.text1}>Salaried </Text>
                   </View>
@@ -363,43 +364,38 @@ const VisaInner = ({ navigation, route }) => {
                       value={selfEmployed}
                       onValueChange={() => setSelfEmployed(!selfEmployed)}
                       color="#e74c3c"
+                      ios_backgroundColor="white"
                     />
                     <Text style={styles.text1}>Self Employed </Text>
                   </View>
                 </View>
 
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginVertical: 20,
-                  }}
-                >
-                  <Text style={{ fontSize: 20, marginHorizontal: 20 }}>
-                    Filter :
-                  </Text>
-
-                  <Picker
-                    style={{ height: 50, width: WIDTH / 3 }}
-                    onValueChange={(itemValue, itemIndex) => {
-                      console.log(itemValue, "ko");
-                      setCountry(itemValue);
+                <View style={styles.inputContainer}>
+                  <TouchableOpacity
+                    onPress={() => setFormVisible(false)}
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: "black",
+                      paddingVertical: 13,
+                      paddingHorizontal: 20,
+                      width: WIDTH / 3.8,
+                      alignItems: "center",
                     }}
                   >
-                    <Picker.Item label="All" value="" />
-                    <Picker.Item label="Planned Tour" value="Planned Tour" />
-                    <Picker.Item label="Road Trip" value="Road Trip" />
-                    <Picker.Item label="Surprise Tour" value="Surprise Tour" />
-                  </Picker>
-                </View>
-                <View style={styles.inputContainer}>
-                  <TouchableOpacity onPress={() => submitVisa()}>
-                    <Text style={styles.button}>Apply</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setFormVisible(false)}>
                     <Text style={styles.button}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => submitVisa()}
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: "#34495e",
+                      paddingVertical: 13,
+                      paddingHorizontal: 20,
+                      width: WIDTH / 3.8,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text style={styles.button}>Apply</Text>
                   </TouchableOpacity>
                 </View>
               </>
@@ -460,7 +456,9 @@ const styles = new StyleSheet.create({
   input: {
     width: WIDTH * 0.4,
     height: Platform.OS === "ios" ? 40 : 20,
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderRadius: 10,
   },
   text: {
     fontSize: 17,
@@ -471,13 +469,9 @@ const styles = new StyleSheet.create({
     fontFamily: "Andika",
   },
   button: {
-    backgroundColor: "#34495e",
-    paddingVertical: 13,
-    paddingHorizontal: 20,
     color: "white",
     fontSize: 18,
     fontFamily: "WSansl",
-    borderRadius: 20,
   },
 });
 

@@ -12,7 +12,6 @@ import * as firebase from "firebase";
 import AsyncStorage from "@react-native-community/async-storage";
 import { DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
 import { FontAwesome5, Fontisto, Feather, AntDesign } from "@expo/vector-icons";
-import { Drawer } from "react-native-paper";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
 
@@ -20,13 +19,12 @@ import { AuthContext } from "../context/AuthContext";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const DrawerContent = (props) => {
-  const [isAdmin, setIsAdmin] = useState(false);
-
   const { user, isLoggedIn, setIsLoggedIn, setUser } = useContext(AuthContext);
   useEffect(() => {
     getUserData();
   });
 
+  const [isAdmin, setIsAdmin] = useState(false);
   const getUserData = () => {
     if (user !== null) {
       firebase
@@ -86,7 +84,7 @@ const DrawerContent = (props) => {
                         source={require("../../assets/houses.png")}
                       />
                     )}
-                    onPress={() => props.navigation.navigate("Main")}
+                    onPress={() => props.navigation.navigate("Home")}
                   />
                   <DrawerItem
                     label={() => <Text style={styles.label}>All Requests</Text>}
@@ -97,6 +95,25 @@ const DrawerContent = (props) => {
                       />
                     )}
                     onPress={() => props.navigation.navigate("MyRequest")}
+                  />
+
+                  <DrawerItem
+                    label={() => (
+                      <Text style={styles.label}>Self Tour Plans</Text>
+                    )}
+                    //   icon={({ color, size }) => <Feather name="menu" />}
+                    icon={() => (
+                      <View style={{ marginHorizontal: 5 }}>
+                        <Fontisto
+                          name="plane-ticket"
+                          size={24}
+                          color="#C1C5C6"
+                        />
+                      </View>
+                    )}
+                    onPress={() => {
+                      props.navigation.navigate("MyPlans");
+                    }}
                   />
                   <DrawerItem
                     label={() => (

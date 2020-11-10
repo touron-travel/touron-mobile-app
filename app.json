@@ -25,7 +25,7 @@
   "expo": {
     "name": "tour On",
     "icon": "./assets/playstore.png",
-    "version": "0.0.2",
+    "version": "1.1.2",
     "slug": "touron",
     "notification":{
       "icon": "./assets/playstore.png"
@@ -38,7 +38,7 @@
     },
     "android": {
       "package": "com.touron.travelapp",
-      "versionCode": 13,
+      "versionCode": 14,
       "useNextNotificationsApi": true,
         "googleServicesFile": "./google-services.json"
     },

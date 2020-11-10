@@ -8,6 +8,14 @@ import {
   Dimensions,
   ScrollView,
 } from "react-native";
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+  FontAwesome5,
+} from "@expo/vector-icons";
+
 const WIDTH = Dimensions.get("window").width;
 import { LinearGradient } from "expo-linear-gradient";
 import * as Animatable from "react-native-animatable";
@@ -20,11 +28,17 @@ const TourInnerScreen = ({ route }) => {
     <ScrollView>
       <View style={styles.container}>
         <View>
-          <Image style={styles.image} source={{ uri: item.imageUrl }} />
+          <Image
+            style={styles.image}
+            source={{ uri: item.imageUrl }}
+            backfaceVisibility="hidden"
+          />
           <View
             style={{
               alignItems: "flex-start",
-              justifyContent: "flex-start",
+              justifyContent: "flex-end",
+              position: "absolute",
+              top: WIDTH - 30,
             }}
           >
             <LinearGradient
@@ -32,8 +46,6 @@ const TourInnerScreen = ({ route }) => {
               style={{
                 padding: 8,
                 borderRadius: 10,
-                // position: "absolute",
-                // top: 100,
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
                 margin: 10,
@@ -55,63 +67,9 @@ const TourInnerScreen = ({ route }) => {
           >
             <Text style={styles.tourName}>{item.tourName}</Text>
             <Text style={styles.tourCategory}>
-              Category Type:{item.tourCategory.join(",")}
+              Tour Type : {item.tourCategory.join(",")}
             </Text>
           </View>
-
-          {/* <View
-            style={{
-              bottom: 20,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: WIDTH * 0.9,
-              marginHorizontal: 20,
-              alignItems: "center",
-              position: "absolute",
-            }}
-          >
-            <View>
-              <LinearGradient
-                colors={["#E76847", "#FF9B60"]}
-                // colors={["#28C9E1", "#1CD5C6"]}
-                style={{ padding: 10, borderRadius: 18 }}
-              >
-                <View>
-                  {item.tourCost.adult == 15000 &&
-                  item.tourCost.adult >= 10000 ? (
-                    <Text style={{ fontSize: 18 }}>₹₹₹₹-High</Text>
-                  ) : item.tourCost.adult < 10000 &&
-                    item.tourCost.adult >= 5000 ? (
-                    <Text style={{ fontSize: 18 }}>₹₹₹ - Medium</Text>
-                  ) : item.tourCost.adult > 2500 &&
-                    item.tourCost.adult < 500205 ? (
-                    <Text style={{ fontSize: 18 }}>₹₹ - Low</Text>
-                  ) : (
-                    <Text style={{ fontSize: 18 }}>₹ - Very Low</Text>
-                  )}
-                </View>
-              </LinearGradient>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <LinearGradient
-                colors={["#2193b0", "#6dd5ed"]}
-                style={{ padding: 10, borderRadius: 18, flexDirection: "row" }}
-              >
-                <Image
-                  style={{ height: 25, width: 25, marginRight: 4 }}
-                  source={require("../../../assets/Star.png")}
-                />
-                <Text style={{ fontSize: 18 }}>{item.ratings}/5</Text>
-              </LinearGradient>
-            </View>
-          </View> */}
         </View>
 
         {/* Inner deatil */}
@@ -131,7 +89,6 @@ const TourInnerScreen = ({ route }) => {
           <View
             style={{
               borderRadius: 40,
-              marginVertical: 5,
               borderColor: "#fff",
             }}
           >
@@ -147,113 +104,168 @@ const TourInnerScreen = ({ route }) => {
             </Text>
           </View>
         </View>
-        {/* <View style={styles.features}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
 
-              alignItems: "center",
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40 }}
-              source={require("../../../assets/Scooter.png")}
-            />
-            <Text>{item.pickUpPoint.join(",")}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-
-              alignItems: "center",
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40 }}
-              source={require("../../../assets/Star.png")}
-            />
-            <Text>{item.tourPreferance}</Text>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-
-              alignItems: "center",
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40 }}
-              source={require("../../../assets/Signs.png")}
-            />
-            <Text>{item.tourType}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40 }}
-              source={require("../../../assets/Umbrella.png")}
-            />
-            <Text>{item.tourDuration}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-
-              alignItems: "center",
-            }}
-          >
-            <Image
-              style={{ height: 40, width: 40 }}
-              source={require("../../../assets/Cocktail.png")}
-            />
-            <Text>{item.idealType.join(",")}</Text>
-          </View>
-
-          {item.pickUpTime !== "-" ? (
-            <View
-              style={{
-                marginVertical: 10,
-              }}
-            >
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            marginHorizontal: 5,
+            justifyContent: "space-evenly",
+          }}
+        >
+          {item.pickUpTime === "N.A" || item.pickUpTime === "NA" ? null : (
+            <>
               <View
                 style={{
-                  flexDirection: "row",
+                  height: WIDTH / 4,
+                  width: WIDTH / 5,
+                  backgroundColor: "#d5e1d9ff",
+
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  marginLeft: 15,
                   justifyContent: "center",
                   alignItems: "center",
+                  paddingVertical: 10,
                 }}
               >
-                <Image
-                  style={{ height: 40, width: 40 }}
-                  source={require("../../../assets/Flag.png")}
+                <Text style={{ fontSize: 10 }}>Pick up</Text>
+                <MaterialCommunityIcons
+                  name="car-convertible"
+                  size={40}
+                  color="black"
                 />
-                <Text>{item.pickUpTime} Pick up</Text>
+                <Text style={{ fontSize: 12, textAlign: "center" }}>
+                  {item.pickUpTime}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  // height: WIDTH / 4,
+                  height: WIDTH / 4,
+                  width: WIDTH / 2.8,
+                  backgroundColor: "#d5e1d9ff",
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  marginHorizontal: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingVertical: 10,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="bus-clock"
+                  size={35}
+                  color="black"
+                  style={{ marginBottom: 10 }}
+                />
+
+                <Text style={{ fontSize: 12, textAlign: "center" }}>
+                  {item.pickUpPoint[0]}
+                </Text>
+                {item.pickUpPoint[1] == null ? null : (
+                  <Text style={{ fontSize: 10, textAlign: "center" }}>
+                    {item.pickUpPoint[1]}
+                  </Text>
+                )}
               </View>
               <View
                 style={{
-                  flexDirection: "row",
+                  height: WIDTH / 4,
+                  width: WIDTH / 4.6,
+                  backgroundColor: "#d5e1d9ff",
+                  borderRadius: 10,
+                  marginVertical: 10,
+                  marginRight: 15,
                   justifyContent: "center",
                   alignItems: "center",
+                  padding: 10,
                 }}
               >
-                <Image
-                  style={{ height: 40, width: 40 }}
-                  source={require("../../../assets/Scooter.png")}
+                <Text style={{ fontSize: 10 }}>Drop</Text>
+                <MaterialCommunityIcons
+                  name="car-convertible"
+                  size={40}
+                  color="black"
                 />
-                <Text>{item.dropTime} Drop</Text>
+                <Text style={{ fontSize: 12, textAlign: "center" }}>
+                  {item.dropTime}
+                </Text>
               </View>
-            </View>
-          ) : null}
-        </View> */}
+            </>
+          )}
+          <View
+            style={{
+              height: WIDTH / 4,
+              width: WIDTH / 5,
+              backgroundColor: "#d5e1d9ff",
+
+              borderRadius: 10,
+              marginVertical: 10,
+              marginLeft: 15,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingVertical: 10,
+            }}
+          >
+            <Text style={{ fontSize: 11 }}>Tour</Text>
+            <AntDesign
+              name="star"
+              size={28}
+              color="black"
+              style={{ marginVertical: 5 }}
+            />
+            <Text style={{ fontSize: 12 }}>{item.tourPreferance}</Text>
+          </View>
+          <View
+            style={{
+              height: WIDTH / 4,
+              width: WIDTH / 2.8,
+              backgroundColor: "#d5e1d9ff",
+              borderRadius: 10,
+              marginVertical: 10,
+              marginHorizontal: 5,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingVertical: 10,
+            }}
+          >
+            <MaterialIcons
+              name="loyalty"
+              size={35}
+              color="black"
+              style={{ marginBottom: 10 }}
+            />
+            <Text style={{ fontSize: 12 }}>{item.idealType[0]}</Text>
+            {item.idealType[1] == null ? null : (
+              <Text style={{ fontSize: 10 }}>{item.idealType[1]}</Text>
+            )}
+          </View>
+
+          <View
+            style={{
+              height: WIDTH / 4,
+              width: WIDTH / 4.6,
+              backgroundColor: "#d5e1d9ff",
+              borderRadius: 10,
+              marginVertical: 10,
+              marginRight: 15,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 5,
+            }}
+          >
+            <Text style={{ fontSize: 10 }}>{item.tourType}</Text>
+            <Ionicons
+              name="md-time"
+              size={30}
+              color="black"
+              style={{ marginVertical: 5 }}
+            />
+            <Text style={{ fontSize: 12 }}>{item.tourDuration}</Text>
+          </View>
+        </View>
 
         {item.itinerary === "-" ? null : (
           <View
@@ -270,7 +282,6 @@ const TourInnerScreen = ({ route }) => {
                 padding: 5,
                 fontFamily: "NewYorkl",
                 borderRadius: 10,
-                // marginLeft: 10,
               }}
             >
               Itinerary
@@ -285,11 +296,8 @@ const TourInnerScreen = ({ route }) => {
             >
               <Text
                 style={{
-                  // fontWeight: "700",
-                  lineHeight: 25,
                   marginLeft: 20,
                   marginTop: 15,
-
                   fontFamily: "Andika",
                 }}
               >
@@ -299,11 +307,8 @@ const TourInnerScreen = ({ route }) => {
           </View>
         )}
 
-        {/* Pickups */}
-
-        {/* Additional information */}
-
-        {item.additionalInformation == "-" ? null : (
+        {item.additionalInformation == "-" ||
+        item.additionalInformation == "NA" ? null : (
           <View
             style={{
               justifyContent: "flex-start",
@@ -380,6 +385,12 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 40,
     position: "relative",
     width: WIDTH,
+    shadowColor: "#333",
+    shadowOffset: {
+      height: 20,
+      width: 20,
+    },
+    shadowOpacity: 1,
     overlayColor: "#0000",
   },
   cityName: {
@@ -388,9 +399,10 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   tourName: {
-    fontSize: 25,
-    margin: 5,
+    fontSize: 28,
+    marginHorizontal: 10,
     fontFamily: "NewYorkl",
+    // color: "#fff",
   },
   innerDetail: {
     margin: 10,
@@ -410,3 +422,110 @@ const styles = StyleSheet.create({
   },
   itinerary: {},
 });
+
+// {/* <View style={styles.features}>
+//     <View
+//       style={{
+//         flexDirection: "row",
+//         justifyContent: "center",
+
+//         alignItems: "center",
+//       }}
+//     >
+//       <Image
+//         style={{ height: 40, width: 40 }}
+//         source={require("../../../assets/Scooter.png")}
+//       />
+//       <Text>{item.pickUpPoint.join(",")}</Text>
+//     </View>
+//     <View
+//       style={{
+//         flexDirection: "row",
+//         justifyContent: "center",
+
+//         alignItems: "center",
+//       }}
+//     >
+//       {/* <Image
+//         style={{ height: 40, width: 40 }}
+//         source={require("../../../assets/Star.png")}
+//       />
+//       <Text>{item.tourPreferance}</Text> */}
+//       </View>
+
+//       <View
+//         style={{
+//           flexDirection: "row",
+//           justifyContent: "center",
+//           alignItems: "center",
+//         }}
+//       >
+//         <Image
+//           style={{ height: 40, width: 40 }}
+//           source={require("../../../assets/Signs.png")}
+//         />
+//         <Text>{item.tourType}</Text>
+//       </View>
+//       <View
+//         style={{
+//           flexDirection: "row",
+//           justifyContent: "center",
+//           alignItems: "center",
+//         }}
+//       >
+//         <Image
+//           style={{ height: 40, width: 40 }}
+//           source={require("../../../assets/Umbrella.png")}
+//         />
+//         <Text>{item.tourDuration}</Text>
+//       </View>
+//       <View
+//         style={{
+//           flexDirection: "row",
+//           justifyContent: "center",
+
+//           alignItems: "center",
+//         }}
+//       >
+//         <Image
+//           style={{ height: 40, width: 40 }}
+//           source={require("../../../assets/Cocktail.png")}
+//         />
+//         <Text>{item.idealType.join(",")}</Text>
+//       </View>
+
+//       {item.pickUpTime !== "-" ? (
+//         <View
+//           style={{
+//             marginVertical: 10,
+//           }}
+//         >
+//           <View
+//             style={{
+//               flexDirection: "row",
+//               justifyContent: "center",
+//               alignItems: "center",
+//             }}
+//           >
+//             <Image
+//               style={{ height: 40, width: 40 }}
+//               source={require("../../../assets/Flag.png")}
+//             />
+//             <Text>{item.pickUpTime} Pick up</Text>
+//           </View>
+//           <View
+//             style={{
+//               flexDirection: "row",
+//               justifyContent: "center",
+//               alignItems: "center",
+//             }}
+//           >
+//             <Image
+//               style={{ height: 40, width: 40 }}
+//               source={require("../../../assets/Scooter.png")}
+//             />
+//             <Text>{item.dropTime} Drop</Text>
+//           </View>
+//         </View>
+//       ) : null}
+//     </View>
