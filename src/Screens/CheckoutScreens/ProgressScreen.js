@@ -56,20 +56,6 @@ const ProgressScreen = ({ navigation, route }) => {
     formatedMonth = month < 10 ? "0" + month : month;
   });
 
-  // let empty = {};
-
-  // cityDetails.forEach((city) => {
-  //   const CITYNAME = city.name;
-  //   const arr3 = finalTour.filter((tour) => {
-  //     return CITYNAME.includes(tour.cityName);
-  //   });
-  //   // console.log(arr3);
-
-  //   empty[CITYNAME] = arr3;
-  // });
-
-  // Filtering specific city and tours
-
   let selectedCityNames = [];
   let specificCityTours = [];
 

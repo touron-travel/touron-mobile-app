@@ -54,74 +54,66 @@ const BlogHomeScreen = ({ navigation }) => {
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <FlatList
-          numColumns={2}
-          data={blog}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <View
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            marginVertical: 30,
+          }}
+        >
+          {blog.map((item, index) => (
+            <TouchableWithoutFeedback
+              key={index}
+              onPress={() => navigation.navigate("BlogInner", { item: item })}
+            >
+              <Surface
                 style={{
-                  width: WIDTH / 2,
-                  marginHorizontal: 5,
-                  display: "flex",
-                  flexDirection: "row",
+                  width: WIDTH / 2.2,
+                  marginHorizontal: 3,
+                  marginVertical: 5,
+                  borderRadius: 20,
+                  elevation: 5,
+                  height: HEIGHT / 2.5,
                 }}
               >
-                <TouchableWithoutFeedback
-                  onPress={() =>
-                    navigation.navigate("BlogInner", { item: item })
-                  }
-                >
-                  <Surface
+                <View>
+                  <Image
                     style={{
-                      width: WIDTH / 2.1,
-                      marginHorizontal: 0,
-                      marginVertical: 5,
-                      borderRadius: 20,
-                      elevation: 5,
-                      height: HEIGHT / 2.5,
+                      height: HEIGHT / 4.8,
+                      width: WIDTH / 2.2,
+                      borderRadius: 15,
+                    }}
+                    source={{ uri: item.imageSrc }}
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "NewYorkl",
+                      marginHorizontal: 10,
+                      marginTop: 4,
                     }}
                   >
-                    <View>
-                      <Image
-                        style={{
-                          height: HEIGHT / 4.8,
-                          width: WIDTH / 2.1,
-                          borderRadius: 15,
-                        }}
-                        source={{ uri: item.imageSrc }}
-                      />
-                    </View>
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          fontFamily: "NewYorkl",
-                          marginHorizontal: 10,
-                          marginTop: 4,
-                        }}
-                      >
-                        {item.blogTitle}
-                      </Text>
-                    </View>
-                    <View style={{ marginHorizontal: 10 }}>
-                      {Platform.OS === "ios" ? (
-                        <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
-                          {item.content.slice(0, 100)}...
-                        </Text>
-                      ) : (
-                        <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
-                          {item.content.slice(0, 45)}...
-                        </Text>
-                      )}
-                    </View>
-                  </Surface>
-                </TouchableWithoutFeedback>
-              </View>
-            );
-          }}
-        />
+                    {item.blogTitle}
+                  </Text>
+                </View>
+                <View style={{ marginHorizontal: 10 }}>
+                  {Platform.OS === "ios" ? (
+                    <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                      {item.content.slice(0, 100)}...
+                    </Text>
+                  ) : (
+                    <Text style={{ fontSize: 14, fontFamily: "Andika" }}>
+                      {item.content.slice(0, 45)}...
+                    </Text>
+                  )}
+                </View>
+              </Surface>
+            </TouchableWithoutFeedback>
+          ))}
+        </View>
       )}
 
       {loaded ? null : (

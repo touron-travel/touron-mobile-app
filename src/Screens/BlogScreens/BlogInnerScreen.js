@@ -329,14 +329,14 @@ const BlogInnerScreen = ({ navigation, route }) => {
         </Text>
       )}
 
-      {item.subHeading6 == "" ? null : (
+      {item.subHeading6 == "" && item.content6 == "" ? null : (
         <View style={{ margin: 10 }}>
           <Text style={{ fontFamily: "NewYorkl", fontSize: 18 }}>
             {item.subHeading6}
           </Text>
         </View>
       )}
-      {item.imageSrc6 == "" ? null : (
+      {/* {item.imageSrc6 == "" ? null : (
         <View>
           <Image
             style={{ width: WIDTH, height: HEIGHT / 3 }}
@@ -355,8 +355,8 @@ const BlogInnerScreen = ({ navigation, route }) => {
         >
           {item.content6}
         </Text>
-      )}
-
+      )} */}
+      {/* 
       <View
         style={{
           padding: 5,
@@ -422,7 +422,7 @@ const BlogInnerScreen = ({ navigation, route }) => {
             );
           }}
         />
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

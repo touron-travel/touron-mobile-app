@@ -271,8 +271,7 @@ const VisaDetailsScreen = ({ navigation }) => {
         >
           <View style={styles.inputContainer}>
             <Text style={{ fontSize: 30, fontFamily: "Avenir" }}>
-              {" "}
-              Visa Details of {data.name}{" "}
+              Visa Details of {data.name}
             </Text>
           </View>
           <View style={styles.inputContainer}>

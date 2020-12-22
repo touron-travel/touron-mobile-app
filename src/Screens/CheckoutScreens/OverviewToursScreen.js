@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   View,
+  ScrollView,
   Dimensions,
   FlatList,
 } from "react-native";
@@ -12,7 +13,6 @@ import { Surface } from "react-native-paper";
 const WIDTH = Dimensions.get("window").width;
 import { CheckBox } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
-import { ScrollView } from "react-native-gesture-handler";
 
 const OverviewToursScreen = ({ navigation, route }) => {
   const selectedTours = route.params.selectedTours;
@@ -77,60 +77,55 @@ const OverviewToursScreen = ({ navigation, route }) => {
           </View>
         </View>
 
-        <FlatList
-          data={finalTour}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.tourName}
-          renderItem={({ item }) => {
-            return (
+        {finalTour.map((item, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: "row",
+              margin: 10,
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+            }}
+          >
+            <View style={{ margin: 10, flex: 0.3 }}>
+              <Image
+                style={{ width: 80, height: 80, borderRadius: 10 }}
+                source={{ uri: item.imageUrl }}
+              />
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                height: 70,
+                flex: 0.99,
+                marginTop: 4,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginTop: 5,
+                  fontFamily: "Avenir",
+                }}
+              >
+                {item.tourName}
+              </Text>
               <View
                 style={{
                   flexDirection: "row",
-                  margin: 10,
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
+                  marginTop: 10,
+                  justifyContent: "flex-start",
                 }}
               >
-                <View style={{ margin: 10, flex: 0.3 }}>
-                  <Image
-                    style={{ width: 80, height: 80, borderRadius: 10 }}
-                    source={{ uri: item.imageUrl }}
-                  />
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    height: 70,
-                    flex: 0.99,
-                    marginTop: 4,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      marginTop: 5,
-                      fontFamily: "Avenir",
-                    }}
-                  >
-                    {item.tourName}
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      marginTop: 10,
-                      justifyContent: "flex-start",
-                    }}
-                  >
-                    <Text style={{ fontSize: 15, marginRight: 5 }}>
-                      {item.cityName} |
-                    </Text>
-                    <Text style={{ fontSize: 15 }}>{item.tourType}</Text>
-                  </View>
-                </View>
+                <Text style={{ fontSize: 15, marginRight: 5 }}>
+                  {item.cityName} |
+                </Text>
+                <Text style={{ fontSize: 15 }}>{item.tourType}</Text>
               </View>
-            );
-          }}
-        />
+            </View>
+          </View>
+        ))}
+
         <View style={{ bottom: 0, width: WIDTH }}>
           <TouchableOpacity
             style={{ flex: 1.5 }}

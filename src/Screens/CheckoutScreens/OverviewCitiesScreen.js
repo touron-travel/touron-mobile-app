@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   View,
-  FlatList,
   Dimensions,
 } from "react-native";
 const WIDTH = Dimensions.get("window").width;
@@ -76,73 +75,77 @@ const OverviewCitiesScreen = ({ navigation, route }) => {
             Overview of the seletecd cities
           </Text>
         </View>
-        <FlatList
+
+        {cities.map((item, index) => (
+          <Surface style={styles.surfaces} key={index}>
+            <View>
+              <Surface style={styles.surface}>
+                <Image
+                  style={styles.cityimage}
+                  source={{ uri: item.imageUrl }}
+                />
+              </Surface>
+
+              <Text style={styles.cityName}>{item.name}</Text>
+            </View>
+
+            <View>
+              <Image
+                style={{ height: 40, width: 40 }}
+                source={require("../../../assets/Calendar.png")}
+              />
+            </View>
+            <View
+              style={{
+                marginHorizontal: 20,
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 14,
+                  fontWeight: "bold",
+                }}
+              >
+                Enter No Of Days
+              </Text>
+
+              <View style={styles.inputContainer}>
+                <TextInput
+                  keyboardType="number-pad"
+                  style={{
+                    fontSize: 25,
+                    marginTop: 5,
+                  }}
+                  editable={true}
+                  onChangeText={(value) => {
+                    const date = updatedDate(item);
+                    const specificCity = getCurrentCity(item);
+                    setCityDetails([
+                      ...date,
+                      {
+                        name: specificCity.name,
+                        days: value,
+                        imageUrl: item.imageUrl,
+                      },
+                    ]);
+                  }}
+                />
+              </View>
+            </View>
+          </Surface>
+        ))}
+        {/* <FlatList
           data={cities}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
             return (
-              <Surface style={styles.surfaces}>
-                <View>
-                  <Surface style={styles.surface}>
-                    <Image
-                      style={styles.cityimage}
-                      source={{ uri: item.imageUrl }}
-                    />
-                  </Surface>
-
-                  <Text style={styles.cityName}>{item.name}</Text>
-                </View>
-
-                <View>
-                  <Image
-                    style={{ height: 40, width: 40 }}
-                    source={require("../../../assets/Calendar.png")}
-                  />
-                </View>
-                <View
-                  style={{
-                    marginHorizontal: 20,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 14,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Enter No Of Days
-                  </Text>
-
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      keyboardType="number-pad"
-                      style={{
-                        fontSize: 25,
-                        marginTop: 5,
-                      }}
-                      editable={true}
-                      onChangeText={(value) => {
-                        const date = updatedDate(item);
-                        const specificCity = getCurrentCity(item);
-                        setCityDetails([
-                          ...date,
-                          {
-                            name: specificCity.name,
-                            days: value,
-                            imageUrl: item.imageUrl,
-                          },
-                        ]);
-                      }}
-                    />
-                  </View>
-                </View>
-              </Surface>
+             
             );
           }}
-        />
+        /> */}
         <View style={{ width: WIDTH, marginLeft: -20 }}>
           <Image
             style={styles.calendarImage}

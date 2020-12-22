@@ -58,7 +58,8 @@ const SelfTourHome = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={(styles.view, { shadowOpacity: 1 })}></View>) : (
+      <View style={(styles.view, { shadowOpacity: 1 })}></View>
+
       <View style={{ marginTop: 20 }}>
         <View style={{ marginTop: 0 }}>
           <Text
