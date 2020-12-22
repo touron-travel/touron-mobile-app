@@ -71,10 +71,10 @@ const App = () => {
     if (mounted) {
       getTours();
       getCities();
-      firebase.auth().onAuthStateChanged((user) => {
-        setUser(user);
-        setIsLoggedIn(true);
-      });
+      // firebase.auth().onAuthStateChanged((user) => {
+      //   setUser(user);
+      //   setIsLoggedIn(true);
+      // });
     }
     return () => (mounted = false);
   }, []);

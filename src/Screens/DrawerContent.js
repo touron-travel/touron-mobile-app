@@ -173,6 +173,37 @@ const DrawerContent = (props) => {
                       props.navigation.navigate("Visa");
                     }}
                   />
+                  <DrawerItem
+                    label={() => (
+                      <Text
+                        style={{
+                          marginBottom: HEIGHT / 10,
+                          color: "#FFF",
+                          fontWeight: "bold",
+                          fontSize: 16,
+                        }}
+                      >
+                        Log Out
+                      </Text>
+                    )}
+                    onPress={() => {
+                      firebase.auth().signOut();
+                      setUser(null);
+                      removeToken();
+                      setIsLoggedIn(false);
+                      props.navigation.navigate("Home");
+                    }}
+                    icon={() => (
+                      <Image
+                        style={{
+                          height: 30,
+                          width: 30,
+                          marginBottom: HEIGHT / 10,
+                        }}
+                        source={require("../../assets/log-out.png")}
+                      />
+                    )}
+                  />
                 </>
               ) : (
                 <>

@@ -456,7 +456,7 @@ const SurpriseTourScreen = ({ navigation }) => {
             {step !== 9 &&
             step !== 2 &&
             step !== 3 &&
-            step !== 4 &&
+            step !== 5 &&
             step !== 6 ? (
               <View>
                 <AntDesign name="arrowright" size={28} />

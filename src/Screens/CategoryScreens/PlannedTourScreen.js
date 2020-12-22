@@ -55,7 +55,16 @@ const PlannedTourScreen = ({ navigation, route }) => {
   console.log(user, "plannkwfed");
 
   const [userInfo, setUserInfo] = useState({});
-  console.log(userInfo.phoneNumber, "ijnfo");
+
+  useEffect(() => {
+    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
+    const requestDate = new Date();
+    let currentYear = requestDate.getFullYear();
+    setDate(requestDate.getDate());
+    setMonth(requestDate.getMonth() + 1);
+    setYear(currentYear.toString().slice(2, 5));
+    formatedMonth = month < 10 ? "0" + month : month;
+  });
 
   const getUserData = () => {
     if (user !== null) {
@@ -87,15 +96,6 @@ const PlannedTourScreen = ({ navigation, route }) => {
     if (!isLoggedIn) {
       navigation.replace("SignInScreen");
     }
-  });
-  useEffect(() => {
-    random = Math.floor((Math.random() + 4) * 345334 * Math.random());
-    const requestDate = new Date();
-    let currentYear = requestDate.getFullYear();
-    setDate(requestDate.getDate());
-    setMonth(requestDate.getMonth() + 1);
-    setYear(currentYear.toString().slice(2, 5));
-    formatedMonth = month < 10 ? "0" + month : month;
   });
 
   const showDatePicker = () => {

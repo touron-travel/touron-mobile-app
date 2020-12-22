@@ -19,6 +19,17 @@ import {
 import { Surface } from "react-native-paper";
 
 const AboutUs = ({ navigation }) => {
+  const openWhatsApp = () => {
+    let url = `whatsapp://send?text=&phone= +91 8667801206`;
+    Linking.openURL(url)
+      .then((data) => {
+        console.log("WhatsApp Opened successfully " + data);
+      })
+      .catch(() => {
+        alert("Make sure WhatsApp installed on your device");
+      });
+  };
+
   return (
     <ScrollView style={{ backgroundColor: "#fff", flex: 1 }}>
       <View

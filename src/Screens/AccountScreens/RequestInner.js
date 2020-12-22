@@ -28,13 +28,13 @@ const RequestInner = ({ navigation, route }) => {
   const plan = route.params.planned;
   const road = route.params.road;
   const surprise = route.params.surprise;
+  const key = route.params.key;
   const [loaded, setLoaded] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  // console.log(isAdmin, "isAdmin");
   const [status, setStatus] = useState("");
   const [cost, setCost] = useState(0);
   const [progress, setProgress] = useState(0);
-  console.log(cost);
+  console.log("key", key);
 
   // const [uri, setUri] = useState("");
   // const [name, setName] = useState("");
@@ -371,56 +371,25 @@ const RequestInner = ({ navigation, route }) => {
             {isAdmin ? (
               <TouchableOpacity
                 onPress={() => {
-                  const key = getKey(plan.requestID);
-                  let das = {};
-                  let request = [];
-
-                  firebase
+                  console.log("keddy", key);
+                  const ref = firebase
                     .database()
                     .ref(`requests`)
-                    .on("value", (data) => {
-                      console.log(data.val(), "data");
-                      if (data) {
-                        data.forEach((d) => {
-                          console.log(d.requestID, plan.requestID, "id");
-                          if (d.val().requestID == plan.requestID) {
-                            console.log(d.val(), "valie");
-                            das = d.val();
-                            console.log(das.status, "b");
-                            das.status = status;
-                            console.log(das.status, "a");
-                          }
-                        });
-                      }
-                    });
+                    .child(key)
+                    .child("status")
+                    .set(status);
+                  console.log(ref, "ref");
 
-                  firebase.database().ref(`requests/${key}`).remove();
-                  firebase.database().ref("requests").push(das);
+                  const token = getExpoToken(plan.userID);
 
-                  console.log(request, "req");
-
-                  console.log(das, "das");
-
-                  console.log(das, "das");
-                  // const ref = firebase
-                  //   .database()
-                  //   .ref(`requests/${key}`)
-                  //   .set(das);
-                  // .child(key)
-                  // .child("status")
-                  // .set(status);
-                  //   console.log(ref, "ref");
-                  //   const token = getExpoToken(plan.userID);
-
-                  //   const message = {
-                  //     to: token,
-                  //     sound: "default",
-                  //     title: `Request Status Changed`,
-                  //     body: `Request Status Changed for your ${plan.tourCategory} of id ${plan.requestID} has been changed to  ${status}`,
-                  //     // data: { data: "goes here" },
-                  //     data: plan,
-                  //   };
-                  //   sendPushNotification(message);
+                  const message = {
+                    to: token,
+                    sound: "default",
+                    title: `Request Status Changed`,
+                    body: `Request Status Changed for your ${plan.tourCategory} of id ${plan.requestID} has been changed to  ${status}`,
+                    data: plan,
+                  };
+                  sendPushNotification(message);
 
                   navigation.navigate("MyRequest");
                 }}
@@ -517,14 +486,13 @@ const RequestInner = ({ navigation, route }) => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      const key = getKey(plan.requestID);
                       const ref = firebase
                         .database()
                         .ref(`requests`)
                         .child(key)
                         .child("tourCost")
                         .set(cost);
-                      // console.log(ref, "ref");
+                      console.log(ref, "ref");
 
                       const token = getExpoToken(plan.userID);
 
@@ -836,7 +804,6 @@ const RequestInner = ({ navigation, route }) => {
             {isAdmin ? (
               <TouchableOpacity
                 onPress={() => {
-                  const key = getKey(road.requestID);
                   const ref = firebase
                     .database()
                     .ref(`requests`)
@@ -949,7 +916,6 @@ const RequestInner = ({ navigation, route }) => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      const key = getKey(road.requestID);
                       const ref = firebase
                         .database()
                         .ref(`requests`)
@@ -1110,7 +1076,6 @@ const RequestInner = ({ navigation, route }) => {
             {isAdmin ? (
               <TouchableOpacity
                 onPress={() => {
-                  const key = getKey(surprise.requestID);
                   const ref = firebase
                     .database()
                     .ref(`requests`)
@@ -1118,6 +1083,7 @@ const RequestInner = ({ navigation, route }) => {
                     .child("status")
                     .set(status);
                   console.log(ref, "ref");
+
                   const token = getExpoToken(surprise.userID);
 
                   const message = {
@@ -1223,14 +1189,14 @@ const RequestInner = ({ navigation, route }) => {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      const key = getKey(surprise.requestID);
                       const ref = firebase
                         .database()
                         .ref(`requests`)
                         .child(key)
                         .child("tourCost")
                         .set(cost);
-                      // console.log(ref, "ref");
+                      console.log(ref, "ref");
+
                       const token = getExpoToken(surprise.userID);
 
                       const message = {

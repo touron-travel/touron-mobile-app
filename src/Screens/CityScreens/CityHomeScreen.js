@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ScrollView,
   TextInput,
   ActivityIndicator,
   Dimensions,
@@ -68,7 +69,7 @@ const CityHomeScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {loader ? (
         <ActivityIndicator size="large" />
       ) : (
@@ -86,34 +87,29 @@ const CityHomeScreen = ({ navigation, route }) => {
             />
           </View>
 
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={search()}
-            keyExtractor={(c) => c._id}
-            numColumns={2}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("CityInner", { item: item });
-                  }}
-                >
-                  <View style={styles.imageContainer}>
-                    <View>
-                      <Text style={styles.name}>{item.cityName}</Text>
-                      <Image
-                        style={styles.image}
-                        source={{ uri: item.imageUrl }}
-                      />
-                    </View>
+          <View style={styles.countryGrid}>
+            {search().map((item) => (
+              <TouchableOpacity
+                key={item._id}
+                onPress={() => {
+                  navigation.navigate("CityInner", { item: item });
+                }}
+              >
+                <View style={styles.imageContainer}>
+                  <View>
+                    <Text style={styles.name}>{item.cityName}</Text>
+                    <Image
+                      style={styles.image}
+                      source={{ uri: item.imageUrl }}
+                    />
                   </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -122,8 +118,6 @@ export default CityHomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-evenly",
-    alignItems: "center",
 
     paddingTop: 70,
   },
@@ -163,5 +157,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     alignSelf: "center",
     marginHorizontal: 15,
+  },
+  countryGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    marginBottom: 30,
   },
 });

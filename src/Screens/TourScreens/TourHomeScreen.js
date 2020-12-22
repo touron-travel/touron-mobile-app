@@ -58,11 +58,11 @@ const TourHomeScreen = ({ navigation, route }) => {
   };
 
   const [sT, sTNames] = getSavedTours();
+  const [savedTours, setSavedTours] = useState(sTNames);
+  const [savedToursDetails, setSavedToursDetails] = useState(sT);
   const [error, setErrorMessage] = useState();
   const [loader, setLoader] = useState(true);
   const [filterLoaded, setfilterLoaded] = useState(false);
-  const [savedTours, setSavedTours] = useState(sTNames);
-  const [savedToursDetails, setSavedToursDetails] = useState(sT);
   const [tourName, setTourName] = useState("");
 
   const [tourCategory, setTourCategory] = useState("");

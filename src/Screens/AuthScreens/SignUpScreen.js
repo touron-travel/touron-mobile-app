@@ -110,7 +110,7 @@ function SignUpScreen({ navigation }) {
           storeToken(user.user);
           axios
             .get(
-              `https://2factor.in/API/V1/4196cbc9-0df2-11eb-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN`
+              `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/+91${number}/AUTOGEN/touron`
             )
             .then((response) => {
               let session = response.data.Details;
@@ -208,7 +208,7 @@ function SignUpScreen({ navigation }) {
     setLoaded(true);
     axios
       .get(
-        `https://2factor.in/API/V1/4196cbc9-0df2-11eb-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
+        `https://2factor.in/API/V1/8697a4f2-e821-11ea-9fa5-0200cd936042/SMS/VERIFY/${sessionID}/${code}`
       )
       .then((response) => {
         console.log(response, "RESPONSE");

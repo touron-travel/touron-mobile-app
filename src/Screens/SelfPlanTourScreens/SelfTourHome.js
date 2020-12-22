@@ -58,13 +58,7 @@ const SelfTourHome = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={(styles.view, { shadowOpacity: 1 })}></View>
-      {/* {loader ? (
-        <ActivityIndicator
-          size="large"
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        />
-      ) : ( */}
+      <View style={(styles.view, { shadowOpacity: 1 })}></View>) : (
       <View style={{ marginTop: 20 }}>
         <View style={{ marginTop: 0 }}>
           <Text
@@ -140,23 +134,7 @@ const SelfTourHome = ({ navigation, route }) => {
                                 ...selectedTourNames,
                                 item.tourName,
                               ]);
-                              //  console.log(item);
-                              setSelectedTours([
-                                ...selectedTours,
-                                item,
-                                // {
-                                //   cityName: item.cityName,
-                                //   tourName: item.tourName,
-                                //   duration: item.tourDuration,
-                                //   tourType: item.tourType,
-                                //   idealType: item.idealType,
-                                //   pickUpType: item.pickUpPoint,
-                                //   imageUrl: item.imageUrl,
-                                //   isFinal: true,
-                                // },
-                              ]);
-
-                              //    navigation.navigate("SelfTourInner", { item: item });
+                              setSelectedTours([...selectedTours, item]);
                             }}
                           >
                             <Image

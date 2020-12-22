@@ -34,6 +34,7 @@ const MyRequestScreen = ({ navigation }) => {
   const [page, setPage] = useState(0);
   const from = page * itemsPerPage;
   const to = (page + 1) * itemsPerPage;
+  // console.log("status", status);
   const getUserData = () => {
     if (user !== null) {
       firebase
@@ -48,60 +49,39 @@ const MyRequestScreen = ({ navigation }) => {
     }
   };
 
-  const getAllRequests = () => {
-    setAllRequest([]);
-    let request = [];
-    firebase
-      .database()
-      .ref(`requests`)
-      .on("child_removed", (data) => {
-        if (data) {
-          data.forEach((c) => {
-            request.push(c.val());
-          });
-        }
-      });
-
-    setAllRequest(request);
-  };
   const getAllRequest = () => {
-    setAllRequest([]);
-    let request = [];
     firebase
       .database()
       .ref(`requests`)
       .on("value", (data) => {
         if (data) {
-          data.forEach((c) => {
-            request.push(c.val());
+          setAllRequest({
+            ...data.val(),
           });
         }
       });
-
-    setAllRequest(request);
   };
 
   const filterDataByType = () => {
     if (status !== "") {
-      const filterStatus = allRequest.filter((r) => {
-        return r.status
-          .trim()
-          .toUpperCase()
-          .includes(status.trim().toUpperCase());
+      let rs = {};
+      const tour = Object.keys(allRequest).map((r) => {
+        if (allRequest[r].status === status) {
+          rs[r] = allRequest[r];
+        }
       });
-      return filterStatus;
-    }
-
-    if (category !== "") {
-      const tourCategory = allRequest.filter((r) => {
-        return r.tourCategory
-          .trim()
-          .toUpperCase()
-          .includes(category.trim().toUpperCase());
+      return rs;
+    } else if (category !== "") {
+      let rs = {};
+      const tour = Object.keys(allRequest).map((r) => {
+        if (allRequest[r].tourCategory === category) {
+          rs[r] = allRequest[r];
+        }
       });
-      return tourCategory;
+      return rs;
+    } else {
+      return allRequest;
     }
-    return allRequest;
   };
   useEffect(() => {
     getUserData();
@@ -375,35 +355,42 @@ const MyRequestScreen = ({ navigation }) => {
                 </DataTable.Header>
 
                 <FlatList
-                  data={filterDataByType()}
-                  keyExtractor={(item) => item.requestID}
+                  data={Object.keys(filterDataByType())}
+                  // keyExtractor={(item) => item.requestID}
                   renderItem={({ item }) => {
                     return (
                       <TouchableOpacity
                         onPress={() => {
                           navigation.navigate("RequestInner", {
                             planned:
-                              item.tourCategory === "Planned Tour"
-                                ? item
+                              allRequest[item].tourCategory === "Planned Tour"
+                                ? allRequest[item]
                                 : null,
                             road:
-                              item.tourCategory === "Road Trip" ? item : null,
-                            surprise:
-                              item.tourCategory === "Surprise Tour"
-                                ? item
+                              allRequest[item].tourCategory === "Road Trip"
+                                ? allRequest[item]
                                 : null,
+                            surprise:
+                              allRequest[item].tourCategory === "Surprise Tour"
+                                ? allRequest[item]
+                                : null,
+                            key: item,
                           });
                         }}
                       >
                         <DataTable.Row>
-                          <DataTable.Cell>{item.requestID}</DataTable.Cell>
+                          <DataTable.Cell>
+                            {allRequest[item].requestID}
+                          </DataTable.Cell>
                           <DataTable.Cell numeric>
-                            {item.tourCategory}
+                            {allRequest[item].tourCategory}
                           </DataTable.Cell>
                           <DataTable.Cell numeric style={{ padding: 10 }}>
                             <Text
                               style={{
-                                backgroundColor: `${getColor(item.status)}`,
+                                backgroundColor: `${getColor(
+                                  allRequest[item].status
+                                )}`,
                                 margin: 5,
                                 borderRadius: 50,
                                 fontSize: 15,
@@ -412,7 +399,7 @@ const MyRequestScreen = ({ navigation }) => {
                                 color: "white",
                               }}
                             >
-                              {item.status}
+                              {allRequest[item].status}
                             </Text>
                           </DataTable.Cell>
                         </DataTable.Row>
@@ -425,7 +412,7 @@ const MyRequestScreen = ({ navigation }) => {
                   page={page}
                   numberOfPages={Math.floor(allRequest.length / itemsPerPage)}
                   onPageChange={(page) => setPage(page)}
-                  label={`${from + 1}-${to} of ${allRequest.length}`}
+                  // label={`${from + 1}-${to} of ${allRequest.length}`}
                 />
               </DataTable>
             </View>
