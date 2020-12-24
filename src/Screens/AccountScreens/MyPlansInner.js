@@ -172,51 +172,49 @@ const MyPlansInner = ({ navigation, route }) => {
             marginVertical: 10,
           }}
         >
-          <FlatList
-            data={item.tourDetails}
-            keyExtractor={(item) => item.requestID}
-            renderItem={({ item }) => {
-              return (
+          {item.tourDetails.map((item,index)=>{
+            return (
+              <View
+              key={index}
+              style={{
+                marginHorizontal: 15,
+                height: HEIGHT / 10,
+                justifyContent: "center",
+                paddingVertical: 10,
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => navigation.navigate("MyPlanInner")}
+              >
                 <View
                   style={{
-                    marginHorizontal: 15,
-                    height: HEIGHT / 10,
-                    justifyContent: "center",
-                    paddingVertical: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("MyPlanInner")}
+                  <Image
+                    source={{ uri: item.imageUrl }}
+                    style={{
+                      height: WIDTH / 8,
+                      width: WIDTH / 8,
+                      borderRadius: 5,
+                      marginRight: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      justifyContent: "center",
+                    }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Image
-                        source={{ uri: item.imageUrl }}
-                        style={{
-                          height: WIDTH / 8,
-                          width: WIDTH / 8,
-                          borderRadius: 5,
-                          marginRight: 10,
-                        }}
-                      />
-                      <View
-                        style={{
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ fontSize: 15 }}>{item.tourName}</Text>
-                        {/* <Text style={{ fontSize: 14 }}>{item.cityName}</Text> */}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
+                    <Text style={{ fontSize: 15 }}>{item.tourName}</Text>
+                    {/* <Text style={{ fontSize: 14 }}>{item.cityName}</Text> */}
+                  </View>
                 </View>
-              );
-            }}
-          />
+              </TouchableOpacity>
+            </View>
+            )
+          })}
+        
         </View>
       </View>
     </ScrollView>

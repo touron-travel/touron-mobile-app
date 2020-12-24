@@ -32,7 +32,7 @@ const MyVisaRequestsScreen = ({ navigation }) => {
             console.log(c.val(), "LLLLLL");
             request.push(c.val());
           }
-          setVisaRequest(request);
+          setVisaRequest(request.reverse());
         });
       });
   };

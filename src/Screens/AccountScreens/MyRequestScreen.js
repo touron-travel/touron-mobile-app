@@ -54,11 +54,18 @@ const MyRequestScreen = ({ navigation }) => {
       .database()
       .ref(`requests`)
       .on("value", (data) => {
-        if (data) {
+        let newReq = {}
+        if(data !== null && data !== undefined){
+          let revReq = Object.keys(data.val()).reverse()
+          revReq.forEach(i=>{
+            newReq[i] = data.val()[i]
+          })
           setAllRequest({
-            ...data.val(),
+            ...newReq
           });
         }
+
+      
       });
   };
 
@@ -107,7 +114,7 @@ const MyRequestScreen = ({ navigation }) => {
               pT.push(c.val());
             }
           });
-          setPlannedTour(pT);
+          setPlannedTour(pT.reverse());
         }
       });
 
@@ -125,7 +132,7 @@ const MyRequestScreen = ({ navigation }) => {
               rT.push(c.val());
             }
           });
-          setRoadTrip(rT);
+          setRoadTrip(rT.reverse());
         }
       });
     firebase
@@ -142,7 +149,7 @@ const MyRequestScreen = ({ navigation }) => {
               sT.push(c.val());
             }
           });
-          setSurpriseTour(sT);
+          setSurpriseTour(sT.reverse());
         }
       });
   };
@@ -354,59 +361,57 @@ const MyRequestScreen = ({ navigation }) => {
                   <DataTable.Title numeric>Request Status</DataTable.Title>
                 </DataTable.Header>
 
-                <FlatList
-                  data={Object.keys(filterDataByType())}
-                  // keyExtractor={(item) => item.requestID}
-                  renderItem={({ item }) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("RequestInner", {
-                            planned:
-                              allRequest[item].tourCategory === "Planned Tour"
-                                ? allRequest[item]
-                                : null,
-                            road:
-                              allRequest[item].tourCategory === "Road Trip"
-                                ? allRequest[item]
-                                : null,
-                            surprise:
-                              allRequest[item].tourCategory === "Surprise Tour"
-                                ? allRequest[item]
-                                : null,
-                            key: item,
-                          });
-                        }}
-                      >
-                        <DataTable.Row>
-                          <DataTable.Cell>
-                            {allRequest[item].requestID}
-                          </DataTable.Cell>
-                          <DataTable.Cell numeric>
-                            {allRequest[item].tourCategory}
-                          </DataTable.Cell>
-                          <DataTable.Cell numeric style={{ padding: 10 }}>
-                            <Text
-                              style={{
-                                backgroundColor: `${getColor(
-                                  allRequest[item].status
-                                )}`,
-                                margin: 5,
-                                borderRadius: 50,
-                                fontSize: 15,
-                                fontFamily: "Andika",
-                                padding: 10,
-                                color: "white",
-                              }}
-                            >
-                              {allRequest[item].status}
-                            </Text>
-                          </DataTable.Cell>
-                        </DataTable.Row>
-                      </TouchableOpacity>
-                    );
-                  }}
-                />
+{Object.keys(filterDataByType()).map((item,index)=>{
+  return (
+    <TouchableOpacity
+    key={index}
+    onPress={() => {
+      navigation.navigate("RequestInner", {
+        planned:
+          allRequest[item].tourCategory === "Planned Tour"
+            ? allRequest[item]
+            : null,
+        road:
+          allRequest[item].tourCategory === "Road Trip"
+            ? allRequest[item]
+            : null,
+        surprise:
+          allRequest[item].tourCategory === "Surprise Tour"
+            ? allRequest[item]
+            : null,
+        key: item,
+      });
+    }}
+  >
+    <DataTable.Row>
+      <DataTable.Cell>
+        {allRequest[item].requestID}
+      </DataTable.Cell>
+      <DataTable.Cell numeric>
+        {allRequest[item].tourCategory}
+      </DataTable.Cell>
+      <DataTable.Cell numeric style={{ padding: 10 }}>
+        <Text
+          style={{
+            backgroundColor: `${getColor(
+              allRequest[item].status
+            )}`,
+            margin: 5,
+            borderRadius: 50,
+            fontSize: 15,
+            fontFamily: "Andika",
+            padding: 10,
+            color: "white",
+          }}
+        >
+          {allRequest[item].status}
+        </Text>
+      </DataTable.Cell>
+    </DataTable.Row>
+  </TouchableOpacity>
+  )
+})}
+              
 
                 <DataTable.Pagination
                   page={page}
@@ -493,164 +498,155 @@ const MyRequestScreen = ({ navigation }) => {
                 <View>
                   {plannedTour.length == 0 ? null : (
                     <View>
-                      <FlatList
-                        data={plannedTour}
-                        keyExtractor={(item) => item.requestID}
-                        renderItem={({ item }) => {
-                          return (
-                            <View>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  navigation.navigate("RequestInner", {
-                                    planned: item,
-                                    road: null,
-                                    surprise: null,
-                                  })
-                                }
-                              >
-                                <View
+                      {plannedTour.map((item,index)=>{
+                        return (
+                          <View key={index}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("RequestInner", {
+                                planned: item,
+                                road: null,
+                                surprise: null,
+                              })
+                            }
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                marginTop: 20,
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <View style={{ flex: 0.3 }}>
+                                <Avatar.Text
+                                  label="P"
                                   style={{
-                                    flexDirection: "row",
-                                    marginTop: 20,
-                                    justifyContent: "space-between",
+                                    backgroundColor: "#DBE8EB",
+                                    marginLeft: 20,
                                   }}
-                                >
-                                  <View style={{ flex: 0.3 }}>
-                                    <Avatar.Text
-                                      label="P"
-                                      style={{
-                                        backgroundColor: "#DBE8EB",
-                                        marginLeft: 20,
-                                      }}
-                                    />
-                                  </View>
-                                  <View
-                                    style={{
-                                      flex: 0.7,
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Text style={{ fontSize: 20 }}>
-                                      {item.tourCategory}
-                                    </Text>
-                                    <Text style={{ fontSize: 14 }}>
-                                      Status: {item.status}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
+                                />
+                              </View>
+                              <View
+                                style={{
+                                  flex: 0.7,
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Text style={{ fontSize: 20 }}>
+                                  {item.tourCategory}
+                                </Text>
+                                <Text style={{ fontSize: 14 }}>
+                                  Status: {item.status}
+                                </Text>
+                              </View>
                             </View>
-                          );
-                        }}
-                      />
+                          </TouchableOpacity>
+                        </View>
+                        )
+                      })}
+                     
                     </View>
                   )}
                   {roadTrip.length == 0 ? null : (
                     <View>
-                      <FlatList
-                        data={roadTrip}
-                        keyExtractor={(item) => item.requestID}
-                        renderItem={({ item }) => {
-                          return (
-                            <View>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  navigation.navigate("RequestInner", {
-                                    road: item,
-                                    planned: null,
-                                    surprise: null,
-                                  })
-                                }
-                              >
-                                <View
+                      {roadTrip.map((item,index)=>{
+                        return (
+                          <View key={index}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("RequestInner", {
+                                road: item,
+                                planned: null,
+                                surprise: null,
+                              })
+                            }
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                marginTop: 20,
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <View style={{ flex: 0.3 }}>
+                                <Avatar.Text
+                                  label="R"
                                   style={{
-                                    flexDirection: "row",
-                                    marginTop: 20,
-                                    justifyContent: "space-between",
+                                    backgroundColor: "#DBE8EB",
+                                    marginLeft: 20,
                                   }}
-                                >
-                                  <View style={{ flex: 0.3 }}>
-                                    <Avatar.Text
-                                      label="R"
-                                      style={{
-                                        backgroundColor: "#DBE8EB",
-                                        marginLeft: 20,
-                                      }}
-                                    />
-                                  </View>
-                                  <View
-                                    style={{
-                                      flex: 0.7,
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Text style={{ fontSize: 20 }}>
-                                      {item.tourCategory}
-                                    </Text>
-                                    <Text style={{ fontSize: 14 }}>
-                                      Status: {item.status}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
+                                />
+                              </View>
+                              <View
+                                style={{
+                                  flex: 0.7,
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Text style={{ fontSize: 20 }}>
+                                  {item.tourCategory}
+                                </Text>
+                                <Text style={{ fontSize: 14 }}>
+                                  Status: {item.status}
+                                </Text>
+                              </View>
                             </View>
-                          );
-                        }}
-                      />
+                          </TouchableOpacity>
+                        </View>
+                        )
+                      })}
+                     
                     </View>
                   )}
                   {surpriseTour.length == 0 ? null : (
                     <View>
-                      <FlatList
-                        data={surpriseTour}
-                        keyExtractor={(item) => item.requestID}
-                        renderItem={({ item }) => {
-                          return (
-                            <View>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  navigation.navigate("RequestInner", {
-                                    surprise: item,
-                                    road: null,
-                                    planned: null,
-                                  })
-                                }
-                              >
-                                <View
+                      {surpriseTour.map((item,index)=>{
+                        return (
+                          <View key={index}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("RequestInner", {
+                                surprise: item,
+                                road: null,
+                                planned: null,
+                              })
+                            }
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                marginTop: 20,
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <View style={{ flex: 0.3 }}>
+                                <Avatar.Text
+                                  label="S"
                                   style={{
-                                    flexDirection: "row",
-                                    marginTop: 20,
-                                    justifyContent: "space-between",
+                                    backgroundColor: "#DBE8EB",
+                                    marginLeft: 20,
                                   }}
-                                >
-                                  <View style={{ flex: 0.3 }}>
-                                    <Avatar.Text
-                                      label="S"
-                                      style={{
-                                        backgroundColor: "#DBE8EB",
-                                        marginLeft: 20,
-                                      }}
-                                    />
-                                  </View>
-                                  <View
-                                    style={{
-                                      flex: 0.7,
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Text style={{ fontSize: 20 }}>
-                                      {item.tourCategory}
-                                    </Text>
-                                    <Text style={{ fontSize: 14 }}>
-                                      Status: {item.status}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </TouchableOpacity>
+                                />
+                              </View>
+                              <View
+                                style={{
+                                  flex: 0.7,
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Text style={{ fontSize: 20 }}>
+                                  {item.tourCategory}
+                                </Text>
+                                <Text style={{ fontSize: 14 }}>
+                                  Status: {item.status}
+                                </Text>
+                              </View>
                             </View>
-                          );
-                        }}
-                      />
+                          </TouchableOpacity>
+                        </View>
+                        )
+                      })}
+                     
                     </View>
                   )}
                 </View>

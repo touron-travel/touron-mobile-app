@@ -6,9 +6,7 @@ import {
   TouchableOpacity,
   Picker,
   StyleSheet,
-  SectionList,
   Platform,
-  Button,
 } from "react-native";
 const WIDTH = Dimensions.get("window").width;
 const HEIGHT = Dimensions.get("window").height;
@@ -480,7 +478,7 @@ const RequestInner = ({ navigation, route }) => {
                         backgroundColor: "white",
                         fontSize: 20,
                       }}
-                      value={cost}
+                      value={cost.toString()}
                       onChangeText={(value) => setCost(value)}
                     />
                   </View>
